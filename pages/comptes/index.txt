@@ -1,0 +1,230 @@
+<?php
+// pages/ecritures/liste.php
+session_start();
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php');
+require_once '../../fonctions/database.php';
+require_once '../../fonctions/gestion_comptes.php';
+
+try {
+    $pdo = new PDO("sqlsrv:Server=192.168.100.226;Database=BD_AD_SCE");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
+
+// Vérifier les paramètres
+if (!isset($_GET['compte_id']) || !isset($_GET['numero_compte'])) {
+    header('Location: ../comptes/index.php');
+    exit();
+}
+
+$compteId = $_GET['compte_id'];
+$numeroCompte = $_GET['numero_compte'];
+
+// Récupérer les infos du compte
+$stmt = $pdo->prepare("SELECT * FROM Comptes_compta WHERE ID_Compte = ?");
+$stmt->execute([$compteId]);
+$compte = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$compte) {
+    die("Compte introuvable");
+}
+
+// Gestion de la période
+$dateDebut = $_GET['date_debut'] ?? date('Y-01-01');
+$dateFin = $_GET['date_fin'] ?? date('Y-m-d');
+
+// Calcul du solde antérieur
+$soldeAnterieur = getSoldeAnterieur($pdo, $compteId, $dateDebut);
+$debitAnterieur = $soldeAnterieur['debit_anterieur'];
+$creditAnterieur = $soldeAnterieur['credit_anterieur'];
+$soldeAnterieurValue = $creditAnterieur - $debitAnterieur;
+
+// Récupérer les écritures de la période
+$stmt = $pdo->prepare("
+    SELECT e.*, le.Montant, le.Sens, le.Libelle_Ligne, 
+           j.Nom as Journal_Nom, cp.Nom_Compte as Compte_Contrepartie
+    FROM Lignes_Ecritures le
+    JOIN Ecritures e ON le.ID_Ecriture = e.ID_Ecriture
+    LEFT JOIN JAL j ON e.Cde = j.Cde
+    LEFT JOIN Lignes_Ecritures le2 ON le.ID_Ecriture = le2.ID_Ecriture AND le2.ID_Compte != ?
+    LEFT JOIN Comptes_compta cp ON le2.ID_Compte = cp.ID_Compte
+    WHERE le.ID_Compte = ? 
+    AND e.Date_Saisie BETWEEN ? AND ?
+    ORDER BY e.Date_Saisie, e.ID_Ecriture
+");
+$stmt->execute([$compteId, $compteId, $dateDebut, $dateFin]);
+$ecritures = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Calcul du solde actuel
+$totalDebit = $debitAnterieur;
+$totalCredit = $creditAnterieur;
+foreach ($ecritures as $ecriture) {
+    if ($ecriture['Sens'] === 'D') {
+        $totalDebit += $ecriture['Montant'];
+    } else {
+        $totalCredit += $ecriture['Montant'];
+    }
+}
+$soldeActuel = $totalCredit - $totalDebit;
+
+$titre = "Écritures du compte ".htmlspecialchars($compte['Numero_Compte']);
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BailCompta 360 | <?= htmlspecialchars($titre) ?></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .compte-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .period-selector {
+            background: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .solde-info {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .table-ecritures th {
+            background-color: #343a40;
+            color: white;
+        }
+        .debit {
+            color: #dc3545;
+        }
+        .credit {
+            color: #28a745;
+        }
+        .solde {
+            font-weight: bold;
+        }
+        .ecriture-link {
+            color: #007bff;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="compte-header">
+            <h2><?= htmlspecialchars($compte['Nom_Compte']) ?></h2>
+            <p>Numéro: <?= htmlspecialchars($compte['Numero_Compte']) ?> | Type: <?= htmlspecialchars($compte['Type_Compte']) ?></p>
+            <a href="../comptes/index.php" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+
+        <div class="period-selector">
+            <form method="get" class="form-inline">
+                <input type="hidden" name="compte_id" value="<?= htmlspecialchars($compteId) ?>">
+                <input type="hidden" name="numero_compte" value="<?= htmlspecialchars($numeroCompte) ?>">
+                
+                <div class="form-group mr-3">
+                    <label for="date_debut" class="mr-2">Du :</label>
+                    <input type="date" id="date_debut" name="date_debut" 
+                           value="<?= htmlspecialchars($dateDebut) ?>" class="form-control">
+                </div>
+                
+                <div class="form-group mr-3">
+                    <label for="date_fin" class="mr-2">Au :</label>
+                    <input type="date" id="date_fin" name="date_fin" 
+                           value="<?= htmlspecialchars($dateFin) ?>" class="form-control">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Filtrer</button>
+            </form>
+        </div>
+
+        <div class="solde-info">
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Solde antérieur :</strong> 
+                    <span class="<?= $soldeAnterieurValue >= 0 ? 'credit' : 'debit' ?>">
+                        <?= number_format(abs($soldeAnterieurValue), 2, ',', ' ') ?>
+                    </span>
+                </div>
+                <div class="col-md-4">
+                    <strong>Débit période :</strong> 
+                    <span class="debit"><?= number_format($totalDebit - $debitAnterieur, 2, ',', ' ') ?></span>
+                </div>
+                <div class="col-md-4">
+                    <strong>Crédit période :</strong> 
+                    <span class="credit"><?= number_format($totalCredit - $creditAnterieur, 2, ',', ' ') ?></span>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-12">
+                    <strong>Solde au <?= date('d/m/Y', strtotime($dateFin)) ?> :</strong> 
+                    <span class="solde <?= $soldeActuel >= 0 ? 'credit' : 'debit' ?>">
+                        <?= number_format(abs($soldeActuel), 2, ',', ' ') ?>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-ecritures">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Pièce</th>
+                        <th>Journal</th>
+                        <th>Libellé</th>
+                        <th>Contrepartie</th>
+                        <th>Débit</th>
+                        <th>Crédit</th>
+                        <th>Agence</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($ecritures as $ecriture): ?>
+                        <tr>
+                            <td><?= date('d/m/Y', strtotime($ecriture['Date_Saisie'])) ?></td>
+                            <td>
+                                <a href="details.php?id=<?= $ecriture['ID_Ecriture'] ?>" class="ecriture-link">
+                                    <?= htmlspecialchars($ecriture['Numero_Piece']) ?>
+                                </a>
+                            </td>
+                            <td><?= htmlspecialchars($ecriture['Journal_Nom'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($ecriture['Libelle_Ligne'] ?? $ecriture['Description']) ?></td>
+                            <td><?= htmlspecialchars($ecriture['Compte_Contrepartie'] ?? 'N/A') ?></td>
+                            <td class="debit"><?= $ecriture['Sens'] === 'D' ? number_format($ecriture['Montant'], 2, ',', ' ') : '' ?></td>
+                            <td class="credit"><?= $ecriture['Sens'] === 'C' ? number_format($ecriture['Montant'], 2, ',', ' ') : '' ?></td>
+                            <td><?= htmlspecialchars($ecriture['NumeroAgenceSCE'] ?? 'N/A') ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        // Mise en forme des dates pour le navigateur
+        $('#date_debut, #date_fin').on('change', function() {
+            if (new Date($('#date_fin').val()) < new Date($('#date_debut').val())) {
+                alert('La date de fin doit être postérieure à la date de début');
+                $(this).val('');
+            }
+        });
+    });
+    </script>
+
+    <?php require_once('../../templates/footer.php'); ?>
+</body>
+</html>

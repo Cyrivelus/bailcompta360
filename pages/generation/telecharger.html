@@ -1,0 +1,76 @@
+<?php
+// pages/ecritures/liste.php
+
+$titre = 'Liste des Écritures Comptables';
+$current_page = basename($_SERVER['PHP_SELF']); // Pour la classe 'active' dans la navigation
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php'); // Inclusion de la navigation
+?>
+
+
+<?php
+// telecharger.php
+
+// *** Configuration ***
+$cheminDossierTelechargements = '/chemin/vers/votre/dossier/telechargements/'; // Chemin vers le dossier contenant les fichiers à télécharger
+// ***/!\*** IMPORTANT : Sécuriser l'accès à ce dossier et valider les noms de fichiers. ***/!\***
+
+// *** Vérification si le nom du fichier est passé en paramètre GET ***
+if (isset($_GET['fichier']) && !empty($_GET['fichier'])) {
+    $nomFichier = basename($_GET['fichier']); // Récupérer uniquement le nom du fichier (sécurité)
+    $cheminFichierComplet = $cheminDossierTelechargements . $nomFichier;
+
+    // *** Vérification de l'existence du fichier ***
+    if (file_exists($cheminFichierComplet) && is_readable($cheminFichierComplet)) {
+        // *** Obtention du type MIME du fichier ***
+        $typeMIME = mime_content_type($cheminFichierComplet);
+        if ($typeMIME === false) {
+            // Si le type MIME ne peut pas être déterminé, utiliser un type générique
+            $typeMIME = 'application/octet-stream';
+        }
+
+        // *** Définition des en-têtes HTTP pour forcer le téléchargement ***
+        header('Content-Type: ' . $typeMIME);
+        header('Content-Disposition: attachment; filename="' . $nomFichier . '"');
+        header('Content-Length: ' . filesize($cheminFichierComplet));
+        header('Cache-Control: private');
+        header('Pragma: public');
+        header('Expires: 0');
+
+        // *** Lecture du fichier et envoi au navigateur ***
+        readfile($cheminFichierComplet);
+        exit(); // Important de s'arrêter ici pour ne pas afficher d'autre contenu HTML
+    } else {
+        // *** Le fichier n'existe pas ou n'est pas accessible ***
+        echo "<div class='alert alert-danger'>Le fichier demandé n'existe pas ou n'est pas accessible. <a href='../factures/index.php'>Retour à la gestion des factures</a></div>";
+    }
+} else {
+    // *** Le nom du fichier n'a pas été spécifié ***
+    echo "<div class='alert alert-danger'>Nom de fichier non spécifié pour le téléchargement. <a href='../factures/index.php'>Retour à la gestion des factures</a></div>";
+}
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Téléchargement de Fichier</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/monstyle.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNLJ5ywYOIDjxxyTwCypxSoOO3FxyYr4fccRoP1h0IWcAukj0jz9uNNs" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
+<?php
+require_once('../../templates/footer.php');
+?>

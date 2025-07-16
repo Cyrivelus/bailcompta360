@@ -1,0 +1,179 @@
+<?php
+// pages/ecritures/liste.php
+
+$titre = 'Liste des Écritures Comptables';
+$current_page = basename($_SERVER['PHP_SELF']); // Pour la classe 'active' dans la navigation
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php'); // Inclusion de la navigation
+?>
+
+
+<?php
+// pages/ecritures/liste.php
+
+$titre = 'Liste des Écritures Comptables';
+$current_page = basename($_SERVER['PHP_SELF']); // Pour la classe 'active' dans la navigation
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php'); // Inclusion de la navigation
+?>
+
+<h1><?php echo htmlspecialchars($titre); ?></h1>
+<p>Ceci est la liste des écritures comptables...</p>
+
+<?php
+require_once('../../templates/footer.php');
+?>
+
+<?php
+// Inclure les fichiers nécessaires (connexion à la base de données, fonctions, etc.)
+require_once '../../fonctions/database.php';
+require_once '../../fonctions/gestion_emprunts.php'; // Supposons un fichier pour gérer les emprunts
+
+// Récupérer l'ID de l'emprunt à afficher
+$idEmprunt = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : null;
+
+// Initialisation des variables
+$emprunt = null;
+$erreur = null;
+
+// Récupérer les informations de l'emprunt si un ID est fourni
+if ($idEmprunt) {
+    $emprunt = getEmpruntAvecDetails($db, $idEmprunt); // Fonction pour récupérer l'emprunt avec tous les détails
+    if (!$emprunt) {
+        $erreur = "Emprunt non trouvé.";
+    }
+} else {
+    $erreur = "ID d'emprunt non valide.";
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Détails de l'Emprunt</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/monstyle.css">
+    <link rel="stylesheet" href="../../css/details.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-header">Détails de l'Emprunt Bancaire</h2>
+
+        <?php if ($erreur): ?>
+            <div class="alert alert-danger"><?= $erreur ?></div>
+        <?php endif; ?>
+
+        <?php if ($emprunt): ?>
+            <div class="details-container">
+                <h3>Informations Générales</h3>
+                <p><strong>ID de l'Emprunt:</strong> <?= $emprunt['ID_Emprunt'] ?></p>
+                <p><strong>Banque:</strong> <?= htmlspecialchars($emprunt['Banque']) ?></p>
+                <p><strong>Numéro de Prêt:</strong> <?= htmlspecialchars($emprunt['Numero_Pret']) ?></p>
+                <p><strong>Montant du Prêt:</strong> <?= number_format($emprunt['Montant_Pret'], 2, ',', ' ') ?> <?= htmlspecialchars($emprunt['Devise']) ?></p>
+                <p><strong>Date de Souscription:</strong> <?= date('d/m/Y', strtotime($emprunt['Date_Souscription'])) ?></p>
+                <p><strong>Agence:</strong> <?= htmlspecialchars($emprunt['Agence']) ?></p>
+                <p><strong>Type de Prêt:</strong> <?= htmlspecialchars($emprunt['Type_Pret']) ?></p>
+                <p><strong>Client:</strong> <?= htmlspecialchars($emprunt['Client']) ?></p>
+                <p><strong>Source de Financement:</strong> <?= htmlspecialchars($emprunt['Source_Financement']) ?></p>
+
+                <h3>Informations Financières</h3>
+                <p><strong>Taux Effectif Global (TEG):</strong> <?= number_format($emprunt['Taux_Effectif_Global'] * 100, 4, ',', ' ') ?>%</p>
+                <p><strong>Montant Différé:</strong> <?= number_format($emprunt['Montant_Differe'], 2, ',', ' ') ?> <?= htmlspecialchars($emprunt['Devise']) ?></p>
+                <p><strong>Type de Plan:</strong> <?= htmlspecialchars($emprunt['Type_Plan']) ?></p>
+                <p><strong>Échéance Fin de Mois:</strong> <?= $emprunt['Echeance_Fin_Mois'] ? 'Oui' : 'Non' ?></p>
+                <p><strong>Nombre d'Échéances:</strong> <?= $emprunt['Nombre_Echeances'] ?></p>
+                <p><strong>Gestion du Différé:</strong> <?= htmlspecialchars($emprunt['Gestion_Differe']) ?></p>
+                <p><strong>Nombre de Jours Réels:</strong> <?= $emprunt['Nombre_Jours_Reels'] ?></p>
+                <p><strong>Type d'Intérêt:</strong> <?= htmlspecialchars($emprunt['Type_Interet']) ?></p>
+                <p><strong>Intérêt SP Taux:</strong> <?= number_format($emprunt['Interet_SP_Taux'] * 100, 4, ',', ' ') ?>%</p>
+                <p><strong>Intérêt SP Montant:</strong> <?= number_format($emprunt['Interet_SP_Montant'], 2, ',', ' ') ?> <?= htmlspecialchars($emprunt['Devise']) ?></p>
+                <p><strong>Taxes:</strong> <?= number_format($emprunt['Taxes'], 2, ',', ' ') ?> <?= htmlspecialchars($emprunt['Devise']) ?></p>
+                <p><strong>Période:</strong> <?= htmlspecialchars($emprunt['Periode']) ?></p>
+                <p><strong>Terme:</strong> <?= htmlspecialchars($emprunt['Terme']) ?></p>
+                <p><strong>Perception:</strong> <?= htmlspecialchars($emprunt['Perception']) ?></p>
+
+                <h3>Dates Clés</h3>
+                <p><strong>Date de Mise en Place:</strong> <?= date('d/m/Y', strtotime($emprunt['Date_Mise_En_Place'])) ?></p>
+                <p><strong>Date Première Échéance:</strong> <?= date('d/m/Y', strtotime($emprunt['Date_Premiere_Echeance'])) ?></p>
+                <p><strong>Date Dernière Échéance:</strong> <?= date('d/m/Y', strtotime($emprunt['Date_Derniere_Echeance'])) ?></p>
+                <p><strong>Date Début Amortissement:</strong> <?= ($emprunt['Date_Debut_Amortissement']) ? date('d/m/Y', strtotime($emprunt['Date_Debut_Amortissement'])) : 'Non défini' ?></p>
+                <p><strong>Date Fin Amortissement:</strong> <?= ($emprunt['Date_Fin_Amortissement']) ? date('d/m/Y', strtotime($emprunt['Date_Fin_Amortissement'])) : 'Non défini' ?></p>
+
+                <h3>Informations d'Amortissement</h3>
+                <p><strong>Montant Initial:</strong> <?= number_format($emprunt['Montant_Initial'], 2, ',', ' ') ?> <?= htmlspecialchars($emprunt['Devise']) ?></p>
+                <p><strong>Durée (en jours):</strong> <?= $emprunt['Duree'] ?></p>
+                <p><strong>Type d'Amortissement:</strong> <?= htmlspecialchars($emprunt['Type_Amortissement']) ?></p>
+
+                <p><a href="index.php" class="btn btn-default">Retour à la liste</a></p>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNLJ5ywYOIDjxxyTwCypxSoOO3FxyYr4fccRoP1h0IWcAukj0jz9uNNs" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/script.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="../js/tableau_dynamique.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialisez le tableau dynamique en ciblant son ID ou sa classe
+            initialiserTableauDynamique('#monTableauHTML', {
+                selection: true,
+                pagination: true,
+                rowsPerPage: 10,
+                sortable: true,
+                searchable: true,
+                // Autres options si nécessaire
+            });
+
+            // Vous pouvez initialiser d'autres tableaux dynamiques sur la même page ici
+            initialiserTableauDynamique('#autreTableau', {
+                // Différentes options pour cet autre tableau
+            });
+        });
+    </script>
+</body>
+</body>
+</html>
+
+<?php
+// Fonctions de gestion des emprunts (à implémenter dans fonctions/gestion_emprunts.php)
+
+function getEmpruntAvecDetails($db, $id) {
+    try {
+        $stmt = $db->prepare("SELECT * FROM Emprunts_Bancaires WHERE ID_Emprunt = :id");
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération des détails de l'emprunt : " . $e->getMessage());
+        return false;
+    }
+}
+
+// Vous pourriez également avoir une fonction pour récupérer le plan d'amortissement lié à cet emprunt
+// si vous souhaitez l'afficher sur cette page.
+/*
+function getPlanAmortissement($db, $idEmprunt) {
+    try {
+        $stmt = $db->prepare("SELECT * FROM Echeances_Amortissement WHERE ID_Emprunt = :id ORDER BY Numero_Echeance ASC");
+        $stmt->bindParam(':id', $idEmprunt);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération du plan d'amortissement : " . $e->getMessage());
+        return [];
+    }
+}
+*/
+?>
+<?php
+require_once('../../templates/footer.php');
+?>

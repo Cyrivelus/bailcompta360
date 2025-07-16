@@ -1,0 +1,108 @@
+<?php
+// pages/tableau_bord.php
+
+// Inclure les fichiers nécessaires
+require_once '../fonctions/database.php';
+require_once '../fonctions/gestion_utilisateurs.php';
+require_once '../fonctions/gestion_droits.php';
+
+$titre = 'Tableau de Bord';
+$current_page = basename($_SERVER['PHP_SELF']); // Pour la classe 'active' dans la navigation
+
+require_once('../templates/header.php');
+require_once('../templates/navigation.php'); // Inclusion de la navigation
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Tableau de Bord</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/monstyle.css">
+    <link rel="stylesheet" href="../../css/tableau.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="container">
+    <h2 class="page-header">Tableau de Bord</h2>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span class="glyphicon glyphicon-user"></span> Gestion des Utilisateurs
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <p>Accédez à la gestion des comptes utilisateurs, création, modification, suppression.</p>
+                    <a href="../pages/utilisateurs/index.php" class="btn btn-info btn-block">
+                        <span class="glyphicon glyphicon-cog"></span> Gérer les Utilisateurs
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span class="glyphicon glyphicon-briefcase"></span> Gestion des Profils
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <p>Gérez les différents profils d'accès et leurs permissions au sein de l'application.</p>
+                    <a href="../pages/profils/index.php" class="btn btn-success btn-block">
+                        <span class="glyphicon glyphicon-cog"></span> Gérer les Profils
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span class="glyphicon glyphicon-link"></span> Gestion des Tiers
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <p>Administrez les informations des clients et des fournisseurs de votre entreprise.</p>
+                    <a href="../pages/tiers/index.php" class="btn btn-warning btn-block">
+                        <span class="glyphicon glyphicon-cog"></span> Gérer les Tiers
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span class="glyphicon glyphicon-file"></span> Gestion des Factures
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <p>Consultez, ajoutez, modifiez et gérez les factures clients et fournisseurs.</p>
+                    <a href="../pages/factures/index.php" class="btn btn-danger btn-block">
+                        <span class="glyphicon glyphicon-cog"></span> Gérer les Factures
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNLJ5ywYOIDjxxyTwCypxSoOO3FxyYr4fccRoP1h0IWcAukj0jz9uNNs" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="../js/tableau_dynamique.js"></script>
+<script>
+    $(document).ready(function() {
+        // Vous pouvez ajouter des initialisations de scripts spécifiques au tableau de bord ici
+    });
+</script>
+
+<?php
+require_once('../../templates/footer.php');
+?>

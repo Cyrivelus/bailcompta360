@@ -1,0 +1,44 @@
+<?php
+// acces_refuse.php
+
+$titre = 'Accès Refusé';
+$current_page = basename($_SERVER['PHP_SELF']); // Pour la classe 'active' dans la navigation (si vous l'utilisez)
+
+require_once '../templates/header.php';
+require_once '../templates/navigation.php'; // Facultatif, si vous voulez une navigation limitée
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Modifier l'Écriture</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/formulaire.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="alert alert-danger text-center">
+                <h2 class="alert-heading"><span class="glyphicon glyphicon-warning-sign"></span> Accès Refusé</h2>
+                <p class="mb-0">Vous n'avez pas les autorisations nécessaires pour accéder à cette page ou effectuer cette action.</p>
+                <hr class="my-3">
+                <p class="mb-0">Veuillez contacter l'administrateur si vous pensez que cela est une erreur.</p>
+                <p class="mt-3">
+                    <a href="../index.php" class="btn btn-primary"><span class="glyphicon glyphicon-home"></span> Retour à l'accueil</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php
+require_once('../templates/footer.php');
+?>
+
+</body>
+</html>

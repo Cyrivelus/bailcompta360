@@ -1,0 +1,102 @@
+<?php
+// pages/admin/utilisateurs/modifier.php
+
+// Démarrer la session pour la gestion de l'authentification
+session_start();
+
+// Vérifier si l'utilisateur est connecté et est un administrateur
+if (!isset($_SESSION['utilisateur_id']) || $_SESSION['role'] !== 'Admin') {
+    // Rediriger si non autorisé
+    header("Location: ../../index.php?error=Accès non autorisé");
+    exit();
+}
+
+// Inclure l'en-tête de l'administration
+$title = "Modifier un Utilisateur";
+include('../includes/header.php');
+
+// Inclure la navigation de l'administration
+include('../includes/navigation.php');
+
+// Inclure le fichier de connexion à la base de données
+require_once('../../../fonctions/database.php');
+
+// Vérifier si l'ID de l'utilisateur à modifier est présent dans l'URL
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header("Location: index.php?error=ID utilisateur invalide");
+    exit();
+}
+
+$utilisateur_id = $_GET['id'];
+
+// Récupérer les informations de l'utilisateur à modifier depuis la base de données
+$sql = "SELECT ID_Utilisateur, Nom, Login_Utilisateur, Role FROM Utilisateurs WHERE ID_Utilisateur = :id";
+$stmt = $pdo->prepare($sql);
+$stmt->bindParam(':id', $utilisateur_id, PDO::PARAM_INT);
+$stmt->execute();
+$utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Si l'utilisateur n'est pas trouvé
+if (!$utilisateur) {
+    header("Location: index.php?error=Utilisateur non trouvé");
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Administration - Modifier le rôle</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/monstyle.css">
+    <?php if (isset($admin_style) && $admin_style): ?>
+        <link rel="stylesheet" href="../../css/admin_style.css">
+    <?php endif; ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<?php require_once '../../templates/admin_navigation.php'; // Inclure la navigation spécifique à l'admin ?>
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Modifier l'Utilisateur : <?php echo htmlspecialchars($utilisateur['Nom']); ?></h1>
+    </div>
+
+    <div class="col-lg-6">
+        <form method="post" action="mettre_a_jour_utilisateur.php">
+            <input type="hidden" name="id" value="<?php echo htmlspecialchars($utilisateur['ID_Utilisateur']); ?>">
+            <div class="mb-3">
+                <label for="nom" class="form-label">Nom</label>
+                <input type="text" class="form-control" id="nom" name="nom" value="<?php echo htmlspecialchars($utilisateur['Nom']); ?>" required>
+            </div>
+            <div class="mb-3">
+                <label for="login" class="form-label">Login</label>
+                <input type="text" class="form-control" id="login" name="login" value="<?php echo htmlspecialchars($utilisateur['Login_Utilisateur']); ?>" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Nouveau Mot de Passe (laisser vide pour ne pas changer)</label>
+                <input type="password" class="form-control" id="password" name="password">
+                <small class="form-text text-muted">Si vous laissez ce champ vide, le mot de passe actuel restera inchangé.</small>
+            </div>
+            <div class="mb-3">
+                <label for="role" class="form-label">Rôle</label>
+                <select class="form-select" id="role" name="role" required>
+                    <option value="">Sélectionner un rôle</option>
+                    <option value="Admin" <?php if ($utilisateur['Role'] === 'Admin') echo 'selected'; ?>>Administrateur</option>
+                    <option value="Comptable" <?php if ($utilisateur['Role'] === 'Comptable') echo 'selected'; ?>>Comptable</option>
+                    <option value="Utilisateur" <?php if ($utilisateur['Role'] === 'Utilisateur') echo 'selected'; ?>>Utilisateur</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Mettre à Jour l'Utilisateur</button>
+            <a href="index.php" class="btn btn-secondary">Annuler</a>
+        </form>
+    </div>
+</main>
+
+<?php require_once '../../includes/footer.php'; ?>
+
+
+</body>
+</html>

@@ -1,0 +1,315 @@
+<?php
+// pages/ecritures/liste.php
+
+$titre = 'Liste des Écritures Comptables';
+$current_page = basename($_SERVER['PHP_SELF']);
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php');
+
+// Inclure les fichiers nécessaires
+require_once '../fonctions/database.php';
+require_once '../fonctions/gestion_comptes.php';
+
+// Initialisation des variables
+$dateSaisie = date('Y-m-d'); // Date système automatique
+$description = '';
+$montantTotal = 0;
+$lignesEcriture = [];
+$comptes = getListeComptes($pdo);
+
+// Comptes par défaut pour les ventes
+$compteCaisse = '531000'; // À adapter selon votre plan comptable
+$compteVentes = '707000'; // Compte de ventes de marchandises
+$compteTVA = '445710';    // TVA collectée
+
+// Traitement du formulaire si soumis
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $description = $_POST['description'];
+    // La date est automatique, on ne la prend pas du formulaire
+    
+    // Traitement spécifique pour les ventes au crédit
+    if (isset($_POST['type_operation']) && $_POST['type_operation'] === 'vente_credit') {
+        $montantHT = floatval($_POST['montant_ht']);
+        $tauxTVA = floatval($_POST['taux_tva']);
+        $montantTVA = $montantHT * ($tauxTVA / 100);
+        $montantTTC = $montantHT + $montantTVA;
+        
+        // Création automatique des lignes d'écriture
+        $lignesEcriture = [
+            // Client (débit)
+            ['compte' => $_POST['compte_client'], 'montant' => $montantTTC, 'sens' => 'D'],
+            // Ventes (crédit)
+            ['compte' => $compteVentes, 'montant' => $montantHT, 'sens' => 'C'],
+            // TVA collectée (crédit)
+            ['compte' => $compteTVA, 'montant' => $montantTVA, 'sens' => 'C']
+        ];
+    } else {
+        // Traitement classique (comme avant)
+        if (isset($_POST['compte_debit']) && is_array($_POST['compte_debit'])) {
+            foreach ($_POST['compte_debit'] as $key => $compte) {
+                $montantDebit = isset($_POST['montant_debit'][$key]) ? floatval($_POST['montant_debit'][$key]) : 0;
+                if ($compte && $montantDebit > 0) {
+                    $lignesEcriture[] = ['compte' => $compte, 'montant' => $montantDebit, 'sens' => 'D'];
+                }
+            }
+        }
+
+        if (isset($_POST['compte_credit']) && is_array($_POST['compte_credit'])) {
+            foreach ($_POST['compte_credit'] as $key => $compte) {
+                $montantCredit = isset($_POST['montant_credit'][$key]) ? floatval($_POST['montant_credit'][$key]) : 0;
+                if ($compte && $montantCredit > 0) {
+                    $lignesEcriture[] = ['compte' => $compte, 'montant' => $montantCredit, 'sens' => 'C'];
+                }
+            }
+        }
+    }
+
+    // Validation des données
+    if (!empty($lignesEcriture)) {
+        $montantTotalDebit = array_sum(array_column(array_filter($lignesEcriture, function ($ligne) { return $ligne['sens'] === 'D'; }), 'montant'));
+        $montantTotalCredit = array_sum(array_column(array_filter($lignesEcriture, function ($ligne) { return $ligne['sens'] === 'C'; }), 'montant'));
+
+        if ($montantTotalDebit === $montantTotalCredit && $montantTotalDebit > 0) {
+            $idEcriture = enregistrerEcriture($pdo, $dateSaisie, $description, $montantTotalDebit);
+            if ($idEcriture) {
+                foreach ($lignesEcriture as $ligne) {
+                    enregistrerLigneEcriture($pdo, $idEcriture, $ligne['compte'], $ligne['montant'], $ligne['sens']);
+                }
+                header('Location: liste.php?success=1');
+                exit();
+            } else {
+                $erreur = "Erreur lors de l'enregistrement de l'écriture.";
+            }
+        } else {
+            $erreur = "Le total des débits doit être égal au total des crédits et supérieur à zéro.";
+        }
+    } else {
+        $erreur = "Veuillez saisir au moins une ligne d'écriture.";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Saisie d'Écriture</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/formulaire.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-header">Saisie d'Écriture Comptable</h2>
+
+        <?php if (isset($erreur)): ?>
+            <div class="alert alert-danger"><?= $erreur ?></div>
+        <?php endif; ?>
+
+        <form action="" method="POST" class="form-horizontal">
+            <!-- Type d'opération -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Type d'opération</label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="type_operation" name="type_operation">
+                        <option value="standard">Écriture standard</option>
+                        <option value="vente_credit">Vente au crédit</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Date de saisie (automatique, non modifiable) -->
+            <div class="form-group">
+                <label for="date_saisie" class="col-sm-2 control-label">Date de Saisie</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="date_saisie" value="<?= date('d/m/Y') ?>" readonly>
+                    <input type="hidden" name="date_saisie" value="<?= $dateSaisie ?>">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description" class="col-sm-2 control-label">Description</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="description" name="description" value="<?= $description ?>">
+                </div>
+            </div>
+
+            <!-- Section spécifique pour les ventes au crédit -->
+            <div id="vente_credit_fields" style="display:none;">
+                <div class="form-group">
+                    <label for="compte_client" class="col-sm-2 control-label">Compte Client</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="compte_client" name="compte_client">
+                            <option value="">Sélectionner un compte client</option>
+                            <?php foreach ($comptes as $compte): 
+                                if (strpos($compte['Numero_Compte'], '411') === 0): ?>
+                                    <option value="<?= $compte['ID_Compte'] ?>"><?= $compte['Numero_Compte'] ?> - <?= $compte['Nom_Compte'] ?></option>
+                                <?php endif;
+                            endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="montant_ht" class="col-sm-2 control-label">Montant HT</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" id="montant_ht" name="montant_ht" step="0.01">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taux_tva" class="col-sm-2 control-label">Taux TVA (%)</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" id="taux_tva" name="taux_tva" value="20" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section pour les écritures standard -->
+            <div id="standard_fields">
+                <h3>Lignes d'Écriture</h3>
+                <div id="lignes-ecriture">
+                    <div class="ligne-ecriture form-inline" data-index="0">
+                        <div class="form-group">
+                            <label for="compte_debit_0">Compte Débit</label>
+                            <select class="form-control compte-select" id="compte_debit_0" name="compte_debit[]" data-sens="debit">
+                                <option value="">Sélectionner un compte</option>
+                                <?php foreach ($comptes as $compte): ?>
+                                    <option value="<?= $compte['ID_Compte'] ?>"><?= $compte['Numero_Compte'] ?> - <?= $compte['Nom_Compte'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="montant_debit_0">Montant</label>
+                            <input type="number" class="form-control montant-input" id="montant_debit_0" name="montant_debit[]" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="compte_credit_0">Compte Crédit</label>
+                            <select class="form-control compte-select" id="compte_credit_0" name="compte_credit[]" data-sens="credit">
+                                <option value="">Sélectionner un compte</option>
+                                <?php foreach ($comptes as $compte): ?>
+                                    <option value="<?= $compte['ID_Compte'] ?>"><?= $compte['Numero_Compte'] ?> - <?= $compte['Nom_Compte'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="montant_credit_0">Montant</label>
+                            <input type="number" class="form-control montant-input" id="montant_credit_0" name="montant_credit[]" step="0.01">
+                        </div>
+                        <button type="button" class="btn btn-danger btn-sm remove-ligne">-</button>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-success btn-sm" id="ajouter-ligne">+ Ajouter une ligne</button>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">Enregistrer l'Écriture</button>
+                    <a href="liste.php" class="btn btn-default">Annuler</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let indexLigne = 1;
+
+            // Gestion du type d'opération
+            $('#type_operation').change(function() {
+                if ($(this).val() === 'vente_credit') {
+                    $('#vente_credit_fields').show();
+                    $('#standard_fields').hide();
+                } else {
+                    $('#vente_credit_fields').hide();
+                    $('#standard_fields').show();
+                }
+            });
+
+            // Calcul automatique pour les ventes
+            $('#montant_ht, #taux_tva').on('input', function() {
+                let ht = parseFloat($('#montant_ht').val()) || 0;
+                let taux = parseFloat($('#taux_tva').val()) || 0;
+                let tva = ht * (taux / 100);
+                let ttc = ht + tva;
+                
+                // Vous pourriez afficher ces valeurs quelque part
+                console.log("HT:", ht, "TVA:", tva, "TTC:", ttc);
+            });
+
+            // Reste du code inchangé...
+            $('#ajouter-ligne').click(function() {
+                const nouvelleLigne = `
+                    <div class="ligne-ecriture form-inline" data-index="${indexLigne}">
+                        <div class="form-group">
+                            <label for="compte_debit_${indexLigne}">Compte Débit</label>
+                            <select class="form-control compte-select" id="compte_debit_${indexLigne}" name="compte_debit[]" data-sens="debit">
+                                <option value="">Sélectionner un compte</option>
+                                <?php foreach ($comptes as $compte): ?>
+                                    <option value="<?= $compte['ID_Compte'] ?>"><?= $compte['Numero_Compte'] ?> - <?= $compte['Nom_Compte'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="montant_debit_${indexLigne}">Montant</label>
+                            <input type="number" class="form-control montant-input" id="montant_debit_${indexLigne}" name="montant_debit[]" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="compte_credit_${indexLigne}">Compte Crédit</label>
+                            <select class="form-control compte-select" id="compte_credit_${indexLigne}" name="compte_credit[]" data-sens="credit">
+                                <option value="">Sélectionner un compte</option>
+                                <?php foreach ($comptes as $compte): ?>
+                                    <option value="<?= $compte['ID_Compte'] ?>"><?= $compte['Numero_Compte'] ?> - <?= $compte['Nom_Compte'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="montant_credit_${indexLigne}">Montant</label>
+                            <input type="number" class="form-control montant-input" id="montant_credit_${indexLigne}" name="montant_credit[]" step="0.01">
+                        </div>
+                        <button type="button" class="btn btn-danger btn-sm remove-ligne">-</button>
+                    </div>
+                `;
+                $('#lignes-ecriture').append(nouvelleLigne);
+                indexLigne++;
+            });
+
+            $('#lignes-ecriture').on('click', '.remove-ligne', function() {
+                $(this).closest('.ligne-ecriture').remove();
+            });
+
+            // Fonctionnalité de suggestion de contrepartie
+            $('.compte-select').on('change', function() {
+                const selectedCompte = $(this).val();
+                const sens = $(this).data('sens');
+                const index = $(this).closest('.ligne-ecriture').data('index');
+
+                if (selectedCompte) {
+                    $.ajax({
+                        url: 'ajax_suggestion_contrepartie.php',
+                        method: 'POST',
+                        data: { compte: selectedCompte, sens: sens },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.suggestion_debit && sens === 'credit') {
+                                $(`#compte_debit_${index}`).val(data.suggestion_debit);
+                            } else if (data.suggestion_credit && sens === 'debit') {
+                                $(`#compte_credit_${index}`).val(data.suggestion_credit);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+<?php
+require_once('../../templates/footer.php');
+?>

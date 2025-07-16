@@ -1,0 +1,265 @@
+<?php
+// pages/ecritures/liste.php
+
+$titre = 'Liste des Écritures Comptables';
+$current_page = basename($_SERVER['PHP_SELF']); // Pour la classe 'active' dans la navigation
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php'); // Inclusion de la navigation
+?>
+
+<?php
+// utilisateurs.php (Gestion des utilisateurs et leurs habilitations)
+
+// Inclure les fichiers nécessaires (connexion à la base de données, fonctions, etc.)
+require_once '../../fonctions/database.php';
+require_once '../../fonctions/gestion_utilisateurs.php'; // Pour gérer les utilisateurs et leurs rôles
+require_once '../../fonctions/gestion_habilitations.php'; // Pour gérer les habilitations
+
+// Vérifier si l'utilisateur est connecté et a les droits d'administrateur (à adapter)
+// session_start();
+// if (!isset($_SESSION['utilisateur_id']) || $_SESSION['role'] !== 'administrateur') {
+//     header("Location: ../auth/login.php");
+//     exit();
+// }
+
+// Récupérer la liste de tous les utilisateurs
+$utilisateurs = getListeUtilisateurs($pdo);
+
+// Récupérer la liste de tous les profils (rôles) existants pour le formulaire
+$profils = getListeProfils($pdo);
+
+// Récupérer la liste de toutes les habilitations possibles (pour affichage)
+$habilitationsDisponibles = getListeHabilitations($pdo);
+
+// Traitement de la modification du profil d'un utilisateur
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['modifier_profil_utilisateur'])) {
+    $utilisateurId = $_POST['utilisateur_id'];
+    $nouveauProfilId = $_POST['profil_id'];
+
+    if (modifierProfilUtilisateur($pdo, $utilisateurId, $nouveauProfilId)) {
+        $messageSuccesProfil = "<div class='alert alert-success'>Le profil de l'utilisateur a été mis à jour avec succès.</div>";
+        $utilisateurs = getListeUtilisateurs($pdo); // Recharger la liste des utilisateurs
+    } else {
+        $messageErreurProfil = "<div class='alert alert-danger'>Erreur lors de la mise à jour du profil de l'utilisateur.</div>";
+    }
+}
+
+// Traitement de la modification des habilitations spécifiques d'un utilisateur
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['modifier_habilitations_utilisateur'])) {
+    $utilisateurIdHabilitations = $_POST['utilisateur_id_habilitations'];
+    $habilitationsSelectionneesUtilisateur = isset($_POST['habilitations_utilisateur']) ? $_POST['habilitations_utilisateur'] : [];
+
+    if (modifierHabilitationsUtilisateur($pdo, $utilisateurIdHabilitations, $habilitationsSelectionneesUtilisateur)) {
+        $messageSuccesHabilitationsUtilisateur = "<div class='alert alert-success'>Les habilitations spécifiques de l'utilisateur ont été mises à jour avec succès.</div>";
+    } else {
+        $messageErreurHabilitationsUtilisateur = "<div class='alert alert-danger'>Erreur lors de la mise à jour des habilitations spécifiques de l'utilisateur.</div>";
+    }
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Gestion des Utilisateurs et Habilitations</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/monstyle.css">
+    <link rel="stylesheet" href="../../css/formulaire.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-header">Gestion des Utilisateurs et Habilitations</h2>
+
+        <?php if (isset($messageSuccesProfil)): ?>
+            <?= $messageSuccesProfil ?>
+        <?php endif; ?>
+
+        <?php if (isset($messageErreurProfil)): ?>
+            <?= $messageErreurProfil ?>
+        <?php endif; ?>
+
+        <?php if (isset($messageSuccesHabilitationsUtilisateur)): ?>
+            <?= $messageSuccesHabilitationsUtilisateur ?>
+        <?php endif; ?>
+
+        <?php if (isset($messageErreurHabilitationsUtilisateur)): ?>
+            <?= $messageErreurHabilitationsUtilisateur ?>
+        <?php endif; ?>
+
+        <?php if (!empty($utilisateurs)): ?>
+            <?php foreach ($utilisateurs as $utilisateur): ?>
+                <h3><?= htmlspecialchars($utilisateur['nom_utilisateur']) ?> (ID: <?= $utilisateur['id_utilisateur'] ?>)</h3>
+                <form action="" method="POST" class="form-horizontal">
+                    <input type="hidden" name="utilisateur_id" value="<?= $utilisateur['id_utilisateur'] ?>">
+                    <div class="form-group">
+                        <label for="profil_id_<?= $utilisateur['id_utilisateur'] ?>" class="col-sm-3 control-label">Profil</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" id="profil_id_<?= $utilisateur['id_utilisateur'] ?>" name="profil_id">
+                                <option value="">Sélectionner un profil</option>
+                                <?php if (!empty($profils)): ?>
+                                    <?php foreach ($profils as $profil): ?>
+                                        <option value="<?= $profil['id_profil'] ?>" <?= ($utilisateur['profil_id'] == $profil['id_profil']) ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($profil['nom_profil']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <option value="" disabled>Aucun profil disponible</option>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <button type="submit" class="btn btn-primary" name="modifier_profil_utilisateur">Modifier le Profil</button>
+                        </div>
+                    </div>
+                </form>
+
+                <h4>Habilitations Spécifiques</h4>
+                <form action="" method="POST" class="form-horizontal">
+                    <input type="hidden" name="utilisateur_id_habilitations" value="<?= $utilisateur['id_utilisateur'] ?>">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Habilitations</label>
+                        <div class="col-sm-9">
+                            <?php
+                            $habilitationsUtilisateur = getHabilitationsUtilisateur($pdo, $utilisateur['id_utilisateur']);
+                            if (!empty($habilitationsDisponibles)):
+                                foreach ($habilitationsDisponibles as $habilitation):
+                                    $checked = in_array($habilitation['id_habilitation'], array_column($habilitationsUtilisateur, 'id_habilitation')) ? 'checked' : '';
+                                    ?>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="habilitations_utilisateur[]" value="<?= $habilitation['id_habilitation'] ?>" <?= $checked ?>>
+                                            <?= htmlspecialchars($habilitation['nom_habilitation']) ?> - <?= htmlspecialchars($habilitation['description']) ?>
+                                        </label>
+                                    </div>
+                                    <?php
+                                endforeach;
+                            else: ?>
+                                <p>Aucune habilitation disponible.</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <button type="submit" class="btn btn-primary" name="modifier_habilitations_utilisateur">Enregistrer les Habilitations Spécifiques</button>
+                        </div>
+                    </div>
+                </form>
+                <hr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Aucun utilisateur trouvé.</p>
+        <?php endif; ?>
+
+        <p><a href="../admin/index.php" class="btn btn-default">Administration</a></p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNLJ5ywYOIDjxxyTwCypxSoOO3FxyYr4fccRoP1h0IWcAukj0jz9uNNs" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/script.js"></script>
+<script src="../js/tableau_dynamique.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialisez le tableau dynamique en ciblant son ID ou sa classe
+            initialiserTableauDynamique('#monTableauHTML', {
+                selection: true,
+                pagination: true,
+                rowsPerPage: 10,
+                sortable: true,
+                searchable: true,
+                // Autres options si nécessaire
+            });
+
+            // Vous pouvez initialiser d'autres tableaux dynamiques sur la même page ici
+            initialiserTableauDynamique('#autreTableau', {
+                // Différentes options pour cet autre tableau
+            });
+        });
+    </script>
+</body>
+</html>
+
+<?php
+// Fonctions de gestion des utilisateurs et habilitations (à implémenter dans fonctions/gestion_utilisateurs.php et gestion_habilitations.php)
+
+/**
+ * Récupère la liste de tous les utilisateurs avec leur profil.
+ * (Fonction à implémenter dans gestion_utilisateurs.php)
+ */
+
+
+/**
+ * Modifie le profil d'un utilisateur.
+ * (Fonction à implémenter dans gestion_utilisateurs.php)
+ */
+function modifierProfilUtilisateur($pdo, $utilisateurId, $profilId) {
+    try {
+        $stmt = $pdo->prepare("UPDATE utilisateurs SET profil_id = :profil_id WHERE id_utilisateur = :utilisateur_id");
+        $stmt->bindParam(':profil_id', $profilId, PDO::PARAM_INT);
+        $stmt->bindParam(':utilisateur_id', $utilisateurId, PDO::PARAM_INT);
+        return $stmt->execute();
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la modification du profil de l'utilisateur : " . $e->getMessage());
+        return false;
+    }
+}
+
+/**
+ * Récupère les habilitations spécifiques associées à un utilisateur.
+ * (Fonction à implémenter dans gestion_habilitations.php)
+ */
+function getHabilitationsUtilisateur($pdo, $utilisateurId) {
+    try {
+        $stmt = $pdo->prepare("SELECT h.id_habilitation, h.nom_habilitation, h.description
+                               FROM utilisateur_habilitations uh
+                               JOIN habilitations h ON uh.habilitation_id = h.id_habilitation
+                               WHERE uh.utilisateur_id = :utilisateur_id");
+        $stmt->bindParam(':utilisateur_id', $utilisateurId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération des habilitations de l'utilisateur : " . $e->getMessage());
+        return [];
+    }
+}
+
+/**
+ * Modifie les habilitations spécifiques associées à un utilisateur.
+ * (Fonction à implémenter dans gestion_habilitations.php)
+ */
+function modifierHabilitationsUtilisateur($pdo, $utilisateurId, $habilitationsIds) {
+    try {
+        // Supprimer les habilitations spécifiques existantes pour cet utilisateur
+        $stmtSuppression = $pdo->prepare("DELETE FROM utilisateur_habilitations WHERE utilisateur_id = :utilisateur_id");
+        $stmtSuppression->bindParam(':utilisateur_id', $utilisateurId, PDO::PARAM_INT);
+        $stmtSuppression->execute();
+
+        // Ajouter les nouvelles habilitations spécifiques
+        if (!empty($habilitationsIds)) {
+            $stmtInsertion = $pdo->prepare("INSERT INTO utilisateur_habilitations (utilisateur_id, habilitation_id) VALUES (:utilisateur_id, :habilitation_id)");
+            foreach ($habilitationsIds as $habilitationId) {
+                $stmtInsertion->bindParam(':utilisateur_id', $utilisateurId, PDO::PARAM_INT);
+                $stmtInsertion->bindParam(':habilitation_id', $habilitationId, PDO::PARAM_INT);
+                $stmtInsertion->execute();
+            }
+        }
+        return true;
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la modification des habilitations de l'utilisateur : " . $e->getMessage());
+        return false;
+    }
+}
+
+// Vous devrez également avoir des tables 'utilisateurs' et 'utilisateur_habilitations'
+// dans votre base de données. La table 'utilisateurs' devrait avoir une colonne 'profil_id'
+// faisant référence à la table 'profils'.
+?>
+<?php
+require_once('../../templates/footer.php');
+?>

@@ -1,0 +1,150 @@
+<?php
+// pages/admin/utilisateurs/mettre_a_jour_utilisateur.php
+
+// Démarrer la session si ce n'est pas déjà fait
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// --- CONTRÔLE D'ACCÈS ADMIN (ESSENTIEL) ---
+if (!isset($_SESSION['ID_Utilisateur']) || // Assurez-vous que 'ID_Utilisateur' est la bonne clé de session
+    !isset($_SESSION['Role']) ||          // Assurez-vous que 'Role' est la bonne clé de session
+    $_SESSION['Role'] !== 'Admin') {      // Comparez avec la valeur exacte du rôle Admin
+    
+    // Message d'erreur pour la page de redirection
+    $_SESSION['admin_message_error'] = "Accès refusé. Action non autorisée.";
+    // Rediriger vers une page appropriée, par exemple l'index de l'admin ou la page de connexion globale
+    header('Location: ../index.php'); // Index de la section admin
+    exit();
+}
+// --- FIN CONTRÔLE D'ACCÈS ADMIN ---
+
+// Inclure le fichier de connexion à la base de données
+require_once('../../../fonctions/database.php'); // Ce fichier doit définir $pdo
+
+// Vérifier si $pdo est bien initialisé
+if (!isset($pdo) || !$pdo instanceof PDO) {
+    $_SESSION['admin_message_error'] = "Erreur critique : La connexion à la base de données n'est pas disponible.";
+    // Tenter de rediriger vers la page de modification avec l'ID si disponible, sinon vers l'index
+    $redirect_id = isset($_POST['id']) ? '?id=' . htmlspecialchars($_POST['id']) : '';
+    header('Location: modifier.php' . $redirect_id);
+    exit();
+}
+
+// S'assurer que la requête est de type POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $_SESSION['admin_message_error'] = "Méthode de requête invalide.";
+    header('Location: index.php'); // Rediriger vers la liste des utilisateurs
+    exit();
+}
+
+// Récupérer les données du formulaire
+$utilisateur_id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+$nom = trim(filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_STRING));
+$login = trim(filter_input(INPUT_POST, 'login', FILTER_SANITIZE_STRING)); // La colonne DB est Login_Utilisateur
+$nouveau_mot_de_passe = $_POST['password']; // Ne pas trimmer, ne pas filtrer avant hashage si espaces intentionnels
+$role = filter_input(INPUT_POST, 'role', FILTER_SANITIZE_STRING);
+
+// Jeton CSRF (décommenter pour l'utiliser - fortement recommandé)
+/*
+if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+    $_SESSION['admin_message_error'] = "Erreur de sécurité (CSRF). La requête a été bloquée.";
+    $redirect_id = $utilisateur_id ? '?id=' . $utilisateur_id : '';
+    header('Location: modifier.php' . $redirect_id);
+    exit();
+}
+// Il est bon de supprimer le jeton après usage pour éviter la réutilisation, ou de le régénérer.
+// unset($_SESSION['csrf_token']);
+*/
+
+// --- Validations ---
+if ($utilisateur_id === false || $utilisateur_id === null) {
+    $_SESSION['admin_message_error'] = "ID utilisateur invalide ou manquant.";
+    header('Location: index.php'); // Pas d'ID, retour à la liste
+    exit();
+}
+
+if (empty($nom) || empty($login) || empty($role)) {
+    $_SESSION['admin_message_error'] = "Le nom, le login et le rôle sont requis.";
+    header('Location: modifier.php?id=' . $utilisateur_id);
+    exit();
+}
+
+$roles_valides = ['Admin', 'Comptable', 'Invité']; // Conforme à la contrainte de table
+if (!in_array($role, $roles_valides)) {
+    $_SESSION['admin_message_error'] = "Le rôle sélectionné n'est pas valide.";
+    header('Location: modifier.php?id=' . $utilisateur_id);
+    exit();
+}
+
+// Vérifier si le nouveau login est déjà utilisé par un AUTRE utilisateur
+try {
+    $sqlCheckLogin = "SELECT ID_Utilisateur FROM Utilisateurs WHERE Login_Utilisateur = :login AND ID_Utilisateur != :id_utilisateur";
+    $stmtCheckLogin = $pdo->prepare($sqlCheckLogin);
+    $stmtCheckLogin->bindParam(':login', $login, PDO::PARAM_STR);
+    $stmtCheckLogin->bindParam(':id_utilisateur', $utilisateur_id, PDO::PARAM_INT);
+    $stmtCheckLogin->execute();
+    if ($stmtCheckLogin->fetch()) {
+        $_SESSION['admin_message_error'] = "Ce login est déjà utilisé par un autre utilisateur. Veuillez en choisir un autre.";
+        header('Location: modifier.php?id=' . $utilisateur_id);
+        exit();
+    }
+} catch (PDOException $e) {
+    $_SESSION['admin_message_error'] = "Erreur lors de la vérification du login : " . htmlspecialchars($e->getMessage());
+    error_log("Erreur PDO (check login) dans mettre_a_jour_utilisateur.php: " . $e->getMessage());
+    header('Location: modifier.php?id=' . $utilisateur_id);
+    exit();
+}
+
+// --- Préparation de la requête UPDATE ---
+$params = [
+    ':nom' => $nom,
+    ':login' => $login, // La colonne est Login_Utilisateur
+    ':role' => $role,
+    ':id_utilisateur' => $utilisateur_id
+];
+
+$sqlSetParts = [
+    "Nom = :nom",
+    "Login_Utilisateur = :login", // Mettre à jour Login_Utilisateur
+    "Role = :role"
+];
+
+// Si un nouveau mot de passe est fourni, le hasher et l'ajouter à la requête
+if (!empty($nouveau_mot_de_passe)) {
+    $mot_de_passe_hash = password_hash($nouveau_mot_de_passe, PASSWORD_DEFAULT);
+    if ($mot_de_passe_hash === false) {
+        $_SESSION['admin_message_error'] = "Erreur critique lors de la préparation du nouveau mot de passe.";
+        error_log("Erreur password_hash dans mettre_a_jour_utilisateur.php");
+        header('Location: modifier.php?id=' . $utilisateur_id);
+        exit();
+    }
+    $sqlSetParts[] = "Mot_de_Passe = :mot_de_passe";
+    $params[':mot_de_passe'] = $mot_de_passe_hash;
+}
+
+$sql = "UPDATE Utilisateurs SET " . implode(', ', $sqlSetParts) . " WHERE ID_Utilisateur = :id_utilisateur";
+
+// --- Exécution de la requête ---
+try {
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+
+    if ($stmt->rowCount() > 0) {
+        $_SESSION['admin_message_success'] = "Les informations de l'utilisateur ont été mises à jour avec succès.";
+    } else {
+        // rowCount peut être 0 si aucune donnée n'a réellement changé, ce n'est pas forcément une erreur.
+        // Vous pouvez choisir de mettre un message d'information ou pas de message.
+        $_SESSION['admin_message_info'] = "Aucune modification n'a été apportée aux informations de l'utilisateur (données identiques).";
+    }
+    header('Location: modifier.php?id=' . $utilisateur_id); // Recharger la page de modification
+    exit();
+
+} catch (PDOException $e) {
+    $_SESSION['admin_message_error'] = "Erreur lors de la mise à jour de l'utilisateur : " . htmlspecialchars($e->getMessage());
+    // Loggez l'erreur complète pour le débogage serveur
+    error_log("Erreur PDO (UPDATE utilisateur) dans mettre_a_jour_utilisateur.php: " . $e->getMessage() . " SQL: " . $sql);
+    header('Location: modifier.php?id=' . $utilisateur_id);
+    exit();
+}
+?>

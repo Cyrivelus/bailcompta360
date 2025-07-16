@@ -1,0 +1,102 @@
+<?php
+// pages/admin/index.php
+
+// Démarrer la session pour gérer l'authentification
+session_start();
+
+// Vérifier si l'utilisateur est connecté en tant qu'administrateur
+if (!isset($_SESSION['utilisateur_id']) || $_SESSION['role'] !== 'Admin') {
+    // Si l'utilisateur n'est pas connecté ou n'est pas un administrateur,
+    // le rediriger vers la page de connexion ou une page d'erreur.
+    header("Location: ../index.php?error=Accès non autorisé");
+    exit();
+}
+
+// Inclure l'en-tête de l'interface d'administration
+include('../admin/includes/header.php');
+
+// Inclure la navigation de l'interface d'administration
+include('../admin/includes/navigation.php');
+?>
+
+<div class="container-fluid">
+    <div class="row">
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Tableau de Bord de l'Administration</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    </div>
+            </div>
+
+            <h2>Statistiques Générales</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card bg-light text-dark mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Nombre d'Utilisateurs</h5>
+                            <p class="card-text">
+                                <?php
+                                // Inclure le fichier de connexion à la base de données
+                                require_once('../../fonctions/database.php');
+
+                                // Préparer et exécuter la requête pour compter le nombre d'utilisateurs
+                                $sql = "SELECT COUNT(*) AS total_utilisateurs FROM Utilisateurs";
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute();
+                                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                                echo $result['total_utilisateurs'];
+                                ?>
+                            </p>
+                            <a href="utilisateurs/" class="btn btn-primary">Voir les Utilisateurs</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-light text-dark mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Nombre de Profils</h5>
+                            <p class="card-text">
+                                <?php
+                                // Préparer et exécuter la requête pour compter le nombre de profils
+                                $sql = "SELECT COUNT(*) AS total_profils FROM Profils";
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute();
+                                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                                echo $result['total_profils'];
+                                ?>
+                            </p>
+                            <a href="profils/" class="btn btn-primary">Voir les Profils</a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+            <h2>Actions Rapides</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card bg-info text-white mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Ajouter un Utilisateur</h5>
+                            <p class="card-text">Créer un nouveau compte utilisateur.</p>
+                            <a href="utilisateurs/ajouter.php" class="btn btn-light">Ajouter</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Ajouter un Profil</h5>
+                            <p class="card-text">Définir un nouveau profil d'habilitation.</p>
+                            <a href="profils/ajouter.php" class="btn btn-light">Ajouter</a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+        </main>
+    </div>
+</div>
+
+<?php
+// Inclure le pied de page de l'interface d'administration
+include('../admin/includes/footer.php');
+?>

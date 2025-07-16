@@ -1,0 +1,281 @@
+<?php
+// modifier_facture.php
+
+$titre = 'Modifier la Facture';
+$current_page = basename($_SERVER['PHP_SELF']);
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php');
+require_once('../../fonctions/database.php');
+require_once('../../fonctions/gestion_factures.php');
+require_once('../../fonctions/gestion_tiers.php'); // Inclure la gestion des tiers
+
+// Vérifier si l'ID de la facture est passé en paramètre
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    $_SESSION['error'] = "ID de facture invalide.";
+    header('Location: liste_factures.php');
+    exit();
+}
+
+$idFacture = intval($_GET['id']);
+
+// Récupérer les détails de la facture
+$facture = getFactureById($pdo, $idFacture);
+
+if (!$facture) {
+    $_SESSION['error'] = "Facture non trouvée.";
+    header('Location: liste_factures.php');
+    exit();
+}
+
+// Récupérer la liste des tiers (clients/fournisseurs) pour le formulaire
+$tiersListe = getListeTiers($pdo);
+if (!$tiersListe) {
+     $_SESSION['error'] = "Aucun tiers (client/fournisseur) trouvé. Veuillez en créer un avant de modifier la facture.";
+     header('Location: liste_factures.php'); // ou une autre page appropriée
+     exit();
+}
+
+// Traitement du formulaire de modification
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Valider les données du formulaire
+    $typeFacture = filter_input(INPUT_POST, 'type_facture', FILTER_SANITIZE_STRING);
+    $numeroFacture = filter_input(INPUT_POST, 'numero_facture', FILTER_SANITIZE_STRING);
+    $dateEmission = filter_input(INPUT_POST, 'date_emission', FILTER_SANITIZE_STRING);
+    $dateReception = filter_input(INPUT_POST, 'date_reception', FILTER_SANITIZE_STRING);
+    $dateEcheance = filter_input(INPUT_POST, 'date_echeance', FILTER_SANITIZE_STRING);
+    $idTiers = filter_input(INPUT_POST, 'id_tiers', FILTER_SANITIZE_NUMBER_INT);
+    $montantHT = filter_input(INPUT_POST, 'montant_ht', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    $montantTVA = filter_input(INPUT_POST, 'montant_tva', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    $montantTTC = filter_input(INPUT_POST, 'montant_ttc', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    $statutFacture = filter_input(INPUT_POST, 'statut_facture', FILTER_SANITIZE_STRING);
+    $codeJournal = filter_input(INPUT_POST, 'code_journal', FILTER_SANITIZE_STRING);
+
+    // Validation supplémentaire (par exemple, format des dates, montants positifs)
+     $erreurs = [];
+    if (empty($typeFacture) || !in_array($typeFacture, ['Achat', 'Vente'])) {
+        $erreurs['type_facture'] = "Le type de facture doit être 'Achat' ou 'Vente'.";
+    }
+    if (empty($numeroFacture)) {
+        $erreurs['numero_facture'] = "Le numéro de facture est obligatoire.";
+    }
+    if (empty($dateEmission) || !preg_match("/^\d{4}-\d{2}-\d{2}$/", $dateEmission)) {
+        $erreurs['date_emission'] = "La date d'émission est invalide.";
+    }
+     if (empty($dateReception) || !preg_match("/^\d{4}-\d{2}-\d{2}$/", $dateReception)) {
+        $erreurs['date_reception'] = "La date de réception est invalide.";
+    }
+    if (empty($dateEcheance) || !preg_match("/^\d{4}-\d{2}-\d{2}$/", $dateEcheance)) {
+        $erreurs['date_echeance'] = "La date d'échéance est invalide.";
+    }
+    if (empty($idTiers) || $idTiers <= 0) {
+        $erreurs['id_tiers'] = "Le tiers est obligatoire.";
+    }
+    if (empty($montantHT) || $montantHT < 0) {
+        $erreurs['montant_ht'] = "Le montant HT est invalide.";
+    }
+    if (empty($montantTVA) || $montantTVA < 0) {
+        $erreurs['montant_tva'] = "Le montant TVA est invalide.";
+    }
+    if (empty($montantTTC) || $montantTTC < 0) {
+        $erreurs['montant_ttc'] = "Le montant TTC est invalide.";
+    }
+    if (empty($statutFacture) || !in_array($statutFacture, ['Non payée', 'Partiellement payée', 'Payée', 'Annulée'])) {
+        $erreurs['statut_facture'] = "Le statut de la facture est invalide.";
+    }
+     if (empty($codeJournal)) {
+        $erreurs['code_journal'] = "Le code journal est obligatoire.";
+    }
+
+    if (empty($erreurs)) {
+        // Mettre à jour la facture
+        $resultat = updateFacture(
+            $pdo,
+            $idFacture,
+            $typeFacture,
+            $numeroFacture,
+            $dateEmission,
+            $dateReception,
+            $dateEcheance,
+            $idTiers,
+            $montantHT,
+            $montantTVA,
+            $montantTTC,
+            $statutFacture,
+            $codeJournal
+        );
+
+        if ($resultat) {
+            $_SESSION['success'] = "Facture mise à jour avec succès.";
+            header('Location: liste_factures.php');
+            exit();
+        } else {
+            $_SESSION['error'] = "Erreur lors de la mise à jour de la facture.";
+        }
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Modifier la Facture</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/formulaire.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .form-error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-header">Modifier la Facture</h2>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger"><?= $_SESSION['error'] ?></div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+
+        <form action="" method="post" class="form-horizontal">
+            <div class="form-group">
+                <label for="type_facture" class="col-sm-2 control-label">Type de Facture:</label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="type_facture" name="type_facture">
+                        <option value="Achat" <?= ($facture['Type_Facture'] === 'Achat') ? 'selected' : '' ?>>Achat</option>
+                        <option value="Vente" <?= ($facture['Type_Facture'] === 'Vente') ? 'selected' : '' ?>>Vente</option>
+                    </select>
+                     <?php if (isset($erreurs['type_facture'])): ?>
+                        <div class="form-error"><?= $erreurs['type_facture'] ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="numero_facture" class="col-sm-2 control-label">Numéro de Facture:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="numero_facture" name="numero_facture" value="<?= htmlspecialchars($facture['Numero_Facture']) ?>">
+                     <?php if (isset($erreurs['numero_facture'])): ?>
+                        <div class="form-error"><?= $erreurs['numero_facture'] ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="date_emission" class="col-sm-2 control-label">Date d'Émission:</label>
+                <div class="col-sm-10">
+                    <input type="date" class="form-control" id="date_emission" name="date_emission" value="<?= htmlspecialchars($facture['Date_Emission']) ?>">
+                     <?php if (isset($erreurs['date_emission'])): ?>
+                        <div class="form-error"><?= $erreurs['date_emission'] ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="date_reception" class="col-sm-2 control-label">Date de Réception:</label>
+                <div class="col-sm-10">
+                    <input type="date" class="form-control" id="date_reception" name="date_reception" value="<?= htmlspecialchars($facture['Date_Reception']) ?>">
+                     <?php if (isset($erreurs['date_reception'])): ?>
+                        <div class="form-error"><?= $erreurs['date_reception'] ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="date_echeance" class="col-sm-2 control-label">Date d'Échéance:</label>
+                <div class="col-sm-10">
+                    <input type="date" class="form-control" id="date_echeance" name="date_echeance" value="<?= htmlspecialchars($facture['Date_Echeance']) ?>">
+                     <?php if (isset($erreurs['date_echeance'])): ?>
+                        <div class="form-error"><?= $erreurs['date_echeance'] ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_tiers" class="col-sm-2 control-label">Tiers:</label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="id_tiers" name="id_tiers">
+                        <?php foreach ($tiersListe as $tiers): ?>
+                            <option value="<?= $tiers['ID_Tiers'] ?>" <?= ($facture['ID_Tiers'] === $tiers['ID_Tiers']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($tiers['Nom_Commercial']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                     <?php if (isset($erreurs['id_tiers'])): ?>
+                        <div class="form-error"><?= $erreurs['id_tiers'] ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="montant_ht" class="col-sm-2 control-label">Montant HT:</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" id="montant_ht" name="montant_ht" value="<?= htmlspecialchars($facture['Montant_HT']) ?>" step="0.01">
+                     <?php if (isset($erreurs['montant_ht'])): ?>
+                        <div class="form-error"><?= $erreurs['montant_ht'] ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="montant_tva" class="col-sm-2 control-label">Montant TVA:</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" id="montant_tva" name="montant_tva" value="<?= htmlspecialchars($facture['Montant_TVA']) ?>" step="0.01">
+                     <?php if (isset($erreurs['montant_tva'])): ?>
+                        <div class="form-error"><?= $erreurs['montant_tva'] ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="montant_ttc" class="col-sm-2 control-label">Montant TTC:</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" id="montant_ttc" name="montant_ttc" value="<?= htmlspecialchars($facture['Montant_TTC']) ?>" step="0.01">
+                     <?php if (isset($erreurs['montant_ttc'])): ?>
+                        <div class="form-error"><?= $erreurs['montant_ttc'] ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="statut_facture" class="col-sm-2 control-label">Statut:</label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="statut_facture" name="statut_facture">
+                        <option value="Non payée" <?= ($facture['Statut_Facture'] === 'Non payée') ? 'selected' : '' ?>>Non payée</option>
+                        <option value="Partiellement payée" <?= ($facture['Statut_Facture'] === 'Partiellement payée') ? 'selected' : '' ?>>Partiellement payée</option>
+                        <option value="Payée" <?= ($facture['Statut_Facture'] === 'Payée') ? 'selected' : '' ?>>Payée</option>
+                         <option value="Annulée" <?= ($facture['Statut_Facture'] === 'Annulée') ? 'selected' : '' ?>>Annulée</option>
+                    </select>
+                     <?php if (isset($erreurs['statut_facture'])): ?>
+                        <div class="form-error"><?= $erreurs['statut_facture'] ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="code_journal" class="col-sm-2 control-label">Code Journal:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="code_journal" name="code_journal" value="<?= htmlspecialchars($facture['ID_Journal']) ?>">
+                     <?php if (isset($erreurs['code_journal'])): ?>
+                        <div class="form-error"><?= $erreurs['code_journal'] ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-save"></i> Enregistrer les modifications
+                    </button>
+                    <a href="liste_factures.php" class="btn btn-default">
+                        <i class="glyphicon glyphicon-arrow-left"></i> Annuler
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+<?php
+require_once('../../templates/footer.php');
+?>

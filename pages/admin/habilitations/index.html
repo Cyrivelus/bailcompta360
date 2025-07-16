@@ -1,0 +1,153 @@
+<?php
+// pages/admin/habilitations/index.php
+
+// Démarrer la session pour la gestion de l'authentification
+session_start();
+
+// Vérifier si l'utilisateur est connecté et est un administrateur
+if (!isset($_SESSION['utilisateur_id']) || $_SESSION['role'] !== 'Admin') {
+    // Rediriger si non autorisé
+    header("Location: ../../index.php?error=Accès non autorisé");
+    exit();
+}
+
+// Inclure l'en-tête de l'administration
+$title = "Gestion des Habilitations";
+include('../includes/header.php');
+
+// Inclure la navigation de l'administration
+include('../includes/navigation.php');
+
+// Inclure le fichier de connexion à la base de données
+require_once('../../../fonctions/database.php');
+
+// Récupérer tous les profils pour la gestion des habilitations par profil
+$sqlProfils = "SELECT ID_Profil, Nom_Profil FROM Profils";
+$stmtProfils = $pdo->prepare($sqlProfils);
+$stmtProfils->execute();
+$profils = $stmtProfils->fetchAll(PDO::FETCH_ASSOC);
+
+// Récupérer tous les utilisateurs pour la gestion des habilitations par utilisateur
+$sqlUtilisateurs = "SELECT ID_Utilisateur, Nom FROM Utilisateurs";
+$stmtUtilisateurs = $pdo->prepare($sqlUtilisateurs);
+$stmtUtilisateurs->execute();
+$utilisateurs = $stmtUtilisateurs->fetchAll(PDO::FETCH_ASSOC);
+
+// Définir la liste des objets protégés (fonctionnalités) - à adapter selon votre application
+$objetsProteges = [
+    'saisie_ecritures' => 'Saisie des Écritures Comptables',
+    'gestion_emprunts' => 'Gestion des Emprunts Bancaires',
+    'gestion_factures' => 'Gestion des Factures (Clients/Fournisseurs)',
+    'import_releves' => 'Importation des Relevés Bancaires',
+    'export_compta' => 'Exportation Comptable (ABS 2000)',
+    'gestion_utilisateurs' => 'Gestion des Utilisateurs',
+    'gestion_profils' => 'Gestion des Profils',
+    'gestion_habilitations' => 'Gestion des Habilitations',
+    'configuration_app' => 'Configuration de l\'Application',
+    'visualisation_logs' => 'Visualisation des Logs',
+    // Ajoutez ici d'autres fonctionnalités que vous souhaitez protéger
+];
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Administration - Modifier le rôle</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/style.css">
+    <?php if (isset($admin_style) && $admin_style): ?>
+        <link rel="stylesheet" href="../../css/admin_style.css">
+    <?php endif; ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<?php require_once '../../templates/admin_navigation.php'; // Inclure la navigation spécifique à l'admin ?>
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Gestion Globale des Habilitations</h1>
+    </div>
+
+    <?php
+    // Afficher les messages d'erreur ou de succès s'il y en a
+    if (isset($_GET['error'])) {
+        echo '<div class="alert alert-danger">' . htmlspecialchars($_GET['error']) . '</div>';
+    }
+    if (isset($_GET['success'])) {
+        echo '<div class="alert alert-success">' . htmlspecialchars($_GET['success']) . '</div>';
+    }
+    ?>
+
+    <h2>Habilitations par Profil</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>Nom du Profil</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($profils)): ?>
+                    <tr><td colspan="2">Aucun profil trouvé.</td></tr>
+                <?php else: ?>
+                    <?php foreach ($profils as $profil): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($profil['Nom_Profil']); ?></td>
+                            <td>
+    <a href="modifier.php?type=profil&id=<?php echo htmlspecialchars($profil['ID_Profil']); ?>" class="btn btn-sm btn-outline-primary">Gérer les Habilitations</a>
+    <a href="afficher_details.php?type=profil&id=<?php echo htmlspecialchars($profil['ID_Profil']); ?>" class="btn btn-sm btn-outline-info ms-2">Afficher les Détails</a>
+    <a href="reinitialiser.php?type=profil&id=<?php echo htmlspecialchars($profil['ID_Profil']); ?>" class="btn btn-sm btn-outline-danger ms-2" onclick="return confirm('Êtes-vous sûr de vouloir réinitialiser les habilitations de ce profil ?');">Réinitialiser</a>
+</td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <hr class="my-4">
+
+    <h2>Habilitations par Utilisateur</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>Nom de l'Utilisateur</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($utilisateurs)): ?>
+                    <tr><td colspan="2">Aucun utilisateur trouvé.</td></tr>
+                <?php else: ?>
+                    <?php foreach ($utilisateurs as $utilisateur): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($utilisateur['Nom']); ?></td>
+                           <td>
+    <a href="modifier.php?type=utilisateur&id=<?php echo htmlspecialchars($utilisateur['ID_Utilisateur']); ?>" class="btn btn-sm btn-outline-primary">Gérer les Habilitations</a>
+    <a href="afficher_details.php?type=utilisateur&id=<?php echo htmlspecialchars($utilisateur['ID_Utilisateur']); ?>" class="btn btn-sm btn-outline-info ms-2">Afficher les Détails</a>
+    <a href="reinitialiser.php?type=utilisateur&id=<?php echo htmlspecialchars($utilisateur['ID_Utilisateur']); ?>" class="btn btn-sm btn-outline-danger ms-2" onclick="return confirm('Êtes-vous sûr de vouloir réinitialiser les habilitations de cet utilisateur ?');">Réinitialiser</a>
+</td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <hr class="my-4">
+
+    <h2>Gestion des Chapitres Non Autorisés</h2>
+    <p>Ici, vous pourrez gérer les chapitres comptables non autorisés par profil et par utilisateur (fonctionnalité à implémenter).</p>
+    <a href="modifier_chapitres.php" class="btn btn-primary">Gérer les Chapitres Non Autorisés</a>
+
+</main>
+
+<?php require_once '../../includes/footer.php'; ?>
+
+</body>
+</html>

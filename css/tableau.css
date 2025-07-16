@@ -1,0 +1,146 @@
+/* tableau.css */
+
+/* Styles spécifiques aux tableaux (peuvent compléter ou remplacer des styles de style.css) */
+
+.tableau-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow-x: auto; /* Pour gérer les tableaux larges sur les petits écrans */
+}
+
+.tableau-titre {
+    color: #800020; /* Bordeaux */
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.tableau {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.tableau th,
+.tableau td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    white-space: nowrap; /* Empêche le texte de passer à la ligne */
+}
+
+.tableau th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #555;
+}
+
+.tableau tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.tableau tbody tr:hover {
+    background-color: #eee;
+}
+
+.tableau tbody tr.ligne-cliquable {
+    cursor: pointer;
+}
+
+.tableau tbody tr.ligne-cliquable:hover {
+    background-color: #d4edda; /* Vert clair pour indiquer la cliquabilité */
+}
+
+.tableau .action-column {
+    text-align: center;
+}
+
+.tableau .action-button {
+    padding: 8px 12px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.tableau .action-button.modifier {
+    background-color: #007bff; /* Bleu */
+    color: #fff;
+}
+
+.tableau .action-button.modifier:hover {
+    background-color: #0056b3;
+}
+
+.tableau .action-button.supprimer {
+    background-color: #dc3545; /* Rouge */
+    color: #fff;
+}
+
+.tableau .action-button.supprimer:hover {
+    background-color: #c82333;
+}
+
+.tableau .action-button.voir {
+    background-color: #28a745; /* Vert */
+    color: #fff;
+}
+
+.tableau .action-button.voir:hover {
+    background-color: #1e7e34;
+}
+
+.tableau .status-actif {
+    color: green;
+    font-weight: bold;
+}
+
+.tableau .status-inactif {
+    color: red;
+    font-weight: bold;
+}
+
+.tableau .align-right {
+    text-align: right;
+}
+
+.tableau .align-center {
+    text-align: center;
+}
+
+/* Styles pour la pagination des tableaux (si applicable) */
+.tableau-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.tableau-pagination .page-item {
+    margin: 0 5px;
+}
+
+.tableau-pagination .page-link {
+    color: #800020;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 6px 10px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.tableau-pagination .page-link:hover {
+    background-color: #eee;
+}
+
+.tableau-pagination .page-item.active .page-link {
+    background-color: #800020;
+    color: #fff;
+    border-color: #800020;
+}
+
+/* Ajoutez ici d'autres styles spécifiques à vos tableaux */

@@ -1,0 +1,23 @@
+# Ignorer les fichiers de configuration de base de données (si non versionnés)
+config.local.php
+.env
+*.sql
+
+# Ignorer les dépendances de Composer
+/vendor/
+
+# Ignorer les dépendances de Node.js
+/node_modules/
+
+# Fichiers de cache et temporaires
+*.log
+*.cache
+temp/
+tmp/
+
+# Fichiers de session PHP
+/sessions/
+
+# Fichiers spécifiques à l'OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,131 @@
+<?php
+// pages/ecritures/liste.php
+
+$titre = 'Liste des Écritures Comptables';
+$current_page = basename($_SERVER['PHP_SELF']); // Pour la classe 'active' dans la navigation
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php'); // Inclusion de la navigation
+?>
+
+<?php
+// gestion_droits.php (Fonctions de gestion des droits et vérification d'accès)
+
+/**
+ * Vérifie si un utilisateur a une habilitation spécifique.
+ *
+ * @param PDO $db Instance de connexion à la base de données.
+ * @param int $utilisateurId ID de l'utilisateur.
+ * @param string $nomHabilitation Nom de l'habilitation à vérifier (tel que défini dans la table 'habilitations').
+ * @return bool True si l'utilisateur a l'habilitation, false sinon.
+ */
+function aLeDroit(PDO $db, int $utilisateurId, string $nomHabilitation): bool
+{
+    // Récupérer les habilitations spécifiques de l'utilisateur
+    $habilitationsUtilisateur = getHabilitationsUtilisateur($db, $utilisateurId);
+    if (!empty($habilitationsUtilisateur)) {
+        foreach ($habilitationsUtilisateur as $habilitation) {
+            if ($habilitation['nom_habilitation'] === $nomHabilitation) {
+                return true;
+            }
+        }
+    }
+
+    // Récupérer le profil de l'utilisateur et ses habilitations
+    $profilUtilisateur = getProfilUtilisateur($db, $utilisateurId);
+    if ($profilUtilisateur && isset($profilUtilisateur['id_profil'])) {
+        $habilitationsProfil = getHabilitationsProfil($db, $profilUtilisateur['id_profil']);
+        if (!empty($habilitationsProfil)) {
+            foreach ($habilitationsProfil as $habilitation) {
+                if ($habilitation['nom_habilitation'] === $nomHabilitation) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Récupère le profil d'un utilisateur.
+ *
+ * @param PDO $db Instance de connexion à la base de données.
+ * @param int $utilisateurId ID de l'utilisateur.
+ * @return array|null Tableau associatif contenant les informations du profil, ou null si non trouvé.
+ */
+function getProfilUtilisateur(PDO $db, int $utilisateurId): ?array
+{
+    try {
+        $stmt = $db->prepare("SELECT p.id_profil, p.nom_profil
+                               FROM utilisateurs u
+                               JOIN profils p ON u.profil_id = p.id_profil
+                               WHERE u.id_utilisateur = :utilisateur_id");
+        $stmt->bindParam(':utilisateur_id', $utilisateurId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération du profil de l'utilisateur : " . $e->getMessage());
+        return null;
+    }
+}
+
+/**
+ * Fonction d'exemple pour restreindre l'accès à une page.
+ *
+ * @param PDO $db Instance de connexion à la base de données.
+ * @param int $utilisateurId ID de l'utilisateur connecté.
+ * @param string $habilitationRequise Nom de l'habilitation nécessaire pour accéder à la page.
+ * @param string $urlRedirection URL vers laquelle rediriger en cas de non-autorisation.
+ */
+function verifierDroitAcces(PDO $db, int $utilisateurId, string $habilitationRequise, string $urlRedirection): void
+{
+    if (!aLeDroit($db, $utilisateurId, $habilitationRequise)) {
+        header("Location: " . $urlRedirection);
+        exit();
+    }
+}
+
+// *** N'oubliez pas d'inclure database.php, gestion_utilisateurs.php et gestion_habilitations.php
+// *** dans les fichiers qui utilisent ces fonctions.
+
+// Exemple d'utilisation dans une page protégée :
+/*
+require_once 'fonctions/database.php';
+require_once 'fonctions/gestion_droits.php';
+require_once 'fonctions/gestion_utilisateurs.php'; // Pour getHabilitationsUtilisateur et getProfilUtilisateur
+require_once 'fonctions/gestion_habilitations.php'; // Pour getHabilitationsProfil
+
+session_start();
+if (!isset($_SESSION['utilisateur_id'])) {
+    header("Location: ../auth/login.php");
+    exit();
+}
+
+$utilisateurId = $_SESSION['utilisateur_id'];
+$habilitationRequise = 'gestion_factures'; // L'habilitation nécessaire pour accéder à cette page
+$urlRedirection = '../auth/non_autorise.php';
+
+verifierDroitAcces($db, $utilisateurId, $habilitationRequise, $urlRedirection);
+
+// Si l'utilisateur a l'habilitation, le contenu de la page s'affiche ici.
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Page Protégée</title>
+</head>
+<body>
+    <h1>Bienvenue sur la page de gestion des factures !</h1>
+    <p>Vous avez les droits nécessaires pour accéder à cette section.</p>
+    <a href="../index.php">Retour à l'accueil</a>
+</body>
+</html>
+*/
+?>
+
+<?php
+require_once('../../templates/footer.php');
+?>

@@ -1,0 +1,374 @@
+<?php
+// pages/ecritures/liste.php
+
+$titre = 'Liste des Écritures Comptables';
+$current_page = basename($_SERVER['PHP_SELF']); // Pour la classe 'active' dans la navigation
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php'); // Inclusion de la navigation
+?>
+
+
+<?php
+// Inclure les fichiers nécessaires (connexion à la base de données, fonctions, etc.)
+require_once '../../fonctions/database.php';
+require_once '../../fonctions/gestion_emprunts.php'; // Supposons un fichier pour gérer les emprunts
+
+// Récupérer l'ID de l'emprunt à modifier
+$idEmprunt = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : null;
+
+// Initialisation des variables et des erreurs
+$banque = '';
+$numeroPret = '';
+$montantPret = '';
+$dateMiseEnPlace = '';
+$datePremiereEcheance = '';
+$dateDerniereEcheance = '';
+$tauxInteret = '';
+$nombreEcheances = '';
+$typeAmortissement = '';
+$erreur = null;
+$success = null;
+
+// Récupérer les informations de l'emprunt si un ID est fourni
+if ($idEmprunt) {
+    $emprunt = getEmprunt($db, $idEmprunt);
+    if ($emprunt) {
+        $banque = $emprunt['Banque'];
+        $numeroPret = $emprunt['Numero_Pret'];
+        $montantPret = $emprunt['Montant_Pret'];
+        $dateMiseEnPlace = date('Y-m-d', strtotime($emprunt['Date_Mise_En_Place']));
+        $datePremiereEcheance = date('Y-m-d', strtotime($emprunt['Date_Premiere_Echeance']));
+        $dateDerniereEcheance = date('Y-m-d', strtotime($emprunt['Date_Derniere_Echeance']));
+        $tauxInteret = $emprunt['Taux_Effectif_Global'] * 100; // Afficher en pourcentage
+        $nombreEcheances = $emprunt['Nombre_Echeances'];
+        $typeAmortissement = $emprunt['Type_Amortissement'];
+    } else {
+        $erreur = "Emprunt non trouvé.";
+    }
+} else {
+    $erreur = "ID d'emprunt non valide.";
+}
+
+// Traitement du formulaire si soumis
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $idEmprunt) {
+    $banque = $_POST['banque'];
+    $numeroPret = $_POST['numero_pret'];
+    $montantPret = floatval($_POST['montant_pret']);
+    $dateMiseEnPlace = $_POST['date_mise_en_place'];
+    $datePremiereEcheance = $_POST['date_premiere_echeance'];
+    $dateDerniereEcheance = $_POST['date_derniere_echeance'];
+    $tauxInteret = floatval($_POST['taux_interet']);
+    $nombreEcheances = intval($_POST['nombre_echeances']);
+    $typeAmortissement = $_POST['type_amortissement'];
+
+    // Validation des données (à implémenter plus robustement)
+    if (empty($banque)) {
+        $erreur = "Le nom de la banque est requis.";
+    } elseif (empty($numeroPret)) {
+        $erreur = "Le numéro de prêt est requis.";
+    } elseif ($montantPret <= 0) {
+        $erreur = "Le montant du prêt doit être supérieur à zéro.";
+    } elseif (empty($dateMiseEnPlace)) {
+        $erreur = "La date de mise en place est requise.";
+    } elseif (empty($datePremiereEcheance)) {
+        $erreur = "La date de la première échéance est requise.";
+    } elseif (empty($dateDerniereEcheance)) {
+        $erreur = "La date de la dernière échéance est requise.";
+    } elseif ($tauxInteret < 0) {
+        $erreur = "Le taux d'intérêt ne peut pas être négatif.";
+    } elseif ($nombreEcheances <= 0) {
+        $erreur = "Le nombre d'échéances doit être supérieur à zéro.";
+    } elseif (empty($typeAmortissement)) {
+        $erreur = "Le type d'amortissement est requis.";
+    }
+
+    if (!$erreur) {
+        $updated = modifierEmprunt(
+            $db,
+            $idEmprunt,
+            $banque,
+            $dateMiseEnPlace,
+            null, // Agence
+            null, // Devise
+            $numeroPret,
+            null, // Type de prêt
+            null, // Client
+            $montantPret,
+            null, // Source de financement
+            $tauxInteret / 100, // Convertir le taux en décimal
+            null, // Montant différé
+            null, // Type de plan
+            null, // Échéance fin de mois
+            $nombreEcheances,
+            null, // Gestion différé
+            null, // Nombre de jours réels
+            null, // Type d'intérêt
+            $dateMiseEnPlace,
+            $datePremiereEcheance,
+            $dateDerniereEcheance,
+            null, // Interet SP Taux
+            null, // Interet SP Montant
+            null, // Taxes
+            null, // Période
+            null, // Terme
+            null, // Perception
+            null, // Date début amortissement
+            null, // Date fin amortissement
+            $montantPret, // Montant initial
+            null, // Durée
+            $typeAmortissement
+        );
+
+        if ($updated) {
+            $success = "L'emprunt a été mis à jour avec succès.";
+        } else {
+            $erreur = "Erreur lors de la mise à jour de l'emprunt.";
+        }
+    }
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Modifier un Emprunt</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/monstyle.css">
+    <link rel="stylesheet" href="../../css/formulaire.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-header">Modifier l'Emprunt Bancaire</h2>
+
+        <?php if ($erreur): ?>
+            <div class="alert alert-danger"><?= $erreur ?></div>
+        <?php endif; ?>
+
+        <?php if ($success): ?>
+            <div class="alert alert-success"><?= $success ?> <a href="index.php" class="alert-link">Retour à la liste des emprunts</a></div>
+        <?php endif; ?>
+
+        <?php if ($idEmprunt && !$erreur): ?>
+            <form action="" method="POST" class="form-horizontal">
+                <div class="form-group">
+                    <label for="banque" class="col-sm-3 control-label">Banque</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="banque" name="banque" value="<?= htmlspecialchars($banque) ?>" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="numero_pret" class="col-sm-3 control-label">Numéro de Prêt</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="numero_pret" name="numero_pret" value="<?= htmlspecialchars($numeroPret) ?>" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="montant_pret" class="col-sm-3 control-label">Montant du Prêt</label>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control" id="montant_pret" name="montant_pret" value="<?= $montantPret ?>" step="0.01" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="date_mise_en_place" class="col-sm-3 control-label">Date de Mise en Place</label>
+                    <div class="col-sm-9">
+                        <input type="date" class="form-control" id="date_mise_en_place" name="date_mise_en_place" value="<?= $dateMiseEnPlace ?>" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="date_premiere_echeance" class="col-sm-3 control-label">Date Première Échéance</label>
+                    <div class="col-sm-9">
+                        <input type="date" class="form-control" id="date_premiere_echeance" name="date_premiere_echeance" value="<?= $datePremiereEcheance ?>" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="date_derniere_echeance" class="col-sm-3 control-label">Date Dernière Échéance</label>
+                    <div class="col-sm-9">
+                        <input type="date" class="form-control" id="date_derniere_echeance" name="date_derniere_echeance" value="<?= $dateDerniereEcheance ?>" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="taux_interet" class="col-sm-3 control-label">Taux d'Intérêt (%)</label>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control" id="taux_interet" name="taux_interet" value="<?= $tauxInteret ?>" step="0.0001" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombre_echeances" class="col-sm-3 control-label">Nombre d'Échéances</label>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control" id="nombre_echeances" name="nombre_echeances" value="<?= $nombreEcheances ?>" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="type_amortissement" class="col-sm-3 control-label">Type d'Amortissement</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" id="type_amortissement" name="type_amortissement" required>
+                            <option value="">Sélectionner un type</option>
+                            <option value="linéaire" <?= ($typeAmortissement == 'linéaire') ? 'selected' : '' ?>>Linéaire</option>
+                            <option value="progressif" <?= ($typeAmortissement == 'progressif') ? 'selected' : '' ?>>Progressif</option>
+                            <option value="dégressif" <?= ($typeAmortissement == 'dégressif') ? 'selected' : '' ?>>Dégressif</option>
+                            <option value="in fine" <?= ($typeAmortissement == 'in fine') ? 'selected' : '' ?>>In Fine</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <button type="submit" class="btn btn-primary">Mettre à jour l'Emprunt</button>
+                        <a href="index.php" class="btn btn-default">Annuler</a>
+                    </div>
+                </div>
+            </form>
+        <?php endif; ?>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNLJ5ywYOIDjxxyTwCypxSoOO3FxyYr4fccRoP1h0IWcAukj0jz9uNNs" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
+
+<?php
+// Fonctions de gestion des emprunts (à implémenter dans fonctions/gestion_emprunts.php)
+
+function getEmprunt($db, $id) {
+    try {
+        $stmt = $db->prepare("SELECT * FROM Emprunts_Bancaires WHERE ID_Emprunt = :id");
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération de l'emprunt : " . $e->getMessage());
+        return false;
+    }
+}
+
+function modifierEmprunt(
+    $db,
+    $idEmprunt,
+    $banque,
+    $dateSouscription,
+    $agence,
+    $devise,
+    $numeroPret,
+    $typePret,
+    $client,
+    $montantPret,
+    $sourceFinancement,
+    $tauxEffectifGlobal,
+    $montantDiffere,
+    $typePlan,
+    $echeanceFinMois,
+    $nombreEcheances,
+    $gestionDiffere,
+    $nombreJoursReels,
+    $typeInteret,
+    $dateMiseEnPlace,
+    $datePremiereEcheance,
+    $dateDerniereEcheance,
+    $interetSPTaux,
+    $interetSPMontant,
+    $taxes,
+    $periode,
+    $terme,
+    $perception,
+    $dateDebutAmortissement,
+    $dateFinAmortissement,
+    $montantInitial,
+    $duree,
+    $typeAmortissement
+) {
+    try {
+        $stmt = $db->prepare("UPDATE Emprunts_Bancaires SET
+            Banque = :banque,
+            Date_Souscription = :date_souscription,
+            Agence = :agence,
+            Devise = :devise,
+            Numero_Pret = :numero_pret,
+            Type_Pret = :type_pret,
+            Client = :client,
+            Montant_Pret = :montant_pret,
+            Source_Financement = :source_financement,
+            Taux_Effectif_Global = :taux_teg,
+            Montant_Differe = :montant_differe,
+            Type_Plan = :type_plan,
+            Echeance_Fin_Mois = :echeance_fin_mois,
+            Nombre_Echeances = :nombre_echeances,
+            Gestion_Differe = :gestion_differe,
+            Nombre_Jours_Reels = :nombre_jours_reels,
+            Type_Interet = :type_interet,
+            Date_Mise_En_Place = :date_mise_en_place,
+            Date_Premiere_Echeance = :date_premiere_echeance,
+            Date_Derniere_Echeance = :date_derniere_echeance,
+            Interet_SP_Taux = :interet_sp_taux,
+            Interet_SP_Montant = :interet_sp_montant,
+            Taxes = :taxes,
+            Periode = :periode,
+            Terme = :terme,
+            Perception = :perception,
+            Date_Debut_Amortissement = :date_debut_amortissement,
+            Date_Fin_Amortissement = :date_fin_amortissement,
+            Montant_Initial = :montant_initial,
+            Duree = :duree,
+            Type_Amortissement = :type_amortissement
+        WHERE ID_Emprunt = :id_emprunt");
+
+        $stmt->bindParam(':banque', $banque);
+        $stmt->bindParam(':date_souscription', $dateSouscription);
+        $stmt->bindParam(':agence', $agence);
+        $stmt->bindParam(':devise', $devise);
+        $stmt->bindParam(':numero_pret', $numeroPret);
+        $stmt->bindParam(':type_pret', $typePret);
+        $stmt->bindParam(':client', $client);
+        $stmt->bindParam(':montant_pret', $montantPret);
+        $stmt->bindParam(':source_financement', $sourceFinancement);
+        $stmt->bindParam(':taux_teg', $tauxEffectifGlobal);
+        $stmt->bindParam(':montant_differe', $montantDiffere);
+        $stmt->bindParam(':type_plan', $typePlan);
+        $stmt->bindParam(':echeance_fin_mois', $echeanceFinMois, PDO::PARAM_BOOL);
+        $stmt->bindParam(':nombre_echeances', $nombreEcheances, PDO::PARAM_INT);
+        $stmt->bindParam(':gestion_differe', $gestionDiffere);
+        $stmt->bindParam(':nombre_jours_reels', $nombreJoursReels, PDO::PARAM_INT);
+        $stmt->bindParam(':type_interet', $typeInteret);
+        $stmt->bindParam(':date_mise_en_place', $dateMiseEnPlace);
+        $stmt->bindParam(':date_premiere_echeance', $datePremiereEcheance);
+        $stmt->bindParam(':date_derniere_echeance', $dateDerniereEcheance);
+        $stmt->bindParam(':interet_sp_taux', $interetSPTaux);
+        $stmt->bindParam(':interet_sp_montant', $interetSPMontant);
+        $stmt->bindParam(':taxes', $taxes);
+        $stmt->bindParam(':periode', $periode);
+        $stmt->bindParam(':terme', $terme);
+        $stmt->bindParam(':perception', $perception);
+        $stmt->bindParam(':date_debut_amortissement', $dateDebutAmortissement);
+        $stmt->bindParam(':date_fin_amortissement', $dateFinAmortissement);
+        $stmt->bindParam(':montant_initial', $montantInitial);
+        $stmt->bindParam(':duree', $duree, PDO::PARAM_INT);
+        $stmt->bindParam(':type_amortissement', $typeAmortissement);
+        $stmt->bindParam(':id_emprunt', $idEmprunt, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la modification de l'emprunt : " . $e->getMessage());
+        return false;
+    }
+}
+
+// La fonction getEmprunt est supposée exister dans fonctions/gestion_emprunts.php
+?>
+
+<?php
+require_once('../../templates/footer.php');
+?>

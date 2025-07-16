@@ -1,0 +1,66 @@
+# sécurité/.htaccess
+
+# Empêcher la navigation dans les répertoires (sauf si un fichier index est présent)
+Options -Indexes
+
+# Empêcher l'accès direct aux fichiers .php dans certains dossiers (si nécessaire)
+# Utilisez cette section avec prudence et adaptez les dossiers selon vos besoins
+<FilesMatch "\.php$">
+    <If "-f '%{REQUEST_FILENAME}'">
+        Order Deny,Allow
+        Deny from all
+        # Autoriser l'accès depuis localhost (pour le développement)
+        # Allow from 127.0.0.1
+    </If>
+</FilesMatch>
+# Exemple pour interdire l'accès direct aux fichiers PHP dans le dossier 'fonctions'
+<Directory ~ "/fonctions/">
+    <FilesMatch "\.php$">
+        Order Deny,Allow
+        Deny from all
+    </FilesMatch>
+</Directory>
+# Exemple pour interdire l'accès direct aux fichiers PHP dans le dossier 'classes'
+<Directory ~ "/classes/">
+    <FilesMatch "\.php$">
+        Order Deny,Allow
+        Deny from all
+    </FilesMatch>
+</Directory>
+
+# Bloquer l'accès aux fichiers de configuration sensibles
+<FilesMatch "(config\.inc\.php|configuration\.php|\.htaccess|\.htpasswd)">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Empêcher l'accès aux fichiers de sauvegarde (.bak, .sql.gz, etc.)
+<FilesMatch "\.(bak|sql\.gz|dump|log|ini)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Rediriger les erreurs 404 et 500 vers vos pages personnalisées
+ErrorDocument 404 /bailcompta360/erreurs/404.php
+ErrorDocument 500 /bailcompta360/erreurs/500.php
+
+# Activer la réécriture d'URL (si vous prévoyez des URLs conviviales)
+# <IfModule mod_rewrite.c>
+#    RewriteEngine On
+#    # Règles de réécriture ici (exemples commentés)
+#    # RewriteRule ^article/([0-9]+)/?$ index.php?page=article&id=$1 [L,QSA]
+# </IfModule>
+
+# Autres directives de sécurité que vous pourriez ajouter :
+# - Désactiver l'affichage des erreurs PHP en production (à décommenter en production)
+# php_flag display_errors Off
+# php_flag log_errors On
+# php_value error_log /chemin/vers/vos/logs/php_errors.log
+
+# - Configurer les en-têtes de sécurité (exemples commentés)
+# Header set X-Frame-Options "SAMEORIGIN"
+# Header set X-Content-Type-Options "nosniff"
+# Header set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+# Header set Content-Security-Policy "default-src 'self';"
+# Header set X-XSS-Protection "1; mode=block"
+AddDefaultCharset UTF-8

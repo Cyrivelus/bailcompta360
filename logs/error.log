@@ -1,0 +1,3 @@
+[2025-05-13 10:03:25] Erreur PDO: SQLSTATE[22007]: [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]La conversion d'un type de données nvarchar en type de données datetime a créé une valeur hors limites.
+[14-May-2025 12:00:05 Europe/Berlin] Tentative de connexion échouée pour l'utilisateur : invite (Mot de passe incorrect pour invité)
+[14-May-2025 12:00:37 Europe/Berlin] Tentative de connexion échouée pour l'utilisateur : invite (Mot de passe incorrect pour invité)

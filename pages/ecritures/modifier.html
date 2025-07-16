@@ -1,0 +1,304 @@
+<?php
+// pages/ecritures/liste.php
+
+$titre = 'Liste des Écritures Comptables';
+$current_page = basename($_SERVER['PHP_SELF']); // Pour la classe 'active' dans la navigation
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php'); // Inclusion de la navigation
+require_once('../../templates/footer.php'); // Inclusion du footer
+?>
+
+
+
+<?php
+// Inclure les fichiers nécessaires (connexion à la base de données, fonctions, etc.)
+require_once '../fonctions/database.php';
+require_once '../fonctions/gestion_ecritures.php'; // Supposons un fichier pour gérer les écritures
+require_once '../fonctions/gestion_comptes.php'; // Supposons un fichier pour gérer les comptes
+
+// Récupérer la liste des comptes pour les listes déroulantes
+$comptes = getListeComptes($db);
+
+// Initialisation des variables
+$idEcriture = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : null;
+$dateSaisie = '';
+$description = '';
+$lignesEcriture = [];
+$erreur = null;
+
+// Récupérer les informations de l'écriture à modifier si un ID est fourni
+if ($idEcriture) {
+    $ecriture = getEcriture($db, $idEcriture);
+    $lignesEcriture = getLignesEcriture($db, $idEcriture);
+
+    if ($ecriture) {
+        $dateSaisie = date('Y-m-d', strtotime($ecriture['Date_Saisie']));
+        $description = $ecriture['Description'];
+    } else {
+        $erreur = "Écriture non trouvée.";
+    }
+} else {
+    $erreur = "ID d'écriture non valide.";
+}
+
+// Traitement du formulaire si soumis
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $idEcriture) {
+    $dateSaisie = $_POST['date_saisie'];
+    $description = $_POST['description'];
+    $nouvellesLignes = [];
+
+    if (isset($_POST['id_ligne']) && is_array($_POST['id_ligne'])) {
+        foreach ($_POST['id_ligne'] as $key => $idLigne) {
+            $compte = $_POST['compte'][$key];
+            $montant = floatval($_POST['montant'][$key]);
+            $sens = $_POST['sens'][$key];
+            if ($compte && $montant > 0 && in_array($sens, ['D', 'C'])) {
+                $nouvellesLignes[] = ['id_ligne' => $idLigne, 'compte' => $compte, 'montant' => $montant, 'sens' => $sens];
+            }
+        }
+    }
+
+    // Validation des données (à implémenter plus robustement)
+    if (!empty($nouvellesLignes)) {
+        $montantTotalDebit = array_sum(array_column(array_filter($nouvellesLignes, function ($ligne) { return $ligne['sens'] === 'D'; }), 'montant'));
+        $montantTotalCredit = array_sum(array_column(array_filter($nouvellesLignes, function ($ligne) { return $ligne['sens'] === 'C'; }), 'montant'));
+
+        if ($montantTotalDebit === $montantTotalCredit && $montantTotalDebit > 0) {
+            // Mettre à jour l'écriture et les lignes d'écriture dans la base de données
+            if (modifierEcriture($db, $idEcriture, $dateSaisie, $description, $montantTotalDebit)) {
+                // Supprimer les anciennes lignes d'écriture
+                supprimerLignesEcriture($db, $idEcriture);
+                // Enregistrer les nouvelles lignes d'écriture
+                foreach ($nouvellesLignes as $ligne) {
+                    enregistrerLigneEcriture($db, $idEcriture, $ligne['compte'], $ligne['montant'], $ligne['sens']);
+                }
+                // Rediriger avec un message de succès
+                header('Location: liste.php?success_update=1');
+                exit();
+            } else {
+                $erreur = "Erreur lors de la mise à jour de l'écriture.";
+            }
+        } else {
+            $erreur = "Le total des débits doit être égal au total des crédits et supérieur à zéro.";
+        }
+    } else {
+        $erreur = "Veuillez saisir au moins une ligne d'écriture.";
+    }
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Modifier l'Écriture</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/formulaire.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-header">Modifier l'Écriture Comptable</h2>
+
+        <?php if ($erreur): ?>
+            <div class="alert alert-danger"><?= $erreur ?></div>
+        <?php endif; ?>
+
+        <?php if ($idEcriture && !$erreur): ?>
+            <form action="" method="POST" class="form-horizontal">
+                <div class="form-group">
+                    <label for="date_saisie" class="col-sm-2 control-label">Date de Saisie</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" id="date_saisie" name="date_saisie" value="<?= $dateSaisie ?>" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description" class="col-sm-2 control-label">Description</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="description" name="description" value="<?= $description ?>">
+                    </div>
+                </div>
+
+                <h3>Lignes d'Écriture</h3>
+                <div id="lignes-ecriture">
+                    <?php if (!empty($lignesEcriture)): ?>
+                        <?php foreach ($lignesEcriture as $index => $ligne): ?>
+                            <div class="ligne-ecriture form-inline" data-index="<?= $index ?>">
+                                <input type="hidden" name="id_ligne[]" value="<?= $ligne['ID_Ligne'] ?>">
+                                <div class="form-group">
+                                    <label for="compte_<?= $index ?>">Compte</label>
+                                    <select class="form-control compte-select" id="compte_<?= $index ?>" name="compte[]">
+                                        <option value="">Sélectionner un compte</option>
+                                        <?php foreach ($comptes as $compteOption): ?>
+                                            <option value="<?= $compteOption['ID_Compte'] ?>" <?= ($compteOption['ID_Compte'] == $ligne['ID_Compte']) ? 'selected' : '' ?>>
+                                                <?= $compteOption['Numero_Compte'] ?> - <?= $compteOption['Nom_Compte'] ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="montant_<?= $index ?>">Montant</label>
+                                    <input type="number" class="form-control montant-input" id="montant_<?= $index ?>" name="montant[]" step="0.01" value="<?= $ligne['Montant'] ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label for="sens_<?= $index ?>">Sens</label>
+                                    <select class="form-control sens-select" id="sens_<?= $index ?>" name="sens[]">
+                                        <option value="D" <?= ($ligne['Sens'] == 'D') ? 'selected' : '' ?>>Débit</option>
+                                        <option value="C" <?= ($ligne['Sens'] == 'C') ? 'selected' : '' ?>>Crédit</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn btn-danger btn-sm remove-ligne">-</button>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="ligne-ecriture form-inline" data-index="0">
+                            <input type="hidden" name="id_ligne[]" value="">
+                            <div class="form-group">
+                                <label for="compte_0">Compte</label>
+                                <select class="form-control compte-select" id="compte_0" name="compte[]">
+                                    <option value="">Sélectionner un compte</option>
+                                    <?php foreach ($comptes as $compteOption): ?>
+                                        <option value="<?= $compteOption['ID_Compte'] ?>"><?= $compteOption['Numero_Compte'] ?> - <?= $compteOption['Nom_Compte'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="montant_0">Montant</label>
+                                <input type="number" class="form-control montant-input" id="montant_0" name="montant[]" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="sens_0">Sens</label>
+                                <select class="form-control sens-select" id="sens_0" name="sens[]">
+                                    <option value="D">Débit</option>
+                                    <option value="C">Crédit</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-danger btn-sm remove-ligne">-</button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <button type="button" class="btn btn-success btn-sm" id="ajouter-ligne">+ Ajouter une ligne</button>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary">Mettre à jour l'Écriture</button>
+                        <a href="liste.php" class="btn btn-default">Annuler</a>
+                    </div>
+                </div>
+            </form>
+        <?php endif; ?>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNLJ5ywYOIDjxxyTwCypxSoOO3FxyYr4fccRoP1h0IWcAukj0jz9uNNs" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            let indexLigne = $('#lignes-ecriture .ligne-ecriture').length;
+
+            $('#ajouter-ligne').click(function() {
+                const nouvelleLigne = `
+                    <div class="ligne-ecriture form-inline" data-index="${indexLigne}">
+                        <input type="hidden" name="id_ligne[]" value="">
+                        <div class="form-group">
+                            <label for="compte_${indexLigne}">Compte</label>
+                            <select class="form-control compte-select" id="compte_${indexLigne}" name="compte[]">
+                                <option value="">Sélectionner un compte</option>
+                                <?php foreach ($comptes as $compteOption): ?>
+                                    <option value="<?= $compteOption['ID_Compte'] ?>"><?= $compteOption['Numero_Compte'] ?> - <?= $compteOption['Nom_Compte'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="montant_${indexLigne}">Montant</label>
+                            <input type="number" class="form-control montant-input" id="montant_${indexLigne}" name="montant[]" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="sens_${indexLigne}">Sens</label>
+                            <select class="form-control sens-select" id="sens_${indexLigne}" name="sens[]">
+                                <option value="D">Débit</option>
+                                <option value="C">Crédit</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-danger btn-sm remove-ligne">-</button>
+                    </div>
+                `;
+                $('#lignes-ecriture').append(nouvelleLigne);
+                indexLigne++;
+            });
+
+            $('#lignes-ecriture').on('click', '.remove-ligne', function() {
+                $(this).closest('.ligne-ecriture').remove();
+            });
+        });
+    </script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/script.js"></script>
+
+</body>
+</html>
+
+<?php
+// Fonctions de gestion des écritures (à implémenter dans fonctions/gestion_ecritures.php)
+
+function getEcriture($db, $id) {
+    try {
+        $stmt = $db->prepare("SELECT ID_Ecriture, Date_Saisie, Description FROM Ecritures WHERE ID_Ecriture = :id");
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération de l'écriture : " . $e->getMessage());
+        return false;
+    }
+}
+
+function getLignesEcriture($db, $idEcriture) {
+    try {
+        $stmt = $db->prepare("SELECT ID_Ligne, ID_Compte, Montant, Sens FROM Lignes_Ecritures WHERE ID_Ecriture = :id");
+        $stmt->bindParam(':id', $idEcriture);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération des lignes d'écriture : " . $e->getMessage());
+        return [];
+    }
+}
+
+function modifierEcriture($db, $id, $dateSaisie, $description, $montantTotal) {
+    try {
+        $stmt = $db->prepare("UPDATE Ecritures SET Date_Saisie = :date, Description = :desc, Montant_Total = :montant WHERE ID_Ecriture = :id");
+        $stmt->bindParam(':date', $dateSaisie);
+        $stmt->bindParam(':desc', $description);
+        $stmt->bindParam(':montant', $montantTotal);
+        $stmt->bindParam(':id', $id);
+        return $stmt->execute();
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la mise à jour de l'écriture : " . $e->getMessage());
+        return false;
+    }
+}
+
+function supprimerLignesEcriture($db, $idEcriture) {
+    try {
+        $stmt = $db->prepare("DELETE FROM Lignes_Ecritures WHERE ID_Ecriture = :id");
+        $stmt->bindParam(':id', $idEcriture);
+        return $stmt->execute();
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la suppression des lignes d'écriture : " . $e->getMessage());
+        return false;
+    }
+}
+
+// La fonction getListeComptes est supposée exister dans fonctions/gestion_comptes.php
+// et renvoyer un tableau associatif de comptes (ID_Compte, Numero_Compte, Nom_Compte).
+// La fonction enregistrerLigneEcriture est supposée exister dans database.php ou un fichier dédié.
+?>
+<?php
+require_once('../../templates/footer.php');
+?>

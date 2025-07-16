@@ -1,0 +1,102 @@
+<?php
+// pages/admin/configuration/modifier_parametre.php
+
+// Démarrer la session pour la gestion de l'authentification
+session_start();
+
+// Vérifier si l'utilisateur est connecté et est un administrateur
+if (!isset($_SESSION['utilisateur_id']) || $_SESSION['role'] !== 'Admin') {
+    // Rediriger si non autorisé
+    header("Location: ../../index.php?error=Accès non autorisé");
+    exit();
+}
+
+// Inclure l'en-tête de l'administration
+$title = "Modifier un Paramètre";
+include('../includes/header.php');
+
+// Inclure la navigation de l'administration
+include('../includes/navigation.php');
+
+// Vérifier si le paramètre à modifier est spécifié dans l'URL
+if (!isset($_GET['param'])) {
+    header("Location: index.php?error=Paramètre non spécifié");
+    exit();
+}
+
+$param = $_GET['param'];
+$section = '';
+$nomParametre = '';
+$valeurActuelle = '';
+
+// Déterminer la section et le nom du paramètre à partir de $_GET['param']
+switch ($param) {
+    case 'app_name':
+        $section = 'app';
+        $nomParametre = 'Nom de l\'Application';
+        $configFile = '../../../config/config.ini';
+        $config = parse_ini_file($configFile, true);
+        $valeurActuelle = isset($config['app']['name']) ? $config['app']['name'] : '';
+        break;
+    // Vous pouvez ajouter d'autres cas pour d'autres paramètres modifiables
+    default:
+        header("Location: index.php?error=Paramètre inconnu");
+        exit();
+}
+
+// Traitement de la soumission du formulaire
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nouvelleValeur = $_POST['valeur'];
+
+    // Lire le fichier INI actuel
+    $config = parse_ini_file($configFile, true);
+
+    // Modifier la valeur du paramètre
+    if (isset($config[$section]) && array_key_exists(strtolower(str_replace(' ', '_', $nomParametre)), array_change_key_case($config[$section]))) {
+        $config[$section][strtolower(str_replace(' ', '_', $nomParametre))] = $nouvelleValeur;
+
+        // Écrire les modifications dans le fichier INI
+        $newContent = '';
+        foreach ($config as $sectionName => $sectionData) {
+            $newContent .= "[" . $sectionName . "]\n";
+            foreach ($sectionData as $key => $value) {
+                $newContent .= $key . " = \"" . $value . "\"\n";
+            }
+            $newContent .= "\n";
+        }
+
+        if (file_put_contents($configFile, $newContent)) {
+            header("Location: index.php?success=" . urlencode($nomParametre . " mis à jour avec succès"));
+            exit();
+        } else {
+            header("Location: index.php?error=" . urlencode("Erreur lors de l'écriture dans le fichier de configuration"));
+            exit();
+        }
+    } else {
+        header("Location: index.php?error=" . urlencode("Paramètre de configuration introuvable"));
+        exit();
+    }
+}
+?>
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Modifier le Paramètre : <?php echo htmlspecialchars($nomParametre); ?></h1>
+    </div>
+
+    <div class="col-lg-6">
+        <form method="post">
+            <div class="mb-3">
+                <label for="valeur" class="form-label"><?php echo htmlspecialchars($nomParametre); ?></label>
+                <input type="text" class="form-control" id="valeur" name="valeur" value="<?php echo htmlspecialchars($valeurActuelle); ?>" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer la Modification</button>
+            <a href="index.php" class="btn btn-secondary">Annuler</a>
+        </form>
+    </div>
+</main>
+
+<?php
+// Inclure le pied de page de l'administration
+include('../includes/footer.php');
+?>

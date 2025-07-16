@@ -1,0 +1,149 @@
+<?php
+// process_payment_sans_banque.php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Constantes spécifiques
+define('DEFAULT_JOURNAL_PAIEMENT_ID', 1);
+define('ACCOUNT_NO_BANK_NUMBER', '38423'); // Compte fixe pour paiement sans banque
+
+require_once('../../fonctions/database.php');
+require_once('../../fonctions/gestion_factures.php');
+require_once('../../fonctions/gestion_ecritures.php');
+require_once('../../fonctions/gestion_comptes.php');
+
+if (!isset($pdo) || !$pdo instanceof PDO) {
+    exitWithError("Connexion à la base de données manquante.");
+}
+
+// Vérification de la requête
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || ($_POST['action'] ?? '') !== 'payer') {
+    exitWithError("Requête invalide.");
+}
+
+$factureId = (int) ($_POST['facture_id'] ?? 0);
+$csrfToken = $_POST['csrf_token'] ?? '';
+$paymentMethod = $_POST['payment_method'] ?? '';
+$bankName = $_POST['bank_name'] ?? '';
+
+if ($paymentMethod !== 'sans_banque') {
+    exitWithError("Ce script ne gère que les paiements SANS banque.");
+}
+
+if (!verifyCsrfToken($csrfToken)) {
+    exitWithError("Jeton CSRF invalide.");
+}
+
+$facture = getFactureById($pdo, $factureId);
+if (!$facture) {
+    exitWithError("Facture introuvable.");
+}
+
+if ($facture['Statut_Facture'] === 'Payé') {
+    redirectSuccess("Facture déjà payée.");
+}
+
+// Récupération des montants
+$montantTTC = (float) $facture['Montant_TTC'];
+$montantNetAPayer = (float) $facture['Montant_Net_A_Payer'];
+$nomFournisseur = $facture['Nom_Fournisseur'];
+$numeroFacture = $facture['Numero_Facture'];
+
+$idCompteFournisseur = getCompteFournisseurId($pdo, $nomFournisseur);
+$idCompteSansBanque = getIdCompteByNumero($pdo, ACCOUNT_NO_BANK_NUMBER);
+$retenues = getRetenuesByFactureId($pdo, $factureId);
+
+if (!$idCompteFournisseur || !$idCompteSansBanque) {
+    exitWithError("Comptes comptables introuvables.");
+}
+
+// Début de transaction
+$pdo->beginTransaction();
+
+try {
+    $description = "PAIEMENT avec le compte sans banque - FACTURE $numeroFacture - $nomFournisseur";
+    $dateSaisie = date('Y-m-d H:i:s');
+    $mois = date('Y-m');
+    $utilisateur = $_SESSION['nom_utilisateur'] ?? 'Système';
+    $numeroPiece = 'PAIE-' . $numeroFacture;
+
+    $idEcriture = createEcriture(
+        $pdo,
+        $dateSaisie,
+        $description,
+        $montantTTC,
+        DEFAULT_JOURNAL_PAIEMENT_ID,
+        $utilisateur,
+        $mois,
+        $numeroPiece
+    );
+
+    if (!$idEcriture) {
+        throw new Exception("Échec lors de la création de l'écriture principale.");
+    }
+
+    // Ligne fournisseur (Crédit)
+    if (!createLigneEcriture($pdo, $idEcriture, $idCompteFournisseur, $montantTTC, 'C', "Paiement Facture $numeroFacture - Fournisseur")) {
+        throw new Exception("Erreur ligne fournisseur.");
+    }
+
+    // Ligne sans banque (Débit)
+    if (!createLigneEcriture($pdo, $idEcriture, $idCompteSansBanque, $montantNetAPayer, 'D', "Paiement avec Compte Sans Banque")) {
+        throw new Exception("Erreur ligne Compte Sans Banque.");
+    }
+
+    // Lignes de retenue
+    foreach ($retenues as $retenue) {
+        if ((float)$retenue['Montant_Retenue'] > 0) {
+            if (!createLigneEcriture(
+                $pdo,
+                $idEcriture,
+                $retenue['ID_Compte_Retenue'],
+                $retenue['Montant_Retenue'],
+                'D',
+                "Retenue: " . $retenue['Libelle_Retenue']
+            )) {
+                throw new Exception("Erreur ligne retenue: " . $retenue['Libelle_Retenue']);
+            }
+        }
+    }
+
+    // Mise à jour du statut facture
+    if (!updateFactureStatutAndEcriture($pdo, $factureId, 'Payé', $idEcriture)) {
+        throw new Exception("Erreur lors de la mise à jour de la facture.");
+    }
+
+    $pdo->commit();
+    redirectSuccess("Paiement effectué avec succès (écriture #$idEcriture).");
+
+} catch (Exception $e) {
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    exitWithError("Erreur: " . $e->getMessage());
+}
+
+
+// ------------------------
+// FONCTIONS UTILES
+// ------------------------
+
+function exitWithError($msg) {
+    header('Location: listes_factures.php?error=' . urlencode($msg));
+    exit();
+}
+
+function redirectSuccess($msg) {
+    header('Location: listes_factures.php?success=' . urlencode($msg));
+    exit();
+}
+
+function verifyCsrfToken($token) {
+    return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+}

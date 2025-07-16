@@ -1,0 +1,601 @@
+[2025-06-10 19:58:34] [DEBUG] Appel de genererEcrituresAmortissement pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Paramètres reçus: Journal Cde=2, Compte Principal=218, Compte Intérêt=2, Compte Banque=24722, Compte Taxes/Frais=0, Banque=, BGFILimit=NULL
+[2025-06-10 19:58:34] [DEBUG] Transaction démarrée pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Exécution de la requête de sélection d'échéancier pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] 48 échéance(s) trouvée(s) pour l'emprunt ID: 250.
+[2025-06-10 19:58:34] [DEBUG] Requête d'insertion d'entête d'écriture préparée.
+[2025-06-10 19:58:34] [DEBUG] Requête d'insertion de ligne d'écriture préparée.
+[2025-06-10 19:58:34] [DEBUG] Nom utilisateur: mbreka, Agence: 000
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 1 (DB Numero_Echeance: 1) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 1: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 1. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 1 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 1 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH1"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4354 pour l'échéance 1
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4354",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4354",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4354: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 1 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 2 (DB Numero_Echeance: 2) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 2: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 2. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 2 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 2 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH2"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4355 pour l'échéance 2
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4355",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4355",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4355: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 2 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 3 (DB Numero_Echeance: 3) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 3: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 3. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 3 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 3 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH3"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4356 pour l'échéance 3
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4356",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4356",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4356: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 3 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 4 (DB Numero_Echeance: 4) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 4: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 4. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 4 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 4 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH4"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4357 pour l'échéance 4
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4357",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4357",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4357: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 4 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 5 (DB Numero_Echeance: 5) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 5: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 5. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 5 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 5 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH5"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4358 pour l'échéance 5
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4358",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4358",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4358: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 5 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 6 (DB Numero_Echeance: 6) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 6: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 6. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 6 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 6 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH6"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4359 pour l'échéance 6
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4359",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4359",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4359: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 6 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 7 (DB Numero_Echeance: 7) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 7: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 7. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 7 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 7 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH7"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4360 pour l'échéance 7
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4360",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4360",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4360: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 7 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 8 (DB Numero_Echeance: 8) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 8: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 8. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 8 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 8 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH8"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4361 pour l'échéance 8
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4361",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4361",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4361: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 8 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 9 (DB Numero_Echeance: 9) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 9: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 9. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 9 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 9 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH9"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4362 pour l'échéance 9
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4362",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4362",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4362: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 9 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 10 (DB Numero_Echeance: 10) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 10: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 10. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 10 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 10 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH10"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4363 pour l'échéance 10
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4363",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4363",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4363: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 10 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 11 (DB Numero_Echeance: 11) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 11: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 11. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 11 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 11 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH11"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4364 pour l'échéance 11
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4364",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4364",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4364: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 11 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 12 (DB Numero_Echeance: 12) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 12: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 12. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 12 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 12 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH12"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4365 pour l'échéance 12
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4365",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4365",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4365: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 12 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 13 (DB Numero_Echeance: 13) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 13: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 13. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 13 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 13 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH13"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4366 pour l'échéance 13
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4366",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4366",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4366: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 13 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 14 (DB Numero_Echeance: 14) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 14: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 14. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 14 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 14 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH14"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4367 pour l'échéance 14
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4367",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4367",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4367: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 14 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 15 (DB Numero_Echeance: 15) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 15: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 15. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 15 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 15 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH15"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4368 pour l'échéance 15
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4368",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4368",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4368: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 15 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 16 (DB Numero_Echeance: 16) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 16: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 16. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 16 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 16 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH16"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4369 pour l'échéance 16
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4369",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4369",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4369: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 16 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 17 (DB Numero_Echeance: 17) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 17: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 17. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 17 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 17 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH17"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4370 pour l'échéance 17
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4370",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4370",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4370: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 17 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 18 (DB Numero_Echeance: 18) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 18: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 18. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 18 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 18 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH18"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4371 pour l'échéance 18
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4371",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4371",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4371: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 18 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 19 (DB Numero_Echeance: 19) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 19: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 19. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 19 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 19 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH19"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4372 pour l'échéance 19
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4372",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4372",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4372: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 19 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 20 (DB Numero_Echeance: 20) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 20: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 20. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 20 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 20 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH20"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4373 pour l'échéance 20
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4373",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4373",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4373: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 20 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 21 (DB Numero_Echeance: 21) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 21: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 21. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 21 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 21 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH21"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4374 pour l'échéance 21
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4374",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4374",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4374: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 21 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 22 (DB Numero_Echeance: 22) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 22: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 22. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 22 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 22 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH22"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4375 pour l'échéance 22
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4375",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4375",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4375: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 22 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 23 (DB Numero_Echeance: 23) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 23: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 23. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 23 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 23 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH23"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4376 pour l'échéance 23
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4376",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4376",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4376: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 23 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 24 (DB Numero_Echeance: 24) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 24: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 24. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 24 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 24 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH24"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4377 pour l'échéance 24
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4377",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4377",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4377: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 24 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 25 (DB Numero_Echeance: 25) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 25: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 25. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 25 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 25 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH25"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4378 pour l'échéance 25
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4378",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4378",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4378: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 25 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 26 (DB Numero_Echeance: 26) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 26: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 26. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 26 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 26 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH26"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4379 pour l'échéance 26
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4379",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4379",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4379: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 26 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 27 (DB Numero_Echeance: 27) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 27: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 27. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 27 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 27 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH27"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4380 pour l'échéance 27
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4380",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4380",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4380: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 27 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 28 (DB Numero_Echeance: 28) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 28: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 28. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 28 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 28 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH28"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4381 pour l'échéance 28
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4381",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4381",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4381: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 28 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 29 (DB Numero_Echeance: 29) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 29: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 29. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 29 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 29 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH29"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4382 pour l'échéance 29
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4382",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4382",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4382: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 29 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 30 (DB Numero_Echeance: 30) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 30: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 30. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 30 - Emprunt ID 250",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 30 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH30"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4383 pour l'échéance 30
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4383",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4383",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4383: Débits=825306.11, Crédits=825306.11
+[2025-06-10 19:58:34] [DEBUG] Échéance 30 traitée avec succès. Équilibre OK.
+[2025-06-10 19:58:34] [DEBUG] Traitement de l'échéance numéro 31 (DB Numero_Echeance: 31) pour emprunt ID: 250
+[2025-06-10 19:58:34] [DEBUG] Détails échéance 31: Amort=2022204.52, Int=825306.11, Taxes=0, Total Original=2847510.64
+[2025-06-10 19:58:34] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 19:58:34] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 31. Paramètres: {":date_saisie":"2025-06-10 18:58:34",":description":"Paiement \u00e9ch\u00e9ance 31 - Emprunt ID 250",":montant_total":2847510.64,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 31 - Emprunt ID 250",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP250-ECH31"}
+[2025-06-10 19:58:34] [DEBUG] Entête d'écriture insérée avec ID: 4384 pour l'échéance 31
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Amortissement: {":id_ecriture":"4384",":id_compte":218,":montant":2022204.52,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4384",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 19:58:34] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4384",":id_compte":24722,":montant":2847510.64,":sens":"C"}
+[2025-06-10 19:58:34] [DEBUG] Vérification équilibre écriture 4384: Débits=2847510.63, Crédits=2847510.64
+[2025-06-10 19:58:34] [DEBUG] Erreur: Déséquilibre Débit/Crédit significatif pour l'écriture ID 4384 (échéance 31, emprunt ID 250). Total Débits: 2847510.63, Total Crédits (Banque): 2847510.64. Transaction annulée pour cette échéance.
+[2025-06-10 19:58:34] [DEBUG] Transaction annulée: Déséquilibre Débit/Crédit.
+[2025-06-10 20:01:41] [DEBUG] Appel de genererEcrituresAmortissement pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Paramètres reçus: Journal Cde=2, Compte Principal=218, Compte Intérêt=2, Compte Banque=24722, Compte Taxes/Frais=0, Banque=, BGFILimit=NULL
+[2025-06-10 20:01:41] [DEBUG] Transaction démarrée pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Exécution de la requête de sélection d'échéancier pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] 48 échéance(s) trouvée(s) pour l'emprunt ID: 251.
+[2025-06-10 20:01:41] [DEBUG] Requête d'insertion d'entête d'écriture préparée.
+[2025-06-10 20:01:41] [DEBUG] Requête d'insertion de ligne d'écriture préparée.
+[2025-06-10 20:01:41] [DEBUG] Nom utilisateur: mbreka, Agence: 000
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 1 (DB Numero_Echeance: 1) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 1: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 1. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 1 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 1 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH1"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4385 pour l'échéance 1
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4385",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4385",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4385: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 1 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 2 (DB Numero_Echeance: 2) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 2: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 2. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 2 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 2 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH2"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4386 pour l'échéance 2
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4386",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4386",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4386: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 2 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 3 (DB Numero_Echeance: 3) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 3: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 3. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 3 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 3 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH3"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4387 pour l'échéance 3
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4387",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4387",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4387: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 3 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 4 (DB Numero_Echeance: 4) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 4: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 4. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 4 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 4 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH4"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4388 pour l'échéance 4
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4388",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4388",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4388: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 4 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 5 (DB Numero_Echeance: 5) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 5: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 5. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 5 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 5 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH5"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4389 pour l'échéance 5
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4389",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4389",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4389: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 5 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 6 (DB Numero_Echeance: 6) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 6: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 6. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 6 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 6 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH6"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4390 pour l'échéance 6
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4390",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4390",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4390: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 6 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 7 (DB Numero_Echeance: 7) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 7: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 7. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 7 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 7 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH7"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4391 pour l'échéance 7
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4391",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4391",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4391: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 7 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 8 (DB Numero_Echeance: 8) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 8: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 8. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 8 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 8 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH8"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4392 pour l'échéance 8
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4392",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4392",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4392: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 8 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 9 (DB Numero_Echeance: 9) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 9: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 9. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 9 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 9 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH9"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4393 pour l'échéance 9
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4393",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4393",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4393: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 9 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 10 (DB Numero_Echeance: 10) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 10: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 10. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 10 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 10 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH10"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4394 pour l'échéance 10
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4394",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4394",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4394: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 10 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 11 (DB Numero_Echeance: 11) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 11: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 11. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 11 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 11 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH11"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4395 pour l'échéance 11
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4395",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4395",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4395: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 11 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 12 (DB Numero_Echeance: 12) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 12: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 12. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 12 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 12 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH12"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4396 pour l'échéance 12
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4396",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4396",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4396: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 12 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 13 (DB Numero_Echeance: 13) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 13: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 13. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 13 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 13 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH13"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4397 pour l'échéance 13
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4397",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4397",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4397: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 13 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 14 (DB Numero_Echeance: 14) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 14: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 14. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 14 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 14 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH14"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4398 pour l'échéance 14
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4398",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4398",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4398: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 14 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 15 (DB Numero_Echeance: 15) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 15: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 15. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 15 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 15 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH15"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4399 pour l'échéance 15
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4399",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4399",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4399: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 15 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 16 (DB Numero_Echeance: 16) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 16: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 16. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 16 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 16 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH16"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4400 pour l'échéance 16
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4400",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4400",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4400: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 16 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 17 (DB Numero_Echeance: 17) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 17: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 17. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 17 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 17 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH17"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4401 pour l'échéance 17
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4401",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4401",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4401: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 17 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 18 (DB Numero_Echeance: 18) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 18: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 18. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 18 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 18 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH18"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4402 pour l'échéance 18
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4402",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4402",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4402: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 18 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 19 (DB Numero_Echeance: 19) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 19: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 19. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 19 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 19 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH19"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4403 pour l'échéance 19
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4403",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4403",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4403: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 19 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 20 (DB Numero_Echeance: 20) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 20: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 20. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 20 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 20 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH20"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4404 pour l'échéance 20
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4404",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4404",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4404: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 20 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 21 (DB Numero_Echeance: 21) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 21: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 21. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 21 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 21 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH21"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4405 pour l'échéance 21
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4405",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4405",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4405: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 21 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 22 (DB Numero_Echeance: 22) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 22: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 22. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 22 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 22 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH22"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4406 pour l'échéance 22
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4406",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4406",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4406: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 22 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 23 (DB Numero_Echeance: 23) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 23: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 23. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 23 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 23 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH23"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4407 pour l'échéance 23
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4407",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4407",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4407: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 23 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 24 (DB Numero_Echeance: 24) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 24: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 24. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 24 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 24 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH24"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4408 pour l'échéance 24
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4408",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4408",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4408: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 24 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 25 (DB Numero_Echeance: 25) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 25: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 25. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 25 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 25 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH25"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4409 pour l'échéance 25
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4409",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4409",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4409: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 25 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 26 (DB Numero_Echeance: 26) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 26: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 26. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 26 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 26 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH26"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4410 pour l'échéance 26
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4410",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4410",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4410: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 26 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 27 (DB Numero_Echeance: 27) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 27: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 27. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 27 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 27 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH27"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4411 pour l'échéance 27
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4411",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4411",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4411: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 27 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 28 (DB Numero_Echeance: 28) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 28: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 28. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 28 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 28 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH28"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4412 pour l'échéance 28
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4412",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4412",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4412: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 28 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 29 (DB Numero_Echeance: 29) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 29: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 29. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 29 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 29 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH29"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4413 pour l'échéance 29
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4413",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4413",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4413: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 29 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 30 (DB Numero_Echeance: 30) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 30: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 30. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 30 - Emprunt ID 251",":montant_total":825306.11,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 30 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH30"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4414 pour l'échéance 30
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4414",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4414",":id_compte":24722,":montant":825306.11,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4414: Débits=825306.11, Crédits=825306.11
+[2025-06-10 20:01:41] [DEBUG] Échéance 30 traitée avec succès. Équilibre OK.
+[2025-06-10 20:01:41] [DEBUG] Traitement de l'échéance numéro 31 (DB Numero_Echeance: 31) pour emprunt ID: 251
+[2025-06-10 20:01:41] [DEBUG] Détails échéance 31: Amort=2022204.52, Int=825306.11, Taxes=0, Total Original=2847510.64
+[2025-06-10 20:01:41] [DEBUG] Aucune logique bancaire spécifique appliquée pour la banque: ''.
+[2025-06-10 20:01:41] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 31. Paramètres: {":date_saisie":"2025-06-10 19:01:41",":description":"Paiement \u00e9ch\u00e9ance 31 - Emprunt ID 251",":montant_total":2847510.63,":id_journal":2,":journal_cde":2,":numero_agence_sce":"000",":libelle_ecriture":"Paiement \u00e9ch\u00e9ance 31 - Emprunt ID 251",":nom_utilisateur":"mbreka",":mois":"2025-06",":numero_piece":"EMP251-ECH31"}
+[2025-06-10 20:01:41] [DEBUG] Entête d'écriture insérée avec ID: 4415 pour l'échéance 31
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Amortissement: {":id_ecriture":"4415",":id_compte":218,":montant":2022204.52,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4415",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:01:41] [DEBUG] Insertion Ligne Banque: {":id_ecriture":"4415",":id_compte":24722,":montant":2847510.64,":sens":"C"}
+[2025-06-10 20:01:41] [DEBUG] Vérification équilibre écriture 4415: Débits=2847510.63, Crédits=2847510.64
+[2025-06-10 20:01:41] [DEBUG] Erreur: Déséquilibre Débit/Crédit significatif pour l'écriture ID 4415 (échéance 31, emprunt ID 251). Total Débits: 2847510.63, Total Crédits (Banque): 2847510.64. Transaction annulée pour cette échéance.
+[2025-06-10 20:01:41] [DEBUG] Transaction annulée: Déséquilibre Débit/Crédit.
+[2025-06-10 20:05:12] [DEBUG] Appel de genererEcrituresAmortissement pour emprunt ID: 252
+[2025-06-10 20:05:12] [DEBUG] Paramètres reçus: Journal Cde=2, Compte Principal=218, Compte Intérêt=2, Compte Banque=24722, Compte Taxes/Frais=0, Banque=, BGFILimit=NULL
+[2025-06-10 20:05:12] [DEBUG] Transaction démarrée pour emprunt ID: 252
+[2025-06-10 20:05:12] [DEBUG] Exécution de la requête de sélection d'échéancier pour emprunt ID: 252
+[2025-06-10 20:05:12] [DEBUG] 48 échéance(s) trouvée(s) pour l'emprunt ID: 252.
+[2025-06-10 20:05:12] [DEBUG] Requête d'insertion d'entête d'écriture préparée.
+[2025-06-10 20:05:12] [DEBUG] Requête d'insertion de ligne d'écriture préparée.
+[2025-06-10 20:05:12] [DEBUG] Nom utilisateur: mbreka, Agence: 000
+[2025-06-10 20:05:12] [DEBUG] Traitement de l'échéance numéro 1 (DB Numero_Echeance: 1) pour emprunt ID: 252
+[2025-06-10 20:05:12] [DEBUG] Détails échéance 1: Amort=0, Int=825306.11, Taxes=0, Total Original=825306.11, Montant Banque (Fixé)=2813003
+[2025-06-10 20:05:12] [DEBUG] Tentative d'insertion de l'entête d'écriture pour l'échéance 1. Montant Total entête: 2813003
+[2025-06-10 20:05:12] [DEBUG] Entête d'écriture insérée avec ID: 4416 pour l'échéance 1
+[2025-06-10 20:05:12] [DEBUG] Insertion Ligne Intérêt: {":id_ecriture":"4416",":id_compte":2,":montant":825306.11,":sens":"D"}
+[2025-06-10 20:05:12] [DEBUG] Insertion Ligne Banque (montant fixé): {":id_ecriture":"4416",":id_compte":24722,":montant":2813003,":sens":"C"}
+[2025-06-10 20:05:12] [DEBUG] Vérification équilibre écriture 4416: Total Débits (calculé) = 825306.11, Total Crédits (fixé) = 2813003
+[2025-06-10 20:05:12] [DEBUG] Erreur: Déséquilibre Débit/Crédit significatif pour l'écriture ID 4416 (échéance 1, emprunt ID 252). Total Débits calculés: 825306.11, Total Crédits (Banque fixé): 2813003. La transaction sera annulée pour cette échéance et toutes les précédentes si en boucle.
+[2025-06-10 20:05:12] [DEBUG] Transaction annulée: Déséquilibre Débit/Crédit.
+[2025-06-10 20:11:45] [DEBUG] Appel de genererEcrituresAmortissement pour emprunt ID: 254
+[2025-06-10 20:11:45] [DEBUG] Paramètres reçus: Journal Cde=2, Compte Principal=218, Compte Intérêt=2, Compte Banque=24722, Compte Taxes/Frais=0, Compte Ajustement=0
+[2025-06-10 20:11:45] [DEBUG] Erreur: Le compte d'ajustement est requis pour gérer les différences liées aux règles bancaires spécifiques.
+[2025-06-10 20:16:32] [DEBUG] Appel de genererEcrituresAmortissement pour emprunt ID: 255
+[2025-06-10 20:16:32] [DEBUG] Paramètres reçus: Journal Cde=2, Compte Principal=218, Compte Intérêt=2, Compte Banque=24722, Compte Taxes/Frais=0, Compte Frais Bancaires=0
+[2025-06-10 20:16:32] [DEBUG] Erreur: Le compte de frais/produits bancaires est requis pour gérer les différences liées aux règles bancaires spécifiques tout en maintenant l'équilibre.

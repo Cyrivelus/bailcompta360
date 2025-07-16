@@ -1,0 +1,236 @@
+<?php
+// pages/ecritures/liste.php
+
+$titre = 'Liste des Écritures Comptables';
+$current_page = basename($_SERVER['PHP_SELF']); // Pour la classe 'active' dans la navigation
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php'); // Inclusion de la navigation
+?>
+
+<?php
+// index.php (Gestion des utilisateurs)
+
+// Inclure les fichiers nécessaires (connexion à la base de données, fonctions, etc.)
+require_once '../../fonctions/database.php';
+require_once '../../fonctions/gestion_utilisateurs.php'; // Pour gérer les utilisateurs
+require_once '../../fonctions/gestion_profils.php'; // Pour la liste des profils
+
+// Vérifier si l'utilisateur est connecté et a les droits d'administrateur (à adapter)
+// session_start();
+// if (!isset($_SESSION['utilisateur_id']) || $_SESSION['role'] !== 'administrateur') {
+//     header("Location: ../auth/login.php");
+//     exit();
+// }
+
+// Récupérer la liste de tous les utilisateurs avec leur profil
+$utilisateurs = getListeUtilisateursAvecProfil($pdo);
+
+// Récupérer la liste de tous les profils pour le formulaire d'ajout/modification
+$profils = getListeProfils($pdo);
+
+// Traitement de l'ajout d'un nouvel utilisateur
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouter_utilisateur'])) {
+    $nomUtilisateur = $_POST['nom_utilisateur'];
+    $motDePasse = $_POST['mot_de_passe'];
+    $profilId = $_POST['profil_id'];
+
+    if (!empty($nomUtilisateur) && !empty($motDePasse) && !empty($profilId)) {
+        if (ajouterUtilisateur($pdo, $nomUtilisateur, password_hash($motDePasse, PASSWORD_DEFAULT), $profilId)) {
+            $messageSuccesAjout = "<div class='alert alert-success'>L'utilisateur '" . htmlspecialchars($nomUtilisateur) . "' a été ajouté avec succès.</div>";
+            $utilisateurs = getListeUtilisateursAvecProfil($pdo); // Recharger la liste
+        } else {
+            $messageErreurAjout = "<div class='alert alert-danger'>Erreur lors de l'ajout de l'utilisateur.</div>";
+        }
+    } else {
+        $messageErreurAjout = "<div class='alert alert-danger'>Tous les champs sont obligatoires pour ajouter un utilisateur.</div>";
+    }
+}
+
+// Traitement de la suppression d'un utilisateur
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['supprimer_utilisateur'])) {
+    $utilisateurIdSupprimer = $_GET['supprimer_utilisateur'];
+    if (supprimerUtilisateur($pdo, $utilisateurIdSupprimer)) {
+        $messageSuccesSuppression = "<div class='alert alert-success'>L'utilisateur a été supprimé avec succès.</div>";
+        $utilisateurs = getListeUtilisateursAvecProfil($pdo); // Recharger la liste
+    } else {
+        $messageErreurSuppression = "<div class='alert alert-danger'>Erreur lors de la suppression de l'utilisateur.</div>";
+    }
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Gestion des Utilisateurs</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/monstyle.css">
+    <link rel="stylesheet" href="../../css/formulaire.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-header">Gestion des Utilisateurs</h2>
+
+        <?php if (isset($messageSuccesAjout)): ?>
+            <?= $messageSuccesAjout ?>
+        <?php endif; ?>
+
+        <?php if (isset($messageErreurAjout)): ?>
+            <?= $messageErreurAjout ?>
+        <?php endif; ?>
+
+        <?php if (isset($messageSuccesSuppression)): ?>
+            <?= $messageSuccesSuppression ?>
+        <?php endif; ?>
+
+        <?php if (isset($messageErreurSuppression)): ?>
+            <?= $messageErreurSuppression ?>
+        <?php endif; ?>
+
+        <h3>Ajouter un Nouvel Utilisateur</h3>
+        <form action="" method="POST" class="form-horizontal">
+            <div class="form-group">
+                <label for="nom_utilisateur" class="col-sm-3 control-label">Nom d'utilisateur</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="nom_utilisateur" name="nom_utilisateur" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="mot_de_passe" class="col-sm-3 control-label">Mot de passe</label>
+                <div class="col-sm-9">
+                    <input type="password" class="form-control" id="mot_de_passe" name="mot_de_passe" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="profil_id" class="col-sm-3 control-label">Profil</label>
+                <div class="col-sm-9">
+                    <select class="form-control" id="profil_id" name="profil_id" required style="height: 40px;" >
+                        <option value="">Sélectionner un profil</option>
+                        <?php if (!empty($profils)): ?>
+                            <?php foreach ($profils as $profil): ?>
+                                <option value="<?= $profil['id_profil'] ?>"><?= htmlspecialchars($profil['nom_profil']) ?></option>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <option value="" disabled>Aucun profil disponible</option>
+                        <?php endif; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button type="submit" class="btn btn-primary" name="ajouter_utilisateur">Ajouter l'utilisateur</button>
+                </div>
+            </div>
+        </form>
+
+        <hr>
+
+        <h3>Liste des Utilisateurs</h3>
+        <?php if (!empty($utilisateurs)): ?>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom d'utilisateur</th>
+                        <th>Profil</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($utilisateurs as $utilisateur): ?>
+                        <tr>
+                            <td><?= $utilisateur['id_utilisateur'] ?></td>
+                            <td><?= htmlspecialchars($utilisateur['nom_utilisateur']) ?></td>
+                            <td><?= htmlspecialchars($utilisateur['nom_profil'] ?? 'Non défini') ?></td>
+                            <td>
+                                <a href="modifier.php?id=<?= $utilisateur['id_utilisateur'] ?>" class="btn btn-sm btn-warning">Modifier</a>
+                                <a href="?supprimer_utilisateur=<?= $utilisateur['id_utilisateur'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">Supprimer</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p>Aucun utilisateur trouvé.</p>
+        <?php endif; ?>
+
+        <p><a href="../admin/index.php" class="btn btn-default">Administration</a></p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNLJ5ywYOIDjxxyTwCypxSoOO3FxyYr4fccRoP1h0IWcAukj0jz9uNNs" crossorigin="anonymous"></script>
+	<script src="../js/tableau_dynamique.js"></script>
+	<script src="js/script.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialisez le tableau dynamique en ciblant son ID ou sa classe
+            initialiserTableauDynamique('#monTableauHTML', {
+                selection: true,
+                pagination: true,
+                rowsPerPage: 10,
+                sortable: true,
+                searchable: true,
+                // Autres options si nécessaire
+            });
+
+            // Vous pouvez initialiser d'autres tableaux dynamiques sur la même page ici
+            initialiserTableauDynamique('#autreTableau', {
+                // Différentes options pour cet autre tableau
+            });
+        });
+    </script>
+</body>
+</html>
+
+<?php
+// Fonctions de gestion des utilisateurs (à implémenter dans fonctions/gestion_utilisateurs.php)
+
+/**
+ * Récupère la liste de tous les utilisateurs avec leur profil.
+ * (Fonction à implémenter dans fonctions/gestion_utilisateurs.php)
+ */
+function getListeUtilisateursAvecProfil($db) {
+    try {
+        $stmt = $db->query("SELECT u.id_utilisateur, u.nom_utilisateur, u.profil_id, p.nom_profil
+                               FROM utilisateurs u
+                               LEFT JOIN profils p ON u.profil_id = p.id_profil
+                               ORDER BY u.nom_utilisateur");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération des utilisateurs avec profil : " . $e->getMessage());
+        return [];
+    }
+}
+
+/**
+ * Ajoute un nouvel utilisateur.
+ * (Fonction à implémenter dans fonctions/gestion_utilisateurs.php)
+ */
+
+
+/**
+ 
+
+// La fonction getListeProfils est supposée exister dans fonctions/gestion_profils.php
+// (ou gestion_utilisateurs.php si vous préférez les organiser ainsi)
+// Exemple (si dans gestion_profils.php) :
+/*
+// fonctions/gestion_profils.php
+function getListeProfils($db) {
+    try {
+        $stmt = $db->query("SELECT id_profil, nom_profil FROM profils ORDER BY nom_profil");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération des profils : " . $e->getMessage());
+        return [];
+    }
+}
+*/
+?>
+<?php
+require_once('../../templates/footer.php');
+?>

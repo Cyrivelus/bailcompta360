@@ -1,0 +1,263 @@
+<?php
+// gestion_utilisateurs.php
+
+// Activer l'affichage des erreurs pour le débogage
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Inclure le fichier de connexion à la base de données
+require_once("../../fonctions/database.php");
+
+// Démarrer la session
+session_start();
+
+// Vérifier si l'utilisateur est connecté et est un administrateur
+if (!isset($_SESSION['utilisateur_id']) || $_SESSION['role'] !== 'Admin') {
+    header("Location: ../../index.php"); // Rediriger si non connecté ou non admin
+    exit();
+}
+
+// Traitement des actions (ajouter, modifier, supprimer)
+if (isset($_POST['action'])) {
+    $action = $_POST['action'];
+
+    switch ($action) {
+        case 'ajouter':
+            if (isset($_POST['nom']) && isset($_POST['login_utilisateur']) && isset($_POST['mot_de_passe']) && isset($_POST['role'])) {
+                $nom = filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_STRING);
+                $login_utilisateur = filter_input(INPUT_POST, 'login_utilisateur', FILTER_SANITIZE_STRING);
+                $mot_de_passe = password_hash($_POST['mot_de_passe'], PASSWORD_DEFAULT); // Hacher le mot de passe
+                $role = filter_input(INPUT_POST, 'role', FILTER_SANITIZE_STRING);
+
+                if (!empty($nom) && !empty($login_utilisateur) && !empty($_POST['mot_de_passe']) && !empty($role)) {
+                    $sql = "INSERT INTO Utilisateurs (Nom, Login_Utilisateur, Mot_de_Passe, Role, Date_Creation) VALUES (?, ?, ?, ?, NOW())";
+                    $stmt = executeQuery($db, $sql, [$nom, $login_utilisateur, $mot_de_passe, $role]);
+
+                    if ($stmt) {
+                        $_SESSION['message'] = "Utilisateur ajouté avec succès.";
+                        $_SESSION['message_type'] = 'success';
+                    } else {
+                        $_SESSION['message'] = "Erreur lors de l'ajout de l'utilisateur.";
+                        $_SESSION['message_type'] = 'danger';
+                    }
+                } else {
+                    $_SESSION['message'] = "Tous les champs sont requis pour ajouter un utilisateur.";
+                    $_SESSION['message_type'] = 'warning';
+                }
+            }
+            break;
+
+        case 'modifier':
+            if (isset($_POST['id_utilisateur']) && isset($_POST['nom']) && isset($_POST['login_utilisateur']) && isset($_POST['role'])) {
+                $id_utilisateur = filter_input(INPUT_POST, 'id_utilisateur', FILTER_SANITIZE_NUMBER_INT);
+                $nom = filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_STRING);
+                $login_utilisateur = filter_input(INPUT_POST, 'login_utilisateur', FILTER_SANITIZE_STRING);
+                $role = filter_input(INPUT_POST, 'role', FILTER_SANITIZE_STRING);
+                $mot_de_passe = $_POST['nouveau_mot_de_passe'] ?? null;
+                $params = [$nom, $login_utilisateur, $role, $id_utilisateur];
+                $sql = "UPDATE Utilisateurs SET Nom = ?, Login_Utilisateur = ?, Role = ? WHERE ID_Utilisateur = ?";
+
+                if (!empty($mot_de_passe)) {
+                    $mot_de_passe_hash = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+                    $sql = "UPDATE Utilisateurs SET Nom = ?, Login_Utilisateur = ?, Mot_de_Passe = ?, Role = ? WHERE ID_Utilisateur = ?";
+                    $params = [$nom, $login_utilisateur, $mot_de_passe_hash, $role, $id_utilisateur];
+                }
+
+                $stmt = executeQuery($db, $sql, $params);
+
+                if ($stmt) {
+                    $_SESSION['message'] = "Utilisateur mis à jour avec succès.";
+                    $_SESSION['message_type'] = 'success';
+                } else {
+                    $_SESSION['message'] = "Erreur lors de la mise à jour de l'utilisateur.";
+                    $_SESSION['message_type'] = 'danger';
+                }
+            } else {
+                $_SESSION['message'] = "Informations manquantes pour la modification.";
+                $_SESSION['message_type'] = 'warning';
+            }
+            break;
+
+        case 'supprimer':
+            if (isset($_POST['id_utilisateur'])) {
+                $id_utilisateur = filter_input(INPUT_POST, 'id_utilisateur', FILTER_SANITIZE_NUMBER_INT);
+                $sql = "DELETE FROM Utilisateurs WHERE ID_Utilisateur = ?";
+                $stmt = executeQuery($db, $sql, [$id_utilisateur]);
+
+                if ($stmt) {
+                    $_SESSION['message'] = "Utilisateur supprimé avec succès.";
+                    $_SESSION['message_type'] = 'success';
+                } else {
+                    $_SESSION['message'] = "Erreur lors de la suppression de l'utilisateur.";
+                    $_SESSION['message_type'] = 'danger';
+                }
+            }
+            break;
+    }
+
+    // Rediriger pour éviter la soumission multiple du formulaire
+    header("Location: gestion_utilisateurs.php");
+    exit();
+}
+
+// Récupérer la liste des utilisateurs
+$sql_liste = "SELECT ID_Utilisateur, Nom, Login_Utilisateur, Role FROM Utilisateurs ORDER BY Nom";
+$stmt_liste = executeQuery($db, $sql_liste);
+$utilisateurs = fetchAll($stmt_liste);
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des Utilisateurs | BailCompta 360</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        .message {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Gestion des Utilisateurs</h2>
+
+        <?php if (isset($_SESSION['message'])): ?>
+            <div class="alert alert-<?= $_SESSION['message_type'] ?> message" role="alert">
+                <?= $_SESSION['message'] ?>
+            </div>
+            <?php unset($_SESSION['message']); ?>
+        <?php endif; ?>
+
+        <h3>Liste des Utilisateurs</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Login</th>
+                    <th>Rôle</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($utilisateurs): ?>
+                    <?php foreach ($utilisateurs as $utilisateur): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($utilisateur['ID_Utilisateur']) ?></td>
+                            <td><?= htmlspecialchars($utilisateur['Nom']) ?></td>
+                            <td><?= htmlspecialchars($utilisateur['Login_Utilisateur']) ?></td>
+                            <td><?= htmlspecialchars($utilisateur['Role']) ?></td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modifierUtilisateurModal<?= $utilisateur['ID_Utilisateur'] ?>">Modifier</button>
+                                <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#supprimerUtilisateurModal<?= $utilisateur['ID_Utilisateur'] ?>">Supprimer</button>
+                            </td>
+                        </tr>
+
+                        <div class="modal fade" id="modifierUtilisateurModal<?= $utilisateur['ID_Utilisateur'] ?>" tabindex="-1" role="dialog" aria-labelledby="modifierUtilisateurModalLabel<?= $utilisateur['ID_Utilisateur'] ?>" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modifierUtilisateurModalLabel<?= $utilisateur['ID_Utilisateur'] ?>">Modifier Utilisateur</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post">
+                                            <input type="hidden" name="action" value="modifier">
+                                            <input type="hidden" name="id_utilisateur" value="<?= $utilisateur['ID_Utilisateur'] ?>">
+                                            <div class="form-group">
+                                                <label for="nom">Nom</label>
+                                                <input type="text" class="form-control" id="nom" name="nom" value="<?= htmlspecialchars($utilisateur['Nom']) ?>" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="login_utilisateur">Login</label>
+                                                <input type="text" class="form-control" id="login_utilisateur" name="login_utilisateur" value="<?= htmlspecialchars($utilisateur['Login_Utilisateur']) ?>" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="nouveau_mot_de_passe">Nouveau Mot de Passe (laisser vide pour ne pas changer)</label>
+                                                <input type="password" class="form-control" id="nouveau_mot_de_passe" name="nouveau_mot_de_passe">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="role">Rôle</label>
+                                                <select class="form-control" id="role" name="role" required>
+                                                    <option value="Admin" <?= ($utilisateur['Role'] === 'Admin') ? 'selected' : '' ?>>Administrateur</option>
+                                                    <option value="Comptable" <?= ($utilisateur['Role'] === 'Comptable') ? 'selected' : '' ?>>Comptable</option>
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="supprimerUtilisateurModal<?= $utilisateur['ID_Utilisateur'] ?>" tabindex="-1" role="dialog" aria-labelledby="supprimerUtilisateurModalLabel<?= $utilisateur['ID_Utilisateur'] ?>" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="supprimerUtilisateurModalLabel<?= $utilisateur['ID_Utilisateur'] ?>">Confirmation de Suppression</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Êtes-vous sûr de vouloir supprimer l'utilisateur <strong><?= htmlspecialchars($utilisateur['Nom']) ?></strong> ?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                        <form method="post" style="display: inline;">
+                                            <input type="hidden" name="action" value="supprimer">
+                                            <input type="hidden" name="id_utilisateur" value="<?= $utilisateur['ID_Utilisateur'] ?>">
+                                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="5">Aucun utilisateur trouvé.</td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <h3>Ajouter un Utilisateur</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="ajouter">
+            <div class="form-group">
+                <label for="nom">Nom</label>
+                <input type="text" class="form-control" id="nom" name="nom" required>
+            </div>
+            <div class="form-group">
+                <label for="login_utilisateur">Login</label>
+                <input type="text" class="form-control" id="login_utilisateur" name="login_utilisateur" required>
+            </div>
+            <div class="form-group">
+                <label for="mot_de_passe">Mot de Passe</label>
+                <input type="password" class="form-control" id="mot_de_passe" name="mot_de_passe" required>
+            </div>
+            <div class="form-group">
+                <label for="role">Rôle</label>
+                <select class="form-control" id="role" name="role" required>
+                    <option value="Admin">Administrateur</option>
+                    <option value="Comptable">Comptable</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">Ajouter</button>
+        </form>
+
+        <p><a href="../pages/tableau_bord.php" class="btn btn-secondary mt-3">Retour au Tableau de Bord</a></p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

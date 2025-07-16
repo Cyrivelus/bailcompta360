@@ -1,0 +1,145 @@
+<?php
+// pages/admin/habilitations/modifier.php
+
+// Démarrer la session pour la gestion de l'authentification
+session_start();
+
+// Vérifier si l'utilisateur est connecté et est un administrateur
+if (!isset($_SESSION['utilisateur_id']) || $_SESSION['role'] !== 'Admin') {
+    // Rediriger si non autorisé
+    header("Location: ../../index.php?error=Accès non autorisé");
+    exit();
+}
+
+// Inclure l'en-tête de l'administration
+$title = "Modifier les Habilitations";
+include('../includes/header.php');
+
+// Inclure la navigation de l'administration
+include('../includes/navigation.php');
+
+// Inclure le fichier de connexion à la base de données
+require_once('../../../fonctions/database.php');
+
+// Vérifier le type (profil ou utilisateur) et l'ID
+if (!isset($_GET['type']) || !in_array($_GET['type'], ['profil', 'utilisateur']) || !isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header("Location: index.php?error=Paramètres invalides");
+    exit();
+}
+
+$type = $_GET['type'];
+$id = $_GET['id'];
+$nomEntite = '';
+$habilitationsActuelles = [];
+
+// Récupérer les objets protégés (fonctionnalités) - doit correspondre à index.php
+$objetsProteges = [
+    'saisie_ecritures' => 'Saisie des Écritures Comptables',
+    'gestion_emprunts' => 'Gestion des Emprunts Bancaires',
+    'gestion_factures' => 'Gestion des Factures (Clients/Fournisseurs)',
+    'import_releves' => 'Importation des Relevés Bancaires',
+    'export_compta' => 'Exportation Comptable (ABS 2000)',
+    'gestion_utilisateurs' => 'Gestion des Utilisateurs',
+    'gestion_profils' => 'Gestion des Profils',
+    'gestion_habilitations' => 'Gestion des Habilitations',
+    'configuration_app' => 'Configuration de l\'Application',
+    'visualisation_logs' => 'Visualisation des Logs',
+    // Ajoutez ici d'autres fonctionnalités
+];
+
+if ($type === 'profil') {
+    // Récupérer le nom du profil
+    $sqlNom = "SELECT Nom_Profil FROM Profils WHERE ID_Profil = :id";
+    $stmtNom = $pdo->prepare($sqlNom);
+    $stmtNom->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmtNom->execute();
+    $resultNom = $stmtNom->fetch(PDO::FETCH_ASSOC);
+    if ($resultNom) {
+        $nomEntite = htmlspecialchars($resultNom['Nom_Profil']);
+    } else {
+        header("Location: index.php?error=Profil non trouvé");
+        exit();
+    }
+
+    // Récupérer les habilitations actuelles du profil
+    $sqlHabilitations = "SELECT Objet FROM Habilitations_Profil WHERE ID_Profil = :id";
+    $stmtHabilitations = $pdo->prepare($sqlHabilitations);
+    $stmtHabilitations->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmtHabilitations->execute();
+    while ($row = $stmtHabilitations->fetch(PDO::FETCH_ASSOC)) {
+        $habilitationsActuelles[] = $row['Objet'];
+    }
+
+} elseif ($type === 'utilisateur') {
+    // Récupérer le nom de l'utilisateur
+    $sqlNom = "SELECT Nom FROM Utilisateurs WHERE ID_Utilisateur = :id";
+    $stmtNom = $pdo->prepare($sqlNom);
+    $stmtNom->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmtNom->execute();
+    $resultNom = $stmtNom->fetch(PDO::FETCH_ASSOC);
+    if ($resultNom) {
+        $nomEntite = htmlspecialchars($resultNom['Nom']);
+    } else {
+        header("Location: index.php?error=Utilisateur non trouvé");
+        exit();
+    }
+
+    // Récupérer les habilitations actuelles de l'utilisateur
+    $sqlHabilitations = "SELECT Objet FROM Habilitations_Utilisateur WHERE ID_Utilisateur = :id";
+    $stmtHabilitations = $pdo->prepare($sqlHabilitations);
+    $stmtHabilitations->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmtHabilitations->execute();
+    while ($row = $stmtHabilitations->fetch(PDO::FETCH_ASSOC)) {
+        $habilitationsActuelles[] = $row['Objet'];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Administration - Modifier le rôle</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <?php if (isset($admin_style) && $admin_style): ?>
+        <link rel="stylesheet" href="../../css/admin_style.css">
+    <?php endif; ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<?php require_once '../../templates/admin_navigation.php'; // Inclure la navigation spécifique à l'admin ?>
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Modifier les Habilitations pour <?php echo $type === 'profil' ? 'le Profil' : 'l\'Utilisateur'; ?> : <?php echo $nomEntite; ?></h1>
+    </div>
+
+    <form method="post" action="enregistrer_habilitations.php">
+        <input type="hidden" name="type" value="<?php echo htmlspecialchars($type); ?>">
+        <input type="hidden" name="id" value="<?php echo htmlspecialchars($id); ?>">
+
+        <div class="mb-3">
+            <label class="form-label">Sélectionnez les Habilitations :</label>
+            <?php foreach ($objetsProteges as $key => $label): ?>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="habilitations[]" value="<?php echo htmlspecialchars($key); ?>" id="<?php echo htmlspecialchars($key); ?>" <?php if (in_array($key, $habilitationsActuelles)) echo 'checked'; ?>>
+                    <label class="form-check-label" for="<?php echo htmlspecialchars($key); ?>">
+                        <?php echo htmlspecialchars($label); ?>
+                    </label>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Enregistrer les Habilitations</button>
+        <a href="index.php" class="btn btn-secondary">Annuler</a>
+    </form>
+</main>
+
+<?php require_once '../../includes/footer.php'; ?>
+
+</body>
+</html>

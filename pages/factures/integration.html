@@ -1,0 +1,244 @@
+<?php
+// pages/ecritures/liste.php
+
+$titre = 'Liste des Écritures Comptables';
+$current_page = basename($_SERVER['PHP_SELF']); // Pour la classe 'active' dans la navigation
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php'); // Inclusion de la navigation
+?>
+
+<div class="container">
+    <h2 class="page-header">Intégration Comptable des Factures</h2>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Import de Factures</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/monstyle.css">
+    <link rel="stylesheet" href="../../css/formulaire.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <?php
+    // integration.php
+
+    // *** Configuration ***
+    $cheminFichierSource = '/chemin/vers/vos/fichiers/factures/'; // Chemin vers le dossier contenant les fichiers de factures (CSV, XML, etc.)
+    $typeFichier = 'csv'; // Type de fichier des factures ('csv', 'xml', etc.)
+    $separateurCSV = ';'; // Séparateur pour les fichiers CSV
+    $formatDate = 'Y-m-d'; // Format de date attendu dans les fichiers de factures
+
+    // Inclure les fichiers nécessaires (connexion à la base de données, fonctions, etc.)
+    require_once '../../fonctions/database.php';
+    require_once '../../fonctions/gestion_fournisseurs.php';
+
+    // *** Fonctions ***
+
+    /**
+     * Lit le contenu d'un fichier de facture en fonction de son type.
+     *
+     * @param string $cheminFichier Chemin complet vers le fichier.
+     * @param string $type Type de fichier ('csv', 'xml', etc.).
+     * @param string $separateur Séparateur pour les fichiers CSV.
+     * @return array|null Tableau associatif représentant la facture, ou null en cas d'erreur.
+     */
+    function lireFichierFacture(string $cheminFichier, string $type, string $separateur = ';'): ?array
+    {
+        if (!file_exists($cheminFichier)) {
+            error_log("Fichier non trouvé : " . $cheminFichier);
+            return null;
+        }
+
+        switch (strtolower($type)) {
+            case 'csv':
+                return lireFactureCSV($cheminFichier, $separateur);
+            // Ajouter d'autres cas pour d'autres types de fichiers (XML, JSON, etc.)
+            case 'xml':
+                return lireFactureXML($cheminFichier);
+            default:
+                error_log("Type de fichier non supporté : " . $type);
+                return null;
+        }
+    }
+
+    /**
+     * Lit un fichier de facture au format CSV.
+     *
+     * @param string $cheminFichier Chemin complet vers le fichier CSV.
+     * @param string $separateur Séparateur des colonnes.
+     * @return array|null Tableau associatif représentant la facture, ou null en cas d'erreur.
+     */
+    function lireFactureCSV(string $cheminFichier, string $separateur): ?array
+    {
+        $facture = [];
+        if (($handle = fopen($cheminFichier, "r")) !== false) {
+            $headers = fgetcsv($handle, 0, $separateur);
+            if ($headers === false) {
+                error_log("Erreur lors de la lecture de l'en-tête CSV : " . $cheminFichier);
+                fclose($handle);
+                return null;
+            }
+            $data = fgetcsv($handle, 0, $separateur);
+            if ($data === false) {
+                error_log("Erreur lors de la lecture des données CSV : " . $cheminFichier);
+                fclose($handle);
+                return null;
+            }
+            if (count($headers) !== count($data)) {
+                error_log("Nombre d'en-têtes et de données CSV incompatible : " . $cheminFichier);
+                fclose($handle);
+                return null;
+            }
+            $facture = array_combine($headers, $data);
+            fclose($handle);
+            return $facture;
+        } else {
+            error_log("Impossible d'ouvrir le fichier CSV : " . $cheminFichier);
+            return null;
+        }
+    }
+
+    /**
+     * Lit un fichier de facture au format XML.
+     *
+     * @param string $cheminFichier Chemin complet vers le fichier XML.
+     * @return array|null Tableau associatif représentant la facture, ou null en cas d'erreur.
+     */
+    function lireFactureXML(string $cheminFichier): ?array
+    {
+        if (!$xml = simplexml_load_file($cheminFichier)) {
+            error_log("Erreur lors de la lecture du fichier XML : " . $cheminFichier);
+            return null;
+        }
+
+        $facture = [];
+        // Adapter la lecture en fonction de la structure de vos fichiers XML
+        if (isset($xml->numero_facture)) $facture['numero_facture'] = (string) $xml->numero_facture;
+        if (isset($xml->date_emission)) $facture['date_emission'] = (string) $xml->date_emission;
+        if (isset($xml->montant_ht)) $facture['montant_ht'] = (float) $xml->montant_ht;
+        if (isset($xml->taux_tva)) $facture['taux_tva'] = (float) $xml->taux_tva;
+        if (isset($xml->montant_ttc)) $facture['montant_ttc'] = (float) $xml->montant_ttc;
+        if (isset($xml->id_client)) $facture['id_client'] = (int) $xml->id_client;
+        if (isset($xml->nom_client)) $facture['nom_client'] = (string) $xml->nom_client;
+        // ... ajouter d'autres champs
+
+        return $facture;
+    }
+
+    /**
+     * Déverse une facture dans la base de données comptable.
+     *
+     * @param PDO $pdo Instance de connexion PDO à la base de données comptable.
+     * @param array $facture Tableau associatif représentant la facture.
+     * @return bool True en cas de succès, false en cas d'erreur.
+     */
+    function deverserFactureCompta(PDO $pdo, array $facture): bool
+    {
+        if (empty($facture)) {
+            error_log("Tentative de déversement d'une facture vide.");
+            return false;
+        }
+
+        // *** Adapter les noms de colonnes et la logique d'insertion à votre base de données comptable ***
+        $sql = "INSERT INTO Factures (
+                    Numero_Facture,
+                    Date_Emission,
+                    Montant_HT,
+                    Montant_TVA,
+                    Montant_TTC,
+                    ID_Tiers,
+                    Type_Facture,
+                    Date_Comptabilisation
+                ) VALUES (
+                    :numero_facture,
+                    :date_emission,
+                    :montant_ht,
+                    :montant_tva,
+                    :montant_ttc,
+                    :id_tiers,
+                    :type_facture,
+                    NOW()
+                )";
+
+        try {
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':numero_facture', $facture['numero_facture']);
+            $stmt->bindParam(':date_emission', $facture['date_emission']);
+            $stmt->bindParam(':montant_ht', $facture['montant_ht']);
+            $stmt->bindParam(':montant_tva', $facture['taux_tva']); // Utilisation du taux pour le montant (à adapter si nécessaire)
+            $stmt->bindParam(':montant_ttc', $facture['montant_ttc']);
+            $stmt->bindParam(':id_tiers', $facture['id_client']); // Supposant un champ 'id_client' dans votre fichier
+            $stmt->bindValue(':type_facture', 'Client'); // Indiquer le type de facture
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Erreur lors du déversement de la facture " . ($facture['numero_facture'] ?? 'N/A') . " : " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // *** Script principal ***
+
+    // Scanner le répertoire des fichiers de factures
+    $fichiersFactures = scandir($cheminFichierSource);
+    $nombreFichiersTraites = 0;
+    $integrationReussie = false;
+
+    foreach ($fichiersFactures as $fichier) {
+        if ($fichier === '.' || $fichier === '..') {
+            continue;
+        }
+
+        $cheminFichierComplet = $cheminFichierSource . $fichier;
+
+        // Vérifier si c'est un fichier
+        if (is_file($cheminFichierComplet)) {
+            echo "<p>Traitement du fichier : " . htmlspecialchars($fichier) . "</p>";
+            $nombreFichiersTraites++;
+
+            // Lire le contenu du fichier de facture
+            $facture = lireFichierFacture($cheminFichierComplet, $typeFichier, $separateurCSV);
+
+            if ($facture) {
+                // Valider les données minimales de la facture avant le déversement
+                if (isset($facture['numero_facture']) && isset($facture['date_emission']) && isset($facture['montant_ttc']) && isset($facture['id_client'])) {
+                    // Déverser la facture dans la base de données comptable
+                    if (deverserFactureCompta($pdo, $facture)) {
+                        echo "<p class='alert alert-success'>Facture " . htmlspecialchars($facture['numero_facture']) . " intégrée avec succès.</p>";
+                        $integrationReussie = true;
+                        // Optionnellement, déplacer le fichier traité vers un dossier d'archives
+                        // rename($cheminFichierComplet, '/chemin/vers/vos/archives/' . $fichier);
+                    } else {
+                        echo "<p class='alert alert-danger'>Erreur lors de l'intégration de la facture " . (isset($facture['numero_facture']) ? htmlspecialchars($facture['numero_facture']) : 'N/A') . ".</p>";
+                    }
+                } else {
+                    echo "<p class='alert alert-warning'>Facture " . (isset($facture['numero_facture']) ? htmlspecialchars($facture['numero_facture']) : htmlspecialchars($fichier)) . " incomplète, intégration ignorée.</p>";
+                    error_log("Facture incomplète : " . $cheminFichierComplet . " - Données manquantes.");
+                }
+            } else {
+                echo "<p class='alert alert-danger'>Erreur lors de la lecture du fichier : " . htmlspecialchars($fichier) . ".</p>";
+            }
+        }
+    }
+
+    if ($nombreFichiersTraites === 0) {
+        echo "<p class='alert alert-info'>Aucun fichier de facture à intégrer n'a été trouvé dans le répertoire : " . htmlspecialchars($cheminFichierSource) . "</p>";
+    } elseif (!$integrationReussie && $nombreFichiersTraites > 0) {
+        echo "<p class='alert alert-warning'>L'intégration des factures est terminée, mais aucune facture n'a été intégrée avec succès.</p>";
+    } elseif ($integrationReussie && $nombreFichiersTraites > 0) {
+        echo "<p class='alert alert-success'>Intégration des factures terminée avec succès.</p>";
+    }
+
+    // Fermer la connexion à la base de données comptable
+    $pdo = null;
+
+    ?>
+
+</div>
+</body>
+</html>
+<?php
+require_once('../../templates/footer.php');
+?>

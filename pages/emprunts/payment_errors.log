@@ -1,0 +1,49 @@
+[2025-06-20 18:42:33] Paramètres manquants: compte_principal_id, compte_interet_id, compte_banque_id sont requis. Received POST data: {"id_echeance":"8526","id_emprunt":"310","compte_principal":"187130000000","compte_charges_interets":"603108000000","compte_banque":"560413128090","compte_taxes_frais":"603108000000"}
+[2025-06-20 18:44:39] Paramètres manquants: compte_principal_id, compte_interet_id, compte_banque_id sont requis. Received POST data: {"id_echeance":"8526","id_emprunt":"310","compte_principal":"187130000000","compte_charges_interets":"603108000000","compte_banque":"560413128090","compte_taxes_frais":"603108000000"}
+[2025-06-20 18:48:20] Paramètres manquants: compte_principal_id, compte_interet_id, compte_banque_id sont requis. Received POST data: {"id_echeance":"8526","id_emprunt":"310","compte_principal":"187130000000","compte_charges_interets":"603108000000","compte_banque":"560413128090","compte_taxes_frais":"603108000000"}
+[2025-06-20 18:52:22] Les IDs de compte comptables fournis sont invalides (doivent être des entiers positifs). Problèmes avec: Compte Principal, Compte Intérêt, Compte Banque Received IDs: {"principal":0,"interet":0,"banque":0,"taxes":null}
+[2025-06-20 18:59:19] Erreur PDO lors de la vérification des comptes comptables: SQLSTATE[22003]: [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]La conversion de la valeur nvarchar '187130000000' a dépassé une colonne int.
+[2025-06-20 19:07:33] Erreur PDO lors de la vérification des comptes comptables: SQLSTATE[22003]: [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]La conversion de la valeur nvarchar '187130000000' a dépassé une colonne int.
+[2025-06-20 19:10:57] Erreur PDO lors de la vérification des comptes comptables: SQLSTATE[22003]: [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]La conversion de la valeur nvarchar '187130000000' a dépassé une colonne int. (Trying to validate account ID: 187130000000)
+[2025-06-20 19:14:07] Les IDs de compte comptables fournis sont trop longs. Problèmes avec: Compte Principal (numéro trop long), Compte Intérêt (numéro trop long), Compte Banque (numéro trop long). La longueur maximale attendue est de 10 chiffres. Received IDs: {"id_echeance":"8526","id_emprunt":"310","compte_principal_id":"187130000000","compte_interet_id":"603108000000","compte_banque_id":"560413128090","compte_taxes_frais_id":""}
+[2025-06-20 19:15:17] Erreur: Un ou plusieurs numéros de compte comptables fournis sont introuvables dans la base de données (IDs: 18713, 603108, 5604131280).
+[2025-06-20 19:17:52] Les IDs de compte comptables fournis sont trop longs. Problèmes avec: Compte Principal (numéro trop long), Compte Intérêt (numéro trop long), Compte Banque (numéro trop long). La longueur maximale attendue est de 10 chiffres. Received IDs: {"id_echeance":"8526","id_emprunt":"310","compte_principal_id":"187130000000","compte_interet_id":"603108000000","compte_banque_id":"560413128090","compte_taxes_frais_id":""}
+[2025-06-20 19:18:23] Les IDs de compte comptables fournis sont trop longs. Problèmes avec: Compte Principal (numéro trop long). La longueur maximale attendue est de 10 chiffres. Received IDs: {"id_echeance":"8526","id_emprunt":"310","compte_principal_id":"187130000000","compte_interet_id":"60310800","compte_banque_id":"560413128","compte_taxes_frais_id":""}
+[2025-06-20 19:19:04] Erreur: Un ou plusieurs numéros de compte comptables fournis sont introuvables dans la base de données (IDs: 18713, 603108, 56041312).
+[2025-06-20 19:23:52] Les IDs de compte comptables fournis sont trop longs. Problèmes avec: Compte Principal (numéro trop long), Compte Intérêt (numéro trop long), Compte Banque (numéro trop long). La longueur maximale attendue est de 10 chiffres. Received IDs: {"id_echeance":"8526","id_emprunt":"310","compte_principal_id":"187130000000","compte_interet_id":"603108000000","compte_banque_id":"560413128090","compte_taxes_frais_id":""}
+[2025-06-20 19:24:46] Erreur: Un ou plusieurs numéros de compte comptables fournis sont introuvables dans la base de données (IDs: 18713000, 60310800, 56041312).
+[2025-06-21 10:36:58] Paramètres manquants ou vides: compte_principal_id, compte_interet_id, compte_banque_id sont requis. Received POST data: {"id_echeance":"927","id_emprunt":"141"}
+[2025-06-24 09:03:00] Erreur lors de la création de l'écriture principale (Ecritures) : SQLSTATE[22007]: [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]La conversion d'un type de données nvarchar en type de données datetime a créé une valeur hors limites. (Date format used: 2025-06-24 09:03:00)
+[2025-06-24 09:03:00] Transaction annulée en raison d'erreurs comptables pour échéance ID: 1609
+[2025-06-24 09:05:44] Erreur lors de la création de l'écriture principale (Ecritures) : SQLSTATE[22007]: [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]La conversion d'un type de données nvarchar en type de données datetime a créé une valeur hors limites. (Date format used: 2025-06-24 09:05:44)
+[2025-06-24 09:05:44] Transaction annulée en raison d'erreurs comptables pour échéance ID: 1609
+[2025-06-24 09:09:52] Erreur lors de la création de l'écriture principale (Ecritures) : SQLSTATE[22007]: [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]La conversion d'un type de données nvarchar en type de données datetime a créé une valeur hors limites. (Date format used: 2025-06-24 09:09:52)
+[2025-06-24 09:09:52] Transaction annulée en raison d'erreurs comptables pour échéance ID: 1609
+[2025-06-24 09:11:51] Échéance ID 1609 comptabilisée avec succès. ID_Ecriture: 7226
+[2025-06-24 09:23:20] Erreur lors de la création de l'écriture principale (Ecritures) : SQLSTATE[22007]: [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]La conversion d'un type de données nvarchar en type de données datetime a créé une valeur hors limites. (Date format used: 2025-06-24 09:23:20)
+[2025-06-24 09:23:20] Transaction annulée en raison d'erreurs comptables pour échéance ID: 9289
+[2025-06-24 09:24:32] Échéance ID 9289 comptabilisée avec succès. ID_Ecriture: 7228
+[2025-06-24 09:25:48] Erreur lors de la création de l'écriture principale (Ecritures) : SQLSTATE[22007]: [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]La conversion d'un type de données nvarchar en type de données datetime a créé une valeur hors limites. (Date format used: 2025-06-24 09:25:48)
+[2025-06-24 09:25:48] Transaction annulée en raison d'erreurs comptables pour échéance ID: 9290
+[2025-06-24 09:27:04] Erreur lors de la création de l'écriture principale (Ecritures) : SQLSTATE[22007]: [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]La conversion d'un type de données nvarchar en type de données datetime a créé une valeur hors limites. (Date format used: 2025-06-24 09:27:04)
+[2025-06-24 09:27:04] Transaction annulée en raison d'erreurs comptables pour échéance ID: 9290
+[2025-06-24 09:30:20] Erreur lors de la création de l'écriture principale (Ecritures) : SQLSTATE[22007]: [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]La conversion d'un type de données nvarchar en type de données datetime a créé une valeur hors limites. (Date format used: 2025-06-24 09:30:20)
+[2025-06-24 09:30:20] Transaction annulée en raison d'erreurs comptables pour échéance ID: 9290
+[2025-06-24 09:32:18] Échéance ID 9290 comptabilisée avec succès. ID_Ecriture: 7232
+[2025-06-24 10:26:13] Échéance ID 9291 comptabilisée avec succès. ID_Ecriture: 7425
+[2025-06-24 11:40:48] Échéance ID 9961 comptabilisée avec succès. ID_Ecriture: 7755
+[2025-06-24 12:03:46] Erreur PDO lors de l'insertion d'une ligne d'écriture (Compte ID: 13166, Sens: D, Montant: -5.8207660913467E-11) : SQLSTATE[42000]: [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Erreur de conversion du type de données nvarchar en numeric.
+[2025-06-24 12:03:46] Transaction annulée en raison d'erreurs comptables pour échéance ID: 9962
+[2025-06-24 12:07:45] Paramètres POST manquants ou vides: journal_cde sont requis. Received POST data: {"id_echeance":"9962","id_emprunt":"340","compte_principal_id":"9060","compte_interet_id":"28403","compte_banque_id":"24747","compte_taxes_frais_id":"13166"}
+[2025-06-24 12:10:45] Échéance ID 9962 comptabilisée avec succès. ID_Ecriture: 7757
+[2025-06-24 12:13:08] Erreur PDO lors de l'insertion d'une ligne d'écriture (Compte ID: 13166, Sens: D, Montant: -4.6566128730774E-10) : SQLSTATE[42000]: [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Erreur de conversion du type de données nvarchar en numeric.
+[2025-06-24 12:13:08] Transaction annulée en raison d'erreurs comptables pour échéance ID: 9963
+[2025-06-24 12:14:51] Échéance ID 9963 comptabilisée avec succès. ID_Ecriture: 7759
+[2025-06-24 12:21:31] Échéance ID 9964 comptabilisée avec succès. ID_Ecriture: 7760
+[2025-06-24 12:23:14] Échéance ID 9965 comptabilisée avec succès. ID_Ecriture: 7761
+[2025-06-24 13:12:11] Échéance ID 9966 comptabilisée avec succès. ID_Ecriture: 8268
+[2025-06-24 13:51:08] Échéance ID 10669 comptabilisée avec succès. ID_Ecriture: 8305
+[2025-06-24 16:50:48] Échéance ID 11353 comptabilisée avec succès. ID_Ecriture: 8950
+[2025-07-08 14:34:06] Erreur de configuration : Statut 'Comptabilisée' (COMP) non trouvé dans la table Statuts.
+[2025-07-08 14:41:11] Échéance ID 1 comptabilisée avec succès. ID_Ecriture: 1
+[2025-07-08 15:04:42] Échéance ID 97 comptabilisée avec succès. ID_Ecriture: 2

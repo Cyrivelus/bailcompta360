@@ -1,0 +1,115 @@
+<?php
+// supprimer_facture.php
+
+$titre = 'Supprimer la Facture';
+$current_page = basename($_SERVER['PHP_SELF']);
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php');
+require_once('../../fonctions/database.php');
+require_once('../../fonctions/gestion_factures.php');
+require_once('../../fonctions/gestion_ecritures.php'); // Inclure la gestion des écritures
+
+// Vérifier si l'ID de la facture est passé en paramètre
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    $_SESSION['error'] = "ID de facture invalide.";
+    header('Location: liste_factures.php');
+    exit();
+}
+
+$idFacture = intval($_GET['id']);
+
+// Récupérer les détails de la facture pour confirmation
+$facture = getFactureById($pdo, $idFacture);
+
+if (!$facture) {
+    $_SESSION['error'] = "Facture non trouvée.";
+    header('Location: liste_factures.php');
+    exit();
+}
+
+// Traitement de la suppression
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Vérifier le jeton CSRF pour plus de sécurité
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $_SESSION['error'] = "Erreur de sécurité : Jeton CSRF invalide.";
+        header('Location: liste_factures.php'); // Ou une autre page appropriée
+        exit();
+    }
+
+    // Supprimer les écritures associées à la facture (IMPORTANT : à faire avant de supprimer la facture)
+    $ecrituresSupprimees = deleteEcrituresByFactureId($pdo, $idFacture);
+    if ($ecrituresSupprimees === false) {
+        $_SESSION['error'] = "Erreur lors de la suppression des écritures comptables associées.";
+        header('Location: liste_factures.php');
+        exit(); // Arrêter la suppression si les écritures ne peuvent pas être supprimées.
+    }
+
+    // Supprimer la facture
+    $resultat = deleteFacture($pdo, $idFacture);
+
+    if ($resultat) {
+        $_SESSION['success'] = "Facture supprimée avec succès.";
+        header('Location: liste_factures.php');
+        exit();
+    } else {
+        $_SESSION['error'] = "Erreur lors de la suppression de la facture.";
+        header('Location: liste_factures.php');
+        exit();
+    }
+}
+
+// Générer un jeton CSRF pour la confirmation de suppression
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+$csrfToken = $_SESSION['csrf_token'];
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Supprimer la Facture</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/formulaire.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-header">Supprimer la Facture</h2>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger"><?= $_SESSION['error'] ?></div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+
+        <div class="alert alert-danger">
+            <strong>Attention !</strong> Êtes-vous sûr de vouloir supprimer la facture n°<?= htmlspecialchars($facture['Numero_Facture']) ?> ?
+            Cette action est irréversible et supprimera également toutes les écritures comptables associées.
+        </div>
+
+        <form action="" method="post" class="form-horizontal">
+            <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="glyphicon glyphicon-trash"></i> Confirmer la suppression
+                    </button>
+                    <a href="liste_factures.php" class="btn btn-default">
+                        <i class="glyphicon glyphicon-arrow-left"></i> Annuler
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+<?php
+require_once('../../templates/footer.php');
+?>

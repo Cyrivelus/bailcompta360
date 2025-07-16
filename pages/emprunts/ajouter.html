@@ -1,0 +1,230 @@
+<?php
+// pages/ecritures/liste.php
+
+$titre = 'Liste des Écritures Comptables';
+$current_page = basename($_SERVER['PHP_SELF']); // Pour la classe 'active' dans la navigation
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php'); // Inclusion de la navigation
+?>
+
+
+<?php
+// Inclure les fichiers nécessaires (connexion à la base de données, fonctions, etc.)
+require_once '../../fonctions/database.php';
+require_once '../../fonctions/gestion_emprunts.php'; // Supposons un fichier pour gérer les emprunts
+
+// Initialisation des variables et des erreurs
+$banque = '';
+$numeroPret = '';
+$montantPret = '';
+$dateMiseEnPlace = date('Y-m-d');
+$datePremiereEcheance = '';
+$dateDerniereEcheance = '';
+$tauxInteret = '';
+$nombreEcheances = '';
+$typeAmortissement = '';
+$erreur = null;
+$success = null;
+
+// Traitement du formulaire si soumis
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $banque = $_POST['banque'];
+    $numeroPret = $_POST['numero_pret'];
+    $montantPret = floatval($_POST['montant_pret']);
+    $dateMiseEnPlace = $_POST['date_mise_en_place'];
+    $datePremiereEcheance = $_POST['date_premiere_echeance'];
+    $dateDerniereEcheance = $_POST['date_derniere_echeance'];
+    $tauxInteret = floatval($_POST['taux_interet']);
+    $nombreEcheances = intval($_POST['nombre_echeances']);
+    $typeAmortissement = $_POST['type_amortissement'];
+
+    // Validation des données (à implémenter plus robustement)
+    if (empty($banque)) {
+        $erreur = "Le nom de la banque est requis.";
+    } elseif (empty($numeroPret)) {
+        $erreur = "Le numéro de prêt est requis.";
+    } elseif ($montantPret <= 0) {
+        $erreur = "Le montant du prêt doit être supérieur à zéro.";
+    } elseif (empty($dateMiseEnPlace)) {
+        $erreur = "La date de mise en place est requise.";
+    } elseif (empty($datePremiereEcheance)) {
+        $erreur = "La date de la première échéance est requise.";
+    } elseif (empty($dateDerniereEcheance)) {
+        $erreur = "La date de la dernière échéance est requise.";
+    } elseif ($tauxInteret < 0) {
+        $erreur = "Le taux d'intérêt ne peut pas être négatif.";
+    } elseif ($nombreEcheances <= 0) {
+        $erreur = "Le nombre d'échéances doit être supérieur à zéro.";
+    } elseif (empty($typeAmortissement)) {
+        $erreur = "Le type d'amortissement est requis.";
+    }
+
+    if (!$erreur) {
+        $idEmprunt = ajouterEmprunt(
+            $pdo,
+            $banque,
+            $dateMiseEnPlace,
+            null, // Agence (peut être null pour l'instant)
+            null, // Devise
+            $numeroPret,
+            null, // Type de prêt
+            null, // Client
+            $montantPret,
+            null, // Source de financement
+            $tauxInteret / 100, // Convertir le taux en décimal
+            null, // Montant différé
+            null, // Type de plan
+            null, // Échéance fin de mois
+            $nombreEcheances,
+            null, // Gestion différé
+            null, // Nombre de jours réels
+            null, // Type d'intérêt
+            $dateMiseEnPlace,
+            $datePremiereEcheance,
+            $dateDerniereEcheance,
+            null, // Intérêt SP Taux
+            null, // Intérêt SP Montant
+            null, // Taxes
+            null, // Période
+            null, // Terme
+            null, // Perception
+            null, // Date début amortissement (peut être identique à date mise en place)
+            null, // Date fin amortissement (peut être identique à date dernière échéance)
+            $montantPret, // Montant initial
+            null, // Durée (peut être calculée)
+            $typeAmortissement
+        );
+
+        if ($idEmprunt) {
+            $success = "L'emprunt a été enregistré avec succès.";
+            // Réinitialiser les champs du formulaire
+            $banque = '';
+            $numeroPret = '';
+            $montantPret = '';
+            $dateMiseEnPlace = date('Y-m-d');
+            $datePremiereEcheance = '';
+            $dateDerniereEcheance = '';
+            $tauxInteret = '';
+            $nombreEcheances = '';
+            $typeAmortissement = '';
+        } else {
+            $erreur = "Erreur lors de l'enregistrement de l'emprunt.";
+        }
+    }
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Ajouter un Emprunt</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/monstyle.css">
+    <link rel="stylesheet" href="../../css/formulaire.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-header">Ajouter un Nouvel Emprunt</h2>
+
+        <?php if ($erreur): ?>
+            <div class="alert alert-danger"><?= $erreur ?></div>
+        <?php endif; ?>
+
+        <?php if ($success): ?>
+            <div class="alert alert-success"><?= $success ?> <a href="index.php" class="alert-link">Retour à la liste des emprunts</a></div>
+        <?php endif; ?>
+
+        <form action="" method="POST" class="form-horizontal">
+            <div class="form-group">
+                <label for="banque" class="col-sm-3 control-label">Banque</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="banque" name="banque" value="<?= htmlspecialchars($banque) ?>" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="numero_pret" class="col-sm-3 control-label">Numéro de Prêt</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="numero_pret" name="numero_pret" value="<?= htmlspecialchars($numeroPret) ?>" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="montant_pret" class="col-sm-3 control-label">Montant du Prêt</label>
+                <div class="col-sm-9">
+                    <input type="number" class="form-control" id="montant_pret" name="montant_pret" value="<?= $montantPret ?>" step="0.01" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="date_mise_en_place" class="col-sm-3 control-label">Date de Mise en Place</label>
+                <div class="col-sm-9">
+                    <input type="date" class="form-control" id="date_mise_en_place" name="date_mise_en_place" value="<?= $dateMiseEnPlace ?>" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="date_premiere_echeance" class="col-sm-3 control-label">Date Première Échéance</label>
+                <div class="col-sm-9">
+                    <input type="date" class="form-control" id="date_premiere_echeance" name="date_premiere_echeance" value="<?= $datePremiereEcheance ?>" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="date_derniere_echeance" class="col-sm-3 control-label">Date Dernière Échéance</label>
+                <div class="col-sm-9">
+                    <input type="date" class="form-control" id="date_derniere_echeance" name="date_derniere_echeance" value="<?= $dateDerniereEcheance ?>" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="taux_interet" class="col-sm-3 control-label">Taux d'Intérêt (%)</label>
+                <div class="col-sm-9">
+                    <input type="number" class="form-control" id="taux_interet" name="taux_interet" value="<?= $tauxInteret ?>" step="0.0001" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="nombre_echeances" class="col-sm-3 control-label">Nombre d'Échéances</label>
+                <div class="col-sm-9">
+                    <input type="number" class="form-control" id="nombre_echeances" name="nombre_echeances" value="<?= $nombreEcheances ?>" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="type_amortissement" class="col-sm-3 control-label">Type d'Amortissement</label>
+                <div class="col-sm-9">
+                     <select class="form-control form-control-lg" id="type_amortissement" name="type_amortissement" required style="width: 100%; max-width: 500px; height: 40%; ">
+                        <option value="">Sélectionner un type</option>
+                        <option value="linéaire" <?= ($typeAmortissement == 'linéaire') ? 'selected' : '' ?>>Linéaire</option>
+                        <option value="progressif" <?= ($typeAmortissement == 'progressif') ? 'selected' : '' ?>>Progressif</option>
+                        <option value="dégressif" <?= ($typeAmortissement == 'dégressif') ? 'selected' : '' ?>>Dégressif</option>
+                        <option value="in fine" <?= ($typeAmortissement == 'in fine') ? 'selected' : '' ?>>In Fine</option>
+                        </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button type="submit" class="btn btn-primary">Ajouter l'Emprunt</button>
+                    <a href="index.php" class="btn btn-default">Annuler</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNLJ5ywYOIDjxxyTwCypxSoOO3FxyYr4fccRoP1h0IWcAukj0jz9uNNs" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
+
+<?php
+require_once('../../templates/footer.php');
+?>

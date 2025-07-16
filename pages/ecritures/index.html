@@ -1,0 +1,207 @@
+<?php
+
+// pages/ecritures/index.php
+session_start(); // Assurez-vous que la session est démarrée
+
+// Récupérer l'ID de l'utilisateur connecté (adaptez ceci à votre système d'authentification)
+$utilisateurConnecteId = $_SESSION['utilisateur_id'] ?? null;
+
+if (!$utilisateurConnecteId || !hasHabilitation($pdo, $utilisateurConnecteId, null, 'saisie_ecritures')) {
+    // L'utilisateur n'a pas l'habilitation, rediriger ou afficher un message d'erreur
+    header('Location: ../acces_refuse.php'); // Créez une page d'accès refusé
+    exit();
+}
+
+// Le reste du code pour la page de saisie des écritures
+// pages/ecritures/index.php
+
+$titre = 'Saisie et Liste des Écritures Comptables';
+$current_page = basename($_SERVER['PHP_SELF']); // Pour la classe 'active' dans la navigation
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php'); // Inclusion de la navigation
+
+// Inclure les fichiers nécessaires (connexion à la base de données, fonctions, etc.)
+require_once '../../fonctions/database.php';
+require_once '../../fonctions/gestion_ecritures.php'; // Supposons un fichier pour gérer les écritures
+
+// Récupérer la liste des écritures depuis la base de données (pour affichage initial)
+$ecritures = getListeEcritures($pdo); // Fonction pour récupérer la liste des écritures
+
+// Traitement des messages de succès ou d'erreur (si redirection depuis d'autres pages)
+$successMessage = isset($_GET['success']) ? "L'écriture a été enregistrée avec succès." : null;
+$updateMessage = isset($_GET['success_update']) ? "L'écriture a été mise à jour avec succès." : null;
+$deleteMessage = isset($_GET['delete_success']) ? "L'écriture a été supprimée avec succès." : null;
+$errorMessage = isset($_GET['error']) ? $_GET['error'] : null;
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Modifier l'Écriture</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/formulaire.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-header">Gestion des Écritures Comptables</h2>
+
+        <?php if ($successMessage): ?>
+            <div class="alert alert-success"><?= $successMessage ?></div>
+        <?php endif; ?>
+
+        <?php if ($updateMessage): ?>
+            <div class="alert alert-success"><?= $updateMessage ?></div>
+        <?php endif; ?>
+
+        <?php if ($deleteMessage): ?>
+            <div class="alert alert-success"><?= $deleteMessage ?></div>
+        <?php endif; ?>
+
+        <?php if ($errorMessage): ?>
+            <div class="alert alert-danger"><?= $errorMessage ?></div>
+        <?php endif; ?>
+
+        <p>
+            <a href="saisie.php" class="btn btn-primary">
+                <span class="glyphicon glyphicon-plus"></span> Saisir une nouvelle écriture
+            </a>
+            <a href="liste.php" class="btn btn-info">
+                <span class="glyphicon glyphicon-list"></span> Liste des écritures
+            </a>
+        </p>
+
+        <h3>Dernières Écritures Saisies</h3>
+        <?php if (!empty($ecritures)): ?>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date de Saisie</th>
+                            <th>Description</th>
+                            <th>Montant Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($ecritures as $ecriture): ?>
+                            <tr>
+                                <td><?= $ecriture['ID_Ecriture'] ?></td>
+                                <td><?= date('d/m/Y H:i:s', strtotime($ecriture['Date_Saisie'])) ?></td>
+                                <td><?= htmlspecialchars($ecriture['Description']) ?></td>
+                                <td><?= number_format($ecriture['Montant_Total'], 2, ',', ' ') ?></td>
+                                <td>
+    <a href="modifier.php?id=<?= $ecriture['ID_Ecriture'] ?>" class="btn btn-sm btn-warning">
+        <span class="glyphicon glyphicon-pencil"></span> Modifier
+    </a>
+    <a href="supprimer.php?id=<?= $ecriture['ID_Ecriture'] ?>" class="btn btn-sm btn-danger ms-2" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette écriture ?')">
+        <span class="glyphicon glyphicon-trash"></span> Supprimer
+    </a>
+    <a href="liste.php?id=<?= $ecriture['ID_Ecriture'] ?>" class="btn btn-sm btn-info ms-2">
+        <span class="glyphicon glyphicon-list"></span> Liste
+    </a>
+    <a href="saisie.php?id=<?= $ecriture['ID_Ecriture'] ?>" class="btn btn-sm btn-primary ms-2">
+        <span class="glyphicon glyphicon-plus"></span> Saisie
+    </a>
+</td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php else: ?>
+            <p class="alert alert-info">Aucune écriture comptable n'a été saisie récemment.</p>
+        <?php endif; ?>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNLJ5ywYOIDjxxyTwCypxSoOO3FxyYr4fccRoP1h0IWcAukj0jz9uNNs" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/script.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="../js/tableau_dynamique.js"></script>
+    <script>
+        $(document).ready(function() {
+            initialiserTableauDynamique('.table', { // Cibler la table des écritures
+                selection: false,
+                pagination: true,
+                rowsPerPage: 10,
+                sortable: true,
+                searchable: true
+            });
+        });
+    </script>
+</body>
+</html>
+
+<?php
+// Fonctions de gestion des écritures (à implémenter dans fonctions/gestion_ecritures.php)
+
+function getListeEcritures($pdo, $limit = 5) { // Récupérer les dernières écritures par défaut
+    try {
+        $stmt = $db->prepare("SELECT ID_Ecriture, Date_Saisie, Description, Montant_Total FROM Ecritures ORDER BY Date_Saisie DESC LIMIT :limit");
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération des dernières écritures : " . $e->getMessage());
+        return [];
+    }
+}
+
+// Vous aurez besoin des fichiers suivants :
+// - saisie.php : Pour saisir une nouvelle écriture.
+// - liste.php : Pour afficher la liste complète des écritures.
+// - modifier.php : Pour modifier une écriture existante.
+// - supprimer.php : Pour gérer la suppression d'une écriture.
+
+// Exemple de contenu pour supprimer.php (similaire à celui des emprunts) :
+/*
+<?php
+require_once '../fonctions/database.php';
+require_once '../fonctions/gestion_ecritures.php';
+
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $idEcriture = $_GET['id'];
+    if (supprimerEcriture($db, $idEcriture)) {
+        header('Location: index.php?delete_success=1');
+        exit();
+    } else {
+        header('Location: index.php?error=Erreur lors de la suppression de l\'écriture.');
+        exit();
+    }
+} else {
+    header('Location: index.php?error=ID d\'écriture invalide.');
+    exit();
+}
+
+function supprimerEcriture($db, $id) {
+    try {
+        // Supprimer d'abord les lignes d'écriture associées
+        $stmtLignes = $db->prepare("DELETE FROM Lignes_Ecritures WHERE ID_Ecriture = :id");
+        $stmtLignes->bindParam(':id', $id);
+        $stmtLignes->execute();
+
+        // Ensuite, supprimer l'écriture principale
+        $stmtEcriture = $db->prepare("DELETE FROM Ecritures WHERE ID_Ecriture = :id");
+        $stmtEcriture->bindParam(':id', $id);
+        return $stmtEcriture->execute();
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la suppression de l'écriture : " . $e->getMessage());
+        return false;
+    }
+}
+?>
+*/
+?>
+<?php
+require_once('../../templates/footer.php');
+?>
+
+</body>
+</html>

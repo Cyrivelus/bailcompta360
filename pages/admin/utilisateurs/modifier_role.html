@@ -1,0 +1,125 @@
+<?php
+// admin/utilisateurs/modifier_role.php
+
+// Inclure les fichiers nécessaires
+require_once '../../includes/header.php';
+require_once '../../includes/navigation.php';
+require_once '../../fonctions/database.php';
+require_once '../../fonctions/gestion_utilisateurs.php';
+
+// Définir le style spécifique à l'administration
+$admin_style = true;
+
+// Vérifier si l'utilisateur est connecté et a les droits d'administrateur
+if (!estAdminConnecte()) {
+    header('Location: ../index.php');
+    exit();
+}
+
+// Vérifier si l'ID de l'utilisateur à modifier est présent dans l'URL et est un nombre
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    $errorMessage = "ID d'utilisateur invalide.";
+} else {
+    $utilisateurId = $_GET['id'];
+
+    // Récupérer les informations de l'utilisateur
+    $utilisateur = getUtilisateurParId($pdo, $utilisateurId);
+    if (!$utilisateur) {
+        $errorMessage = "Utilisateur non trouvé.";
+    }
+}
+
+// Traitement du formulaire de modification du rôle
+if (isset($_POST['modifier_role'])) {
+    // Vérifier le jeton CSRF
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Erreur CSRF.");
+    }
+
+    $nouveauRole = $_POST['role'];
+    $rolesValides = ['Admin', 'Comptable']; // Définir les rôles valides
+
+    if (in_array($nouveauRole, $rolesValides)) {
+        if (modifierRoleUtilisateur($pdo, $utilisateurId, $nouveauRole)) {
+            $successMessage = "Le rôle de l'utilisateur '{$utilisateur['Nom']}' a été mis à jour avec succès.";
+            // Récupérer à nouveau les informations de l'utilisateur pour afficher le nouveau rôle
+            $utilisateur = getUtilisateurParId($pdo, $utilisateurId);
+        } else {
+            $errorMessage = "Erreur lors de la mise à jour du rôle de l'utilisateur.";
+        }
+    } else {
+        $errorMessage = "Le rôle sélectionné n'est pas valide.";
+    }
+}
+
+// Générer un jeton CSRF
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Administration - Modifier le rôle</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/monstyle.css">
+    <?php if (isset($admin_style) && $admin_style): ?>
+        <link rel="stylesheet" href="../../css/admin_style.css">
+    <?php endif; ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<?php require_once '../../templates/admin_navigation.php'; // Inclure la navigation spécifique à l'admin ?>
+
+<div class="container mt-5">
+    <h2>Modifier le rôle d'un utilisateur</h2>
+
+    <?php if (isset($errorMessage)): ?>
+        <div class="alert alert-danger"><?= $errorMessage ?></div>
+    <?php endif; ?>
+
+    <?php if (isset($successMessage)): ?>
+        <div class="alert alert-success"><?= $successMessage ?></div>
+    <?php endif; ?>
+
+    <?php if (isset($utilisateur)): ?>
+        <p>Vous modifiez le rôle de l'utilisateur : <strong><?= htmlspecialchars($utilisateur['Nom']) ?></strong> (Login: <?= htmlspecialchars($utilisateur['Login']) ?>)</p>
+
+        <form method="post">
+            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+            <div class="form-group">
+                <label for="role">Nouveau rôle :</label>
+                <select class="form-control" id="role" name="role" required>
+                    <option value="Admin" <?= ($utilisateur['Role'] === 'Admin') ? 'selected' : '' ?>>Administrateur</option>
+                    <option value="Comptable" <?= ($utilisateur['Role'] === 'Comptable') ? 'selected' : '' ?>>Comptable</option>
+                    </select>
+            </div>
+            <button type="submit" name="modifier_role" class="btn btn-primary">
+                <span class="glyphicon glyphicon-ok"></span> Modifier le rôle
+            </button>
+            <a href="index.php" class="btn btn-secondary">
+                <span class="glyphicon glyphicon-remove"></span> Annuler
+            </a>
+        </form>
+    <?php elseif (!isset($errorMessage)): ?>
+        <p>Veuillez sélectionner un utilisateur depuis la liste pour modifier son rôle.</p>
+        <a href="index.php" class="btn btn-info">
+            <span class="glyphicon glyphicon-arrow-left"></span> Retour à la liste des utilisateurs
+        </a>
+    <?php endif; ?>
+</div>
+
+<?php require_once '../../includes/footer.php'; ?>
+
+</body>
+</html>
+
+<?php
+// Fonction à implémenter (dans fonctions/gestion_utilisateurs.php) :
+// - estAdminConnecte() : Vérifie si l'utilisateur connecté est un administrateur.
+// - getUtilisateurParId($pdo, $id) : Récupère les informations d'un utilisateur par son ID.
+// - modifierRoleUtilisateur($pdo, $utilisateurId, $nouveauRole) : Met à jour le rôle d'un utilisateur dans la base de données.
+?>

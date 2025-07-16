@@ -1,0 +1,167 @@
+<?php
+// templates/navigation.php
+
+// Gestion de la session et de l'inactivité
+error_reporting(0);
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > 1800) {
+    session_destroy();
+    header('Location: /bailcompta360/index.php');
+    exit();
+}
+
+$_SESSION['LAST_ACTIVITY'] = time();
+
+if (isset($_POST['logout'])) {
+    session_destroy();
+    header('location:/bailcompta360/index.php');
+    exit();
+}
+
+// Vérifier si l'utilisateur est connecté (pour afficher la navigation)
+$estConnecte = isset($_SESSION['utilisateur_id']);
+
+// Fonction pour générer l'URL absolue
+function generateUrl($path) {
+    return '/bailcompta360/' . ltrim($path, '/');
+}
+
+if ($estConnecte): // Afficher la navigation si l'utilisateur est connecté (quel que soit son rôle)
+    // Définir la page courante pour la classe 'active'
+    $current_page = basename($_SERVER['PHP_SELF']);
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="<?= generateUrl('tableau_bord.php') ?>">Tableau de Bord</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link <?php if ($current_page == 'saisie.php') echo 'active'; ?>" href="<?= generateUrl('pages/ecritures/saisie.php') ?>">Saisie Écritures</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if ($current_page == 'liste.php') echo 'active'; ?>" href="<?= generateUrl('pages/ecritures/liste.php') ?>">Liste Écritures</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="index.php" id="navbarDropdownEmprunts" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Emprunts
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownEmprunts">
+                        <li><a class="dropdown-item <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && isset($_GET['section']) && $_GET['section'] == 'emprunts') echo 'active'; ?>" href="<?= generateUrl('pages/emprunts/index.php') ?>">Liste Emprunts</a></li>
+                        <li><a class="dropdown-item <?php if (basename($_SERVER['PHP_SELF']) == 'ajouter.php' && isset($_GET['section']) && $_GET['section'] == 'emprunts') echo 'active'; ?>" href="<?= generateUrl('pages/emprunts/ajouter.php') ?>">Ajouter Emprunt</a></li>
+                        </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="index.php" id="navbarDropdownFactures" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Factures
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownFactures">
+                        <li><a class="dropdown-item <?php if (strpos(basename($_SERVER['PHP_SELF']), 'index.php') !== false && strpos($_SERVER['PHP_SELF'], 'clients/') !== false) echo 'active'; ?>" href="<?= generateUrl('pages/factures/clients/index.php') ?>">Factures Clients</a></li>
+                        <li><a class="dropdown-item <?php if (strpos(basename($_SERVER['PHP_SELF']), 'index.php') !== false && strpos($_SERVER['PHP_SELF'], 'fournisseurs/') !== false) echo 'active'; ?>" href="<?= generateUrl('pages/factures/fournisseurs/index.php') ?>">Factures Fournisseurs</a></li>
+                        <li><a class="dropdown-item <?php if ($current_page == 'integration.php') echo 'active'; ?>" href="<?= generateUrl('pages/factures/integration.php') ?>">Intégration Comptable</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="index.php" id="navbarDropdownImport" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Importation
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownImport">
+                        <li><a class="dropdown-item <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && isset($_GET['section']) && $_GET['section'] == 'import') echo 'active'; ?>" href="<?= generateUrl('pages/import/index.php') ?>">Relevés Bancaires</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="index.php" id="navbarDropdownGeneration" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Génération ABS 2000
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownGeneration">
+                        <li><a class="dropdown-item <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && isset($_GET['section']) && $_GET['section'] == 'generation') echo 'active'; ?>" href="<?= generateUrl('pages/generation/index.php') ?>">Fichiers Comptables</a></li>
+                    </ul>
+                </li>
+                <?php
+                // Simuler une fonction hasPermission (à remplacer par votre logique d'autorisation réelle)
+                function hasPermission($pdo, $userId, $permission) {
+                    return true;
+                }
+
+                // Simuler une connexion PDO (à remplacer par votre instance PDO réelle)
+                $pdo = null;
+
+                // Vérifier si l'utilisateur a la permission d'accéder à la gestion des habilitations
+                if (hasPermission($pdo, $_SESSION['utilisateur_id'] ?? 0, 'gestion_habilitations_menu')):
+                ?>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="index.php" id="navbarDropdownHabilitations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Habilitations
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownHabilitations">
+                        <li><a class="dropdown-item <?php if (basename($_SERVER['PHP_SELF']) == 'profils.php') echo 'active'; ?>" href="<?= generateUrl('pages/habilitations/profils.php') ?>">Gestion des Profils</a></li>
+                        <li><a class="dropdown-item <?php if (basename($_SERVER['PHP_SELF']) == 'utilisateurs.php' && isset($_GET['section']) && $_GET['section'] == 'habilitations') echo 'active'; ?>" href="<?= generateUrl('pages/habilitations/utilisateurs.php') ?>">Gestion des Utilisateurs</a></li>
+                        <li><a class="dropdown-item <?php if (basename($_SERVER['PHP_SELF']) == 'gestion_droits.php') echo 'active'; ?>" href="<?= generateUrl('pages/habilitations/gestion_droits.php') ?>">Gestion des Droits</a></li>
+                    </ul>
+                </li>
+                <?php endif; ?>
+                <?php
+                // Vérifier si l'utilisateur a la permission d'accéder à la gestion des utilisateurs
+                if (hasPermission($pdo, $_SESSION['utilisateur_id'] ?? 0, 'gestion_utilisateurs_menu')):
+                ?>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="index.php" id="navbarDropdownUtilisateursGestion" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Utilisateurs
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownUtilisateursGestion">
+                        <li><a class="dropdown-item <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && isset($_GET['section']) && $_GET['section'] == 'utilisateurs') echo 'active'; ?>" href="<?= generateUrl('pages/utilisateurs/index.php') ?>">Liste Utilisateurs</a></li>
+                        <li><a class="dropdown-item <?php if (basename($_SERVER['PHP_SELF']) == 'ajouter.php' && isset($_GET['section']) && $_GET['section'] == 'utilisateurs') echo 'active'; ?>" href="<?= generateUrl('pages/utilisateurs/ajouter.php') ?>">Ajouter Utilisateur</a></li>
+                    </ul>
+                </li>
+                <?php endif; ?>
+                <?php
+                // Vérifier si l'utilisateur a la permission d'accéder à la gestion des profils
+                if (hasPermission($pdo, $_SESSION['utilisateur_id'] ?? 0, 'gestion_profils_menu')):
+                ?>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="index.php" id="navbarDropdownProfilsGestion" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Profils
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownProfilsGestion">
+                        <li><a class="dropdown-item <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && isset($_GET['section']) && $_GET['section'] == 'profils') echo 'active'; ?>" href="<?= generateUrl('pages/profils/index.php') ?>">Liste Profils</a></li>
+                        <li><a class="dropdown-item <?php if (basename($_SERVER['PHP_SELF']) == 'ajouter.php' && isset($_GET['section']) && $_GET['section'] == 'profils') echo 'active'; ?>" href="<?= generateUrl('pages/profils/ajouter.php') ?>">Ajouter Profil</a></li>
+                    </ul>
+                </li>
+                <?php endif; ?>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="index.php" id="navbarDropdownTiers" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Tiers
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownTiers">
+                        <li><a class="dropdown-item <?php if (basename($_SERVER['PHP_SELF']) == 'index.php' && isset($_GET['section']) && $_GET['section'] == 'tiers') echo 'active'; ?>" href="<?= generateUrl('pages/tiers/index.php') ?>">Liste Tiers</a></li>
+                        <li><a class="dropdown-item <?php if (basename($_SERVER['PHP_SELF']) == 'ajouter.php' && isset($_GET['section']) && $_GET['section'] == 'tiers') echo 'active'; ?>" href="<?= generateUrl('pages/tiers/ajouter.php') ?>">Ajouter Tiers</a></li>
+                    </ul>
+                </li>
+            </ul>
+      
+        </div>
+    </div>
+</nav>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+<?php
+endif;
+?>

@@ -1,0 +1,66 @@
+<?php
+/**
+ * _partial_ligne_ecriture.php
+ * Template pour une ligne d'écriture comptable.
+ *
+ * Variables attendues (doivent être définies avant d'inclure ce fichier) :
+ * @var int $index              L'index de la ligne (pour les noms de champs uniques)
+ * @var array $ligne_p          Tableau contenant les données pré-remplies pour la ligne (compte, libelle_ligne, debit, credit)
+ * Exemple: ['compte'=>'', 'libelle_ligne'=>'', 'debit'=>'', 'credit'=>''] pour une nouvelle ligne.
+ * @var array $GLOBALS['allComptesPLN'] Tableau des comptes disponibles, accessible globalement ou passé en paramètre.
+ * Chaque compte doit avoir au moins 'Cpt' (numéro) et 'Lib' (libellé).
+ */
+
+// Assurer que les variables existent pour éviter les erreurs si elles ne sont pas passées
+$index = $index ?? 0; // ou '{{INDEX}}' si utilisé purement comme template JS sans pré-remplissage PHP initial
+$ligne_p = $ligne_p ?? ['compte' => '', 'libelle_ligne' => '', 'debit' => '', 'credit' => ''];
+
+// Assurer que $GLOBALS['allComptesPLN'] est disponible
+if (!isset($GLOBALS['allComptesPLN']) || !is_array($GLOBALS['allComptesPLN'])) {
+    $GLOBALS['allComptesPLN'] = []; // Prévenir les erreurs si non défini
+}
+
+?>
+<div class="entry-line" data-index="<?php echo $index; ?>">
+    <div class="row form-row">
+        <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+                <label for="compte_<?php echo $index; ?>">N° Compte <span class="text-danger">*</span></label>
+                <select class="form-control compte-select" name="compte[]" id="compte_<?php echo $index; ?>" required>
+                    <option value="">Sélectionner un compte...</option>
+                    <?php foreach ($GLOBALS['allComptesPLN'] as $compteOpt): ?>
+                        <option value="<?php echo htmlspecialchars($compteOpt['Cpt']); ?>" <?php echo (isset($ligne_p['compte']) && $ligne_p['compte'] == $compteOpt['Cpt']) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($compteOpt['Cpt']); ?> - <?php echo htmlspecialchars($compteOpt['Lib']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="form-group">
+                <label for="libelle_ligne_<?php echo $index; ?>">Libellé de la ligne <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="libelle_ligne[]" id="libelle_ligne_<?php echo $index; ?>" value="<?php echo isset($ligne_p['libelle_ligne']) ? htmlspecialchars($ligne_p['libelle_ligne']) : ''; ?>" required>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-6">
+            <div class="form-group">
+                <label for="debit_<?php echo $index; ?>">Débit</label>
+                <input type="number" step="0.01" class="form-control montant debit-input" name="debit[]" id="debit_<?php echo $index; ?>" value="<?php echo isset($ligne_p['debit']) ? htmlspecialchars($ligne_p['debit']) : ''; ?>" placeholder="0.00">
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-6">
+            <div class="form-group">
+                <label for="credit_<?php echo $index; ?>">Crédit</label>
+                <input type="number" step="0.01" class="form-control montant credit-input" name="credit[]" id="credit_<?php echo $index; ?>" value="<?php echo isset($ligne_p['credit']) ? htmlspecialchars($ligne_p['credit']) : ''; ?>" placeholder="0.00">
+            </div>
+        </div>
+        <div class="col-md-1 col-sm-12" style="padding-top: 25px; text-align: right;">
+            <button type="button" class="btn btn-info btn-xs btn-contrepartie" title="Générer Contrepartie Ligne">
+                <span class="glyphicon glyphicon-transfer"></span>
+            </button>
+            <button type="button" class="btn btn-danger btn-xs btn-remove-line" title="Supprimer cette Ligne" style="margin-left: 5px;">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
+        </div>
+    </div>
+</div>

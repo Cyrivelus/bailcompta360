@@ -1,0 +1,245 @@
+<?php
+// pages/ecritures/liste.php
+
+$titre = 'Liste des Écritures Comptables';
+$current_page = basename($_SERVER['PHP_SELF']); // Pour la classe 'active' dans la navigation
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php'); // Inclusion de la navigation
+?>
+
+<?php
+// index.php (pour l'import de factures)
+
+// *** Configuration ***
+$cheminDossierUpload = '/chemin/vers/votre/dossier/upload/'; // Chemin vers le dossier où les utilisateurs uploaderont les fichiers
+$typesFichiersAutorises = ['csv', 'xml', 'txt']; // Extensions de fichiers autorisées pour l'upload
+$tailleMaxFichier = 2 * 1024 * 1024; // Taille maximale du fichier en octets (2 Mo)
+
+// *** Gestion des erreurs et des succès ***
+$message = null;
+
+// *** Traitement de l'upload de fichier ***
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['fichier_factures'])) {
+    $nomFichier = $_FILES['fichier_factures']['name'];
+    $tailleFichier = $_FILES['fichier_factures']['size'];
+    $erreurFichier = $_FILES['fichier_factures']['error'];
+    $tmpFichier = $_FILES['fichier_factures']['tmp_name'];
+    $extensionFichier = strtolower(pathinfo($nomFichier, PATHINFO_EXTENSION));
+
+    // Vérifier s'il n'y a pas d'erreur d'upload
+    if ($erreurFichier === UPLOAD_ERR_OK) {
+        // Vérifier la taille du fichier
+        if ($tailleFichier <= $tailleMaxFichier) {
+            // Vérifier le type de fichier (extension)
+            if (in_array($extensionFichier, $typesFichiersAutorises)) {
+                // Créer un nom de fichier unique pour éviter les collisions
+                $nomFichierUnique = uniqid('factures_') . '.' . $extensionFichier;
+                $cheminFichierDestination = $cheminDossierUpload . $nomFichierUnique;
+
+                // Déplacer le fichier temporaire vers le dossier de destination
+                if (move_uploaded_file($tmpFichier, $cheminFichierDestination)) {
+                    $message = "<div class='alert alert-success'>Le fichier " . htmlspecialchars($nomFichier) . " a été uploadé avec succès. <a href='traiter_import.php?fichier=" . urlencode($nomFichierUnique) . "&type=" . urlencode($extensionFichier) . "' class='alert-link'>Cliquez ici pour traiter l'import.</a></div>";
+                } else {
+                    $message = "<div class='alert alert-danger'>Erreur lors du déplacement du fichier uploadé.</div>";
+                }
+            } else {
+                $message = "<div class='alert alert-danger'>Type de fichier non autorisé. Les types autorisés sont : " . implode(', ', $typesFichiersAutorises) . ".</div>";
+            }
+        } else {
+            $message = "<div class='alert alert-danger'>La taille du fichier dépasse la limite autorisée (" . round($tailleMaxFichier / (1024 * 1024), 2) . " Mo).</div>";
+        }
+    } else {
+        switch ($erreurFichier) {
+            case UPLOAD_ERR_INI_SIZE:
+                $message = "<div class='alert alert-danger'>Le fichier uploadé dépasse la directive upload_max_filesize dans php.ini.</div>";
+                break;
+            case UPLOAD_ERR_FORM_SIZE:
+                $message = "<div class='alert alert-danger'>Le fichier uploadé dépasse la directive MAX_FILE_SIZE spécifiée dans le formulaire HTML.</div>";
+                break;
+            case UPLOAD_ERR_PARTIAL:
+                $message = "<div class='alert alert-danger'>Le fichier n'a été que partiellement uploadé.</div>";
+                break;
+            case UPLOAD_ERR_NO_FILE:
+                $message = "<div class='alert alert-danger'>Aucun fichier n'a été uploadé.</div>";
+                break;
+            case UPLOAD_ERR_NO_TMP_DIR:
+                $message = "<div class='alert alert-danger'>Le dossier temporaire est manquant.</div>";
+                break;
+            case UPLOAD_ERR_CANT_WRITE:
+                $message = "<div class='alert alert-danger'>Échec de l'écriture du fichier sur le disque.</div>";
+                break;
+            case UPLOAD_ERR_EXTENSION:
+                $message = "<div class='alert alert-danger'>Extension de fichier PHP a arrêté l'upload du fichier.</div>";
+                break;
+            default:
+                $message = "<div class='alert alert-danger'>Erreur inconnue lors de l'upload du fichier.</div>";
+                break;
+        }
+    }
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Import de Factures</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/monstyle.css">
+    <link rel="stylesheet" href="../../css/formulaire.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-header">Importer des Factures</h2>
+
+        <?php if ($message): ?>
+            <?= $message ?>
+        <?php endif; ?>
+
+        <p>Veuillez sélectionner le fichier de factures à importer (formats autorisés : <?= implode(', ', $typesFichiersAutorises) ?>, taille maximale : <?= round($tailleMaxFichier / (1024 * 1024), 2) ?> Mo).</p>
+
+        <form action="" method="POST" enctype="multipart/form-data" class="form-horizontal">
+            <div class="form-group">
+                <label for="fichier_factures" class="col-sm-3 control-label">Fichier de Factures</label>
+                <div class="col-sm-9">
+                    <input type="file" class="form-control" id="fichier_factures" name="fichier_factures" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button type="submit" class="btn btn-primary">Uploader le Fichier</button>
+                </div>
+            </div>
+        </form>
+
+        <hr>
+        <p><a href="../factures/index.php" class="btn btn-default">Retour à la gestion des factures</a></p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNLJ5ywYOIDjxxyTwCypxSoOO3FxyYr4fccRoP1h0IWcAukj0jz9uNNs" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/script.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="../js/tableau_dynamique.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialisez le tableau dynamique en ciblant son ID ou sa classe
+            initialiserTableauDynamique('#monTableauHTML', {
+                selection: true,
+                pagination: true,
+                rowsPerPage: 10,
+                sortable: true,
+                searchable: true,
+                // Autres options si nécessaire
+            });
+
+            // Vous pouvez initialiser d'autres tableaux dynamiques sur la même page ici
+            initialiserTableauDynamique('#autreTableau', {
+                // Différentes options pour cet autre tableau
+            });
+        });
+    </script>
+</body>
+</body>
+</body>
+</html>
+
+<?php
+// Vous aurez besoin d'un fichier nommé traiter_import.php pour effectuer
+// la lecture et le déversement des données du fichier uploadé.
+
+// Exemple de contenu pour traiter_import.php (très simplifié) :
+/*
+<?php
+require_once '../fonctions/database.php'; // Pour la connexion à la base de données (factures ou compta)
+require_once '../fonctions/gestion_factures.php'; // Ou un fichier d'aide à l'import
+
+if (isset($_GET['fichier']) && isset($_GET['type'])) {
+    $nomFichier = $_GET['fichier'];
+    $typeFichier = $_GET['type'];
+    $cheminFichierComplet = '/chemin/vers/votre/dossier/upload/' . $nomFichier; // IMPORTANT : Sécuriser ce chemin
+
+    if (file_exists($cheminFichierComplet)) {
+        echo "Traitement du fichier : " . htmlspecialchars($nomFichier) . " (type: " . htmlspecialchars($typeFichier) . ")<br>";
+
+        // *** Logique de lecture du fichier en fonction du type ***
+        $donneesImportees = null;
+        if ($typeFichier === 'csv') {
+            $donneesImportees = lireFacturesCSV($cheminFichierComplet, ';'); // Adaptez le séparateur
+        } elseif ($typeFichier === 'xml') {
+            $donneesImportees = lireFacturesXML($cheminFichierComplet); // Implémentez cette fonction
+        } elseif ($typeFichier === 'txt') {
+            $donneesImportees = lireFacturesTXT($cheminFichierComplet); // Implémentez cette fonction
+        }
+
+        if ($donneesImportees) {
+            echo "Données lues avec succès. Début de l'import vers la base de données...<br>";
+            $erreursImport = [];
+            $succesImport = 0;
+
+            foreach ($donneesImportees as $facture) {
+                // *** Adaptez cette logique d'insertion à votre table de factures ***
+                if (ajouterFacture($db, $facture)) { // Supposons une fonction ajouterFacture
+                    $succesImport++;
+                } else {
+                    $erreursImport[] = "Erreur lors de l'import de la facture : " . ($facture['numero_facture'] ?? 'N/A');
+                }
+            }
+
+            echo "Import terminé. " . $succesImport . " factures importées avec succès.<br>";
+            if (!empty($erreursImport)) {
+                echo "Erreurs lors de l'import des factures suivantes :<br>";
+                foreach ($erreursImport as $erreur) {
+                    echo "- " . htmlspecialchars($erreur) . "<br>";
+                }
+            }
+
+            // Optionnellement, supprimer le fichier uploadé après le traitement
+            // unlink($cheminFichierComplet);
+
+        } else {
+            echo "Erreur lors de la lecture du fichier.<br>";
+        }
+
+    } else {
+        echo "Le fichier spécifié n'existe pas.";
+    }
+} else {
+    echo "Paramètres de fichier manquants.";
+}
+
+// Fonctions de lecture de fichiers (à implémenter selon vos formats)
+function lireFacturesCSV($cheminFichier, $separateur) {
+    $factures = [];
+    if (($handle = fopen($cheminFichier, "r")) !== false) {
+        $headers = fgetcsv($handle, 0, $separateur);
+        if ($headers) {
+            while (($data = fgetcsv($handle, 0, $separateur)) !== false) {
+                if (count($headers) === count($data)) {
+                    $factures[] = array_combine($headers, $data);
+                } else {
+                    error_log("Nombre de colonnes incorrect dans le CSV : " . $cheminFichier);
+                }
+            }
+        }
+        fclose($handle);
+    }
+    return $factures;
+}
+
+// function lireFacturesXML($cheminFichier) { ... }
+// function lireFacturesTXT($cheminFichier) { ... }
+
+// function ajouterFacture($db, $dataFacture) { ... } // Fonction pour insérer une facture dans la base
+?>
+*/
+?>
+<?php
+require_once('../../templates/footer.php');
+?>

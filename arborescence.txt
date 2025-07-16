@@ -1,0 +1,386 @@
+Structure du dossier
+Le num‚ro de s‚rie du volume est 4A80-B900
+C:.
+³   arborescence.txt
+³   bootstrap.min.css
+³   database.php
+³   deconnexion.php
+³   forgot_password.html
+³   forgot_password.php
+³   index.html
+³   index.php
+³   Nouveau document texte.txt
+³   README.txt
+³   
+ÃÄÄÄcss
+³       bootstrap.min.css
+³       formulaire.css
+³       Nouveau document texte.txt
+³       print.css
+³       select2-bootstrap-5-theme.min.css
+³       select2.min.css
+³       style.css
+³       tableau.css
+³       
+ÃÄÄÄerreurs
+³       404.html
+³       404.php
+³       500.html
+³       500.php
+³       Nouveau document texte.txt
+³       
+ÃÄÄÄfonctions
+³   ³   api_queue.php
+³   ³   database.php
+³   ³   gestion_agences.php
+³   ³   gestion_budgets.php
+³   ³   gestion_clients.php
+³   ³   gestion_comptes.php
+³   ³   gestion_droits.php
+³   ³   gestion_ecritures.php
+³   ³   gestion_emprunts.php
+³   ³   gestion_factures.php
+³   ³   gestion_factures_fournisseurs.php
+³   ³   gestion_fournisseurs.php
+³   ³   gestion_habilitations.php
+³   ³   gestion_import_statements.php
+³   ³   gestion_journaux.php
+³   ³   gestion_logs.php
+³   ³   gestion_notification.php
+³   ³   gestion_profils.php
+³   ³   gestion_reconciliation.php
+³   ³   gestion_recurring_entries.php
+³   ³   gestion_reports.php
+³   ³   gestion_tiers.html
+³   ³   gestion_tiers.php
+³   ³   gestion_utilisateurs.html
+³   ³   gestion_utilisateurs.php
+³   ³   handle_messages.php
+³   ³   logs.php
+³   ³   Nouveau document texte.txt
+³   ³   PdfGenerator.php
+³   ³   process_api_queue.php
+³   ³   traitement_donnees.php
+³   ³   validation.php
+³   ³   
+³   ÃÄÄÄconfig
+³   ³       config.ini
+³   ³       
+³   ÀÄÄÄlogs
+³       ³   application.log
+³       ³   erreurs_authentification.txt
+³       ³   Nouveau document texte.txt
+³       ³   php_errors.log.txt
+³       ³   php_errors.txt
+³       ³   
+³       ÀÄÄÄNouveau dossier
+ÃÄÄÄimages
+³       compta.ico
+³       courrier.ico
+³       logo_bailcompta.png
+³       LOGO_SCE.ico
+³       sces.jpg
+³       
+ÃÄÄÄjs
+³       bootstrap.bundle.js
+³       bootstrap.min.js
+³       formulaire.js
+³       jquery-3.7.1.js
+³       Nouveau document texte.txt
+³       script.js
+³       select2.min.js
+³       tableau_dynamique.js
+³       
+ÃÄÄÄlibrairies
+³   ÃÄÄÄabs2000_generator
+³   ³       Abs2000Generator.php
+³   ³       Nouveau document texte.txt
+³   ³       
+³   ÀÄÄÄcsv_parser
+³           CsvParser.php
+³           Nouveau document texte.txt
+³           
+ÃÄÄÄlogs
+³       error.log
+³       
+ÃÄÄÄpages
+³   ³   acces_refuse.html
+³   ³   acces_refuse.php
+³   ³   accueil_invite.php
+³   ³   authentification.php
+³   ³   deconnexion.php
+³   ³   Nouveau document texte.txt
+³   ³   tableau_bord.html
+³   ³   tableau_bord.php
+³   ³   
+³   ÃÄÄÄadmin
+³   ³   ³   header.php
+³   ³   ³   index.html
+³   ³   ³   index.php
+³   ³   ³   Nouveau document texte.txt
+³   ³   ³   
+³   ³   ÃÄÄÄaudit_trail
+³   ³   ³       Nouveau document texte.txt
+³   ³   ³       view_activity_log.php
+³   ³   ³       view_login_history.php
+³   ³   ³       
+³   ³   ÃÄÄÄconfiguration
+³   ³   ³       base_de_donnees.html
+³   ³   ³       base_de_donnees.php
+³   ³   ³       index.html
+³   ³   ³       index.php
+³   ³   ³       logs.html
+³   ³   ³       logs.php
+³   ³   ³       modifier_parametre.html
+³   ³   ³       modifier_parametre.php
+³   ³   ³       Nouveau document texte.txt
+³   ³   ³       
+³   ³   ÃÄÄÄcss
+³   ³   ³       admin_style.css
+³   ³   ³       bootstrap.min.css
+³   ³   ³       Nouveau document texte.txt
+³   ³   ³       
+³   ³   ÃÄÄÄdata_management
+³   ³   ³       backup_restore.php
+³   ³   ³       backup_restore.txt
+³   ³   ³       data_integrity_check.php
+³   ³   ³       index.php
+³   ³   ³       purge_old_data.php
+³   ³   ³       
+³   ³   ÃÄÄÄhabilitations
+³   ³   ³       afficher_details.html
+³   ³   ³       afficher_details.php
+³   ³   ³       ajouter.php
+³   ³   ³       index.html
+³   ³   ³       index.php
+³   ³   ³       index.txt
+³   ³   ³       modifier.html
+³   ³   ³       modifier.php
+³   ³   ³       traitement_ajout_habilitation.php
+³   ³   ³       
+³   ³   ÃÄÄÄincludes
+³   ³   ³       footer.html
+³   ³   ³       footer.php
+³   ³   ³       header.html
+³   ³   ³       header.php
+³   ³   ³       index.html
+³   ³   ³       index.php
+³   ³   ³       navigation.html
+³   ³   ³       navigation.php
+³   ³   ³       Nouveau document texte.txt
+³   ³   ³       
+³   ³   ÃÄÄÄjs
+³   ³   ³       admin_script.js
+³   ³   ³       bootstrap.min.css
+³   ³   ³       Nouveau document texte.txt
+³   ³   ³       
+³   ³   ÃÄÄÄprofils
+³   ³   ³       ajouter.html
+³   ³   ³       ajouter.php
+³   ³   ³       assigner_utilisateurs.html
+³   ³   ³       assigner_utilisateurs.php
+³   ³   ³       dupliquer.html
+³   ³   ³       dupliquer.php
+³   ³   ³       enregistrer_profil.php
+³   ³   ³       index.html
+³   ³   ³       index.php
+³   ³   ³       mettre_a_jour_profil.php
+³   ³   ³       modifier.html
+³   ³   ³       modifier.php
+³   ³   ³       Nouveau document texte.txt
+³   ³   ³       supprimer.php
+³   ³   ³       
+³   ³   ÀÄÄÄutilisateurs
+³   ³           ajouter.html
+³   ³           ajouter.php
+³   ³           deconnecter_force.html
+³   ³           deconnecter_force.php
+³   ³           enregistrer_utilisateur.php
+³   ³           index.html
+³   ³           index.php
+³   ³           index.txt
+³   ³           mettre_a_jour_utilisateur.php
+³   ³           modifier.html
+³   ³           modifier.php
+³   ³           modifier_role.html
+³   ³           modifier_role.php
+³   ³           reinitialiser.html
+³   ³           reinitialiser.php
+³   ³           supprimer.html
+³   ³           supprimer.php
+³   ³           
+³   ÃÄÄÄaide
+³   ³       index.php
+³   ³       Nouveau document texte.txt
+³   ³       
+³   ÃÄÄÄanalyse
+³   ³       index.php
+³   ³       Nouveau document texte.txt
+³   ³       process_risk.php
+³   ³       
+³   ÃÄÄÄauth
+³   ³       logout.php
+³   ³       
+³   ÃÄÄÄbudgets
+³   ³       create_budget.php
+³   ³       forecasts.php
+³   ³       index.php
+³   ³       Nouveau document texte.txt
+³   ³       report.php
+³   ³       view_budget_performance.php
+³   ³       
+³   ÃÄÄÄcomptes
+³   ³       ajax_get_ecritures.php
+³   ³       index.php
+³   ³       index.txt
+³   ³       liste.php
+³   ³       
+³   ÃÄÄÄecritures
+³   ³       ajax_ecritures.php
+³   ³       ajax_get_ecritures.php
+³   ³       ajax_suggestion_contrepartie.php
+³   ³       details.php
+³   ³       details_ecriture.php
+³   ³       import_bank_statements.php
+³   ³       index.html
+³   ³       index.php
+³   ³       liste.html
+³   ³       liste.php
+³   ³       modifier.html
+³   ³       modifier.php
+³   ³       nouveau 1.php
+³   ³       nouveau 1.txt
+³   ³       Nouveau document texte.txt
+³   ³       reconciliation.php
+³   ³       Recurring_Ecritures.php
+³   ³       saisie.html
+³   ³       saisie.php
+³   ³       saisie2.php
+³   ³       SaisieNouveau.html
+³   ³       SaisieNouveau.php
+³   ³       supprimer.php
+³   ³       valider_remboursement.php
+³   ³       _partial_ligne_ecriture.php
+³   ³       
+³   ÃÄÄÄemprunts
+³   ³       ajouter.html
+³   ³       ajouter.php
+³   ³       detail.html
+³   ³       details.html
+³   ³       details.php
+³   ³       details_comptable.php
+³   ³       detail_echeance_ancien.txt
+³   ³       error.log
+³   ³       index.html
+³   ³       index.php
+³   ³       index.txt
+³   ³       mark_echeance_paid.php
+³   ³       modifier.html
+³   ³       modifier.php
+³   ³       supprimer.php
+³   ³       valider_remboursement.php
+³   ³       
+³   ÃÄÄÄfactures
+³   ³       index.php
+³   ³       integration.html
+³   ³       integration.php
+³   ³       listes_factures.html
+³   ³       listes_factures.php
+³   ³       modifier_facture.html
+³   ³       modifier_facture.php
+³   ³       Nouveau document texte.txt
+³   ³       process_payment.php
+³   ³       supprimer_facture.html
+³   ³       supprimer_facture.php
+³   ³       voir_facture.html
+³   ³       voir_facture.php
+³   ³       
+³   ÃÄÄÄgeneration
+³   ³       GenEcriture.php
+³   ³       GenEmprunt.php
+³   ³       generer_csv.html
+³   ³       generer_csv.php
+³   ³       GenFacture.php
+³   ³       index.html
+³   ³       index.php
+³   ³       Nouveau document texte.txt
+³   ³       telecharger.html
+³   ³       telecharger.php
+³   ³       
+³   ÃÄÄÄhabilitations
+³   ³       gestion_droits.html
+³   ³       gestion_droits.php
+³   ³       index.html
+³   ³       index.php
+³   ³       Nouveau document texte.txt
+³   ³       profils.html
+³   ³       profils.php
+³   ³       utilisateurs.html
+³   ³       utilisateurs.php
+³   ³       
+³   ÃÄÄÄimport
+³   ³       confirmation.php
+³   ³       index.html
+³   ³       index.php
+³   ³       Nouveau document texte.txt
+³   ³       traitement.html
+³   ³       traitement.php
+³   ³       
+³   ÃÄÄÄlogs
+³   ³       application_errors.log
+³   ³       
+³   ÃÄÄÄnotifications
+³   ³       index.php
+³   ³       Nouveau document texte.txt
+³   ³       
+³   ÃÄÄÄNouveau dossier
+³   ÃÄÄÄprofils
+³   ³       ajouter.html
+³   ³       ajouter.php
+³   ³       index.html
+³   ³       index.php
+³   ³       modifier.html
+³   ³       modifier.php
+³   ³       Nouveau document texte.txt
+³   ³       
+³   ÃÄÄÄreporting
+³   ³       balance.php
+³   ³       cash_flow_statement.php
+³   ³       export_reports.php
+³   ³       journal_general.php
+³   ³       ledger_accounts.php
+³   ³       ledger_accounts.txt
+³   ³       Nouveau document texte.txt
+³   ³       profit_loss.php
+³   ³       
+³   ÃÄÄÄscripts
+³   ³       Nouveau document texte.txt
+³   ³       process_recurring_entries.php
+³   ³       run_recurring_entries.bat
+³   ³       run_recurring_entries.txt
+³   ³       
+³   ÀÄÄÄutilisateurs
+³           index.html
+³           index.php
+³           modifier.php
+³           
+ÃÄÄÄscripts
+³       Nouveau document texte.txt
+³       
+ÃÄÄÄsecurite
+³       .htaccess
+³       Nouveau document texte.txt
+³       
+ÃÄÄÄtemplates
+³       bootstrap.min.css
+³       footer.html
+³       footer.php
+³       header.html
+³       header.php
+³       navigation.html
+³       navigation.php
+³       navigation_invite.php
+³       Nouveau document texte.txt
+³       
+ÀÄÄÄuploads
+    ÀÄÄÄfactures

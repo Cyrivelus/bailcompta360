@@ -1,0 +1,344 @@
+<?php
+// pages/emprunts/details.php (Affichage des détails généraux de l'emprunt et décomposition des échéances)
+
+// --- Initialisation ---
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+ini_set('default_charset', 'UTF-8');
+mb_internal_encoding('UTF-8');
+
+header('Content-Type: text/html; charset=utf-8');
+
+// --- Titre de la page ---
+$titre = "Détails de l'Emprunt Bancaire";
+$current_page = basename(__FILE__);
+
+// --- Inclusions ---
+require_once '../../fonctions/database.php'; // Doit initialiser $pdo
+require_once '../../fonctions/gestion_emprunts.php'; // Doit contenir getEmpruntAvecDetails
+
+// --- Vérification de l'ID fourni ---
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header("Location: index.php?error=" . urlencode("ID d'emprunt non valide ou manquant."));
+    exit;
+}
+
+$idEmprunt = (int) $_GET['id'];
+$emprunt = null;
+$erreur = null;
+$pdo = null;
+
+// Connexion à la base de données
+try {
+    if (!isset($pdo) || !$pdo instanceof PDO) {
+        $serverName = "192.168.100.226";
+        $databaseName = "BD_AD_SCE";
+        // Tenter d'ajouter l'option d'encodage si l'erreur persiste, bien que retirée à la demande précédente
+        // $pdo = new PDO("sqlsrv:Server=$serverName;Database=$databaseName", null, null, [PDO::SQLSRV_ATTR_ENCODING => PDO::SQLSRV_ENCODING_UTF8]);
+        $pdo = new PDO("sqlsrv:Server=$serverName;Database=BD_AD_SCE;"); // Utilisation de la connexion fournie sans option d'encodage
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+
+    if (!isset($pdo) || !$pdo instanceof PDO) {
+        throw new Exception("La connexion PDO n'a pas pu être initialisée.");
+    }
+
+    // Récupération des données de l'emprunt principal (via fonction existante ou fallback)
+    // Assurez-vous que getEmpruntAvecDetails existe dans gestion_emprunts.php
+    // et retourne toutes les colonnes nécessaires de Emprunts_Bancaires.
+    if (function_exists('getEmpruntAvecDetails')) {
+         $emprunt = getEmpruntAvecDetails($pdo, $idEmprunt);
+    } else {
+        // Fallback: Requête directe si la fonction n'existe pas
+        $stmtEmprunt = $pdo->prepare("SELECT * FROM Emprunts_Bancaires WHERE ID_Emprunt = :id_emprunt");
+        $stmtEmprunt->bindParam(':id_emprunt', $idEmprunt, PDO::PARAM_INT);
+        $stmtEmprunt->execute();
+        $emprunt = $stmtEmprunt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+    if (!$emprunt) {
+        // Rediriger si l'emprunt n'est pas trouvé
+        header("Location: index.php?error=" . urlencode("Emprunt bancaire non trouvé."));
+        exit;
+    }
+
+    // Récupération des échéances de l'emprunt
+    $stmtEcheances = $pdo->prepare("SELECT * FROM Echeances_Amortissement WHERE ID_Emprunt = ? ORDER BY Date_Echeance ASC");
+    $stmtEcheances->execute([$idEmprunt]);
+    $echeances = $stmtEcheances->fetchAll(PDO::FETCH_ASSOC);
+
+    // --- Récupérer les écritures liées à cet emprunt ---
+    // Utilise le filtre LIKE sur la description pour trouver les écritures
+    $searchTerm = "%Emprunt ID " . $idEmprunt . "%";
+    $stmtEcrituresLiees = $pdo->prepare("SELECT ID_Ecriture, ID_Journal, Cde, Description FROM Ecritures WHERE Description LIKE :searchTerm ORDER BY Date_Saisie ASC");
+    $stmtEcrituresLiees->bindParam(':searchTerm', $searchTerm, PDO::PARAM_STR);
+    $stmtEcrituresLiees->execute();
+    $ecrituresLiees = $stmtEcrituresLiees->fetchAll(PDO::FETCH_ASSOC);
+
+    // Variables pour stocker les informations de journal et contrepartie (Cde et ID_Journal de la première écriture liée trouvée)
+    $journalLie = "N/A";
+    $contrepartieLiee = "N/A";
+
+    if (!empty($ecrituresLiees)) {
+        // Utiliser les informations de la première écriture liée trouvée
+        $journalLie = htmlspecialchars($ecrituresLiees[0]['Cde'] ?? 'N/A');
+        // Utiliser ID_Journal pour la contrepartie comme demandé, bien que sémantiquement incorrect
+        $contrepartieLiee = htmlspecialchars($ecrituresLiees[0]['ID_Journal'] ?? 'N/A');
+         // Note : Si vous souhaitez afficher le numéro de compte de contrepartie réel,
+         // il faudrait interroger la table Lignes_Ecritures pour trouver les autres comptes
+         // dans la même écriture (ID_Ecriture) qui ne sont pas le compte de l'emprunt.
+         // Cela nécessiterait une logique plus complexe non incluse ici pour respecter les contraintes.
+    }
+
+
+} catch (Exception $e) {
+    $erreur = "Erreur lors de la récupération des détails de l'emprunt : " . $e->getMessage();
+    error_log("Erreur (emprunts/details.php - chargement) : " . $e->getMessage());
+
+    require_once('../../templates/header.php');
+    require_once('../../templates/navigation.php');
+    echo '<div class="container mt-5"><div class="alert alert-danger">' . htmlspecialchars($erreur) . '</div></div>';
+    require_once('../../templates/footer.php');
+    exit;
+}
+
+// --- Inclusions du template HTML ---
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php');
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | <?= htmlspecialchars($titre) ?></title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .details-container {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+        }
+        .details-container h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .details-container p {
+            margin-bottom: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px; /* Espacement sous les tableaux */
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top; /* Alignement en haut pour les cellules */
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .text-right {
+            text-align: right;
+        }
+         .solde-final {
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 1.2em;
+        }
+         .extrait-header {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #e9ecef; /* Couleur légère pour l'en-tête de l'extrait */
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+        }
+         .extrait-header h4 {
+             margin-top: 0;
+             margin-bottom: 10px;
+             padding-bottom: 5px;
+             border-bottom: 1px dashed #adb5bd;
+         }
+         .extrait-links {
+             margin-bottom: 20px;
+             padding: 15px;
+             background-color: #e9f7ef; /* Couleur légère pour les liens d'extrait */
+             border-radius: 5px;
+             border: 1px solid #c3e6cb;
+         }
+         .extrait-links h4 {
+             margin-top: 0;
+             margin-bottom: 10px;
+             padding-bottom: 5px;
+             border-bottom: 1px dashed #8fd19e;
+         }
+         .extrait-links a {
+             margin-right: 15px;
+             display: inline-block; /* Pour que les marges fonctionnent */
+         }
+         /* Styles spécifiques pour le tableau d'extrait */
+         .table-extrait th {
+             text-align: center; /* Centrer les en-têtes du tableau d'extrait */
+         }
+         .table-extrait td {
+             text-align: left; /* Alignement par défaut à gauche */
+         }
+          .table-extrait td.text-right {
+             text-align: right; /* Aligner à droite pour les montants */
+          }
+          .echeance-header-row td {
+              font-weight: bold;
+              background-color: #f2f2f2; /* Même couleur que les th */
+              border-bottom: none; /* Pas de double bordure */
+          }
+          .echeance-detail-row td {
+              border-top: none; /* Pas de double bordure */
+          }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 class="page-header"><?= htmlspecialchars($titre) ?></h2>
+
+    <?php if ($erreur): ?>
+        <div class="alert alert-danger"><?= htmlspecialchars($erreur) ?></div>
+    <?php else: ?>
+        <div class="details-container">
+            <h3>Informations Générales</h3>
+            <p><strong>ID:</strong> <?= htmlspecialchars($emprunt['ID_Emprunt'] ?? 'N/A') ?></p>
+            <p><strong>Banque:</strong> <?= htmlspecialchars($emprunt['Banque'] ?? 'N/A') ?></p>
+            <p><strong>Numéro de Prêt:</strong> <?= htmlspecialchars($emprunt['Numero_Pret'] ?? 'N/A') ?></p>
+            <p><strong>Montant:</strong> <?= isset($emprunt['Montant_Pret']) ? number_format($emprunt['Montant_Pret'], 2, ',', ' ') : '0,00' ?> <?= htmlspecialchars($emprunt['Devise'] ?? 'N/A') ?></p>
+            <p><strong>Date de Souscription:</strong> <?= isset($emprunt['Date_Souscription']) ? date('d/m/Y', strtotime($emprunt['Date_Souscription'])) : 'N/A' ?></p>
+            <p><strong>Agence:</strong> <?= htmlspecialchars($emprunt['Agence'] ?? 'N/A') ?></p>
+            <p><strong>Type de Prêt:</strong> <?= htmlspecialchars($emprunt['Type_Pret'] ?? 'N/A') ?></p>
+            <p><strong>Client:</strong> <?= htmlspecialchars($emprunt['Client'] ?? 'N/A') ?></p>
+            <p><strong>Source de Financement:</strong> <?= htmlspecialchars($emprunt['Source_Financement'] ?? 'N/A') ?></p>
+
+            <h3>Informations Financières</h3>
+            <p><strong>TEG:</strong> <?= isset($emprunt['Taux_Effectif_Global']) ? number_format($emprunt['Taux_Effectif_Global'] * 100, 4, ',', ' ') . '%' : 'N/A' ?></p>
+            <p><strong>Montant Différé:</strong> <?= isset($emprunt['Montant_Differe']) ? number_format($emprunt['Montant_Differe'], 2, ',', ' ') : '0,00' ?> <?= htmlspecialchars($emprunt['Devise'] ?? 'N/A') ?></p>
+            <p><strong>Type de Plan:</strong> <?= htmlspecialchars($emprunt['Type_Plan'] ?? 'N/A') ?></p>
+            <p><strong>Échéance Fin Mois:</strong> <?= isset($emprunt['Echeance_Fin_Mois']) ? ($emprunt['Echeance_Fin_Mois'] ? 'Oui' : 'Non') : 'N/A' ?></p>
+            <p><strong>Nombre d'Échéances:</strong> <?= htmlspecialchars($emprunt['Nombre_Echeances'] ?? 'N/A') ?></p>
+            <p><strong>Gestion du Différé:</strong> <?= htmlspecialchars($emprunt['Gestion_Differe'] ?? 'N/A') ?></p>
+            <p><strong>Jours Réels:</strong> <?= htmlspecialchars($emprunt['Nombre_Jours_Reels'] ?? 'N/A') ?></p>
+            <p><strong>Type d'Intérêt:</strong> <?= htmlspecialchars($emprunt['Type_Interet'] ?? 'N/A') ?></p>
+            <p><strong>Intérêt SP Taux:</strong> <?= isset($emprunt['Interet_SP_Taux']) ? number_format($emprunt['Taux_Effectif_Global'] * 100, 4, ',', ' ') . '%' : 'N/A' ?></p>
+            <p><strong>Intérêt SP Montant:</strong> <?= isset($emprunt['Interet_SP_Montant']) ? number_format($emprunt['Interet_SP_Montant'], 2, ',', ' ') : '0,00' ?> <?= htmlspecialchars($emprunt['Devise'] ?? 'N/A') ?></p>
+            <p><strong>Taxes:</strong> <?= isset($emprunt['Taxes']) ? number_format($emprunt['Taxes'], 2, ',', ' ') : '0,00' ?> <?= htmlspecialchars($emprunt['Devise'] ?? 'N/A') ?></p>
+            <p><strong>Période:</strong> <?= htmlspecialchars($emprunt['Periode'] ?? 'N/A') ?></p>
+            <p><strong>Terme:</strong> <?= htmlspecialchars($emprunt['Terme'] ?? 'N/A') ?></p>
+            <p><strong>Perception:</strong> <?= htmlspecialchars($emprunt['Perception'] ?? 'N/A') ?></p>
+
+            <h3>Dates Clés</h3>
+            <p><strong>Mise en Place:</strong> <?= isset($emprunt['Date_Mise_En_Place']) ? date('d/m/Y', strtotime($emprunt['Date_Mise_En_Place'])) : 'N/A' ?></p>
+            <p><strong>Première Échéance:</strong> <?= isset($emprunt['Date_Premiere_Echeance']) ? date('d/m/Y', strtotime($emprunt['Date_Premiere_Echeance'])) : 'N/A' ?></p>
+            <p><strong>Dernière Échéance:</strong> <?= isset($emprunt['Date_Derniere_Echeance']) ? date('d/m/Y', strtotime($emprunt['Date_Derniere_Echeance'])) : 'N/A' ?></p>
+            <p><strong>Début Amortissement:</strong> <?= isset($emprunt['Date_Debut_Amortissement']) ? date('d/m/Y', strtotime($emprunt['Date_Debut_Amortissement'])) : 'Non défini' ?></p>
+            <p><strong>Fin Amortissement:</strong> <?= isset($emprunt['Date_Fin_Amortissement']) ? date('d/m/Y', strtotime($emprunt['Date_Fin_Amortissement'])) : 'Non défini' ?></p>
+
+            <h3>Amortissement</h3>
+            <p><strong>Montant Initial:</strong> <?= isset($emprunt['Montant_Initial']) ? number_format($emprunt['Montant_Initial'], 2, ',', ' ') : '0,00' ?> <?= htmlspecialchars($emprunt['Devise'] ?? 'N/A') ?></p>
+            <p><strong>Durée (jours):</strong> <?= htmlspecialchars($emprunt['Duree'] ?? 'N/A') ?></p>
+            <p><strong>Type:</strong> <?= htmlspecialchars($emprunt['Type_Amortissement'] ?? 'N/A') ?></p>
+
+            <h3>Décomposition des Échéances de l'Emprunt</h3>
+             <?php if (!empty($echeances)): ?>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date Échéance</th>
+                                <th>Libellé</th>
+                                <th>Journal</th>
+                                <th>Contrepartie</th>
+                                <th class="text-right">Débit</th>
+                                <th class="text-right">Crédit</th>
+                                </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            // Initialiser le capital restant dû avec le montant initial du prêt
+                            $capitalRestantDu = $emprunt['Montant_Pret'] ?? 0;
+
+                            foreach ($echeances as $echeance):
+                                $dateEcheanceFormatted = isset($echeance['Date_Echeance']) ? date('d/m/Y', strtotime($echeance['Date_Echeance'])) : 'N/A';
+                                $numeroEcheance = htmlspecialchars($echeance['Numero_Echeance'] ?? 'N/A');
+                                // Récupérer les montants réels de la table
+                                $amortissement = $echeance['Amortissement'] ?? 0;
+                                $interetSP = $echeance['Interet_SP'] ?? 0;
+                                $taxesInteretSP = $echeance['Taxes_Interet_SP'] ?? 0;
+                                // Le montant total de l'échéance n'est plus affiché directement comme une ligne séparée
+
+                                // Utiliser les informations de l'écriture liée trouvée
+                                $displayJournal = $journalLie;
+                                $displayContrepartie = $contrepartieLiee;
+
+                            ?>
+                                <tr>
+                                    <td><?= $dateEcheanceFormatted ?></td>
+                                    <td>remboursement amortissement pret Échéance <?= $numeroEcheance ?></td>
+                                    <td><?= $displayJournal ?></td>
+                                    <td><?= $displayContrepartie ?></td>
+                                    <td class="text-right">0,00</td> <td class="text-right"><?= number_format($capitalRestantDu, 2, ',', ' ') ?></td> </tr>
+                                <tr>
+                                    <td><?= $dateEcheanceFormatted ?></td>
+                                    <td>Intérêt SP Échéance <?= $numeroEcheance ?></td>
+                                     <td><?= $displayJournal ?></td>
+                                     <td><?= $displayContrepartie ?></td>
+                                     <td class="text-right">0,00</td> <td class="text-right"><?= number_format($interetSP, 2, ',', ' ') ?></td> </tr>
+                                <tr style="border-bottom: 2px solid #ddd;"> <td><?= $dateEcheanceFormatted ?></td>
+                                    <td>Taxes Intérêt SP Échéance <?= $numeroEcheance ?></td>
+                                     <td><?= $displayJournal ?></td>
+                                     <td><?= $displayContrepartie ?></td>
+                                     <td class="text-right">0,00</td> <td class="text-right"><?= number_format($taxesInteretSP, 2, ',', ' ') ?></td> </tr>
+                                <?php
+                                // Mettre à jour le capital restant dû pour la prochaine échéance
+                                $capitalRestantDu -= $amortissement;
+                                // S'assurer que le capital restant dû ne devient pas négatif à la fin
+                                if ($capitalRestantDu < 0.01 && $numeroEcheance == count($echeances)) {
+                                     $capitalRestantDu = 0; // Ajustement pour la dernière échéance
+                                }
+                                endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <p class="alert alert-info">Aucune échéance trouvée pour cet emprunt.</p>
+            <?php endif; ?>
+
+            <?php if (empty($ecrituresLiees)): ?>
+                 <p class="alert alert-warning">Aucune écriture comptable liée trouvée pour cet emprunt (basé sur la description contenant "Emprunt ID <?= htmlspecialchars($idEmprunt) ?>"). Le Journal et la Contrepartie sont affichés comme "N/A".</p>
+            <?php endif; ?>
+
+            
+
+
+            <p><a href="index.php" class="btn btn-default">Retour à la liste</a></p>
+        </div>
+    <?php endif; ?>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script>
+    // L'initialisation du tableau dynamique n'est probablement pas nécessaire pour une simple page de détails
+</script>
+
+<?php require_once('../../templates/footer.php'); ?>
+</body>
+</html>

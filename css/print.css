@@ -1,0 +1,50 @@
+/* Hide elements that should not appear on the printed page */
+@media print {
+    /* Hide navigation bar */
+    .navbar, .header, .footer {
+        display: none !important;
+    }
+
+    /* Hide search, filter, and other control elements */
+    .compte-header,
+    .search-container,
+    .solde-info,
+    .nombre-lignes,
+    .page-header,
+    #btn-filtrer,
+    #btn-print { /* Hide the print button itself */
+        display: none !important;
+    }
+
+    /* Adjust table layout for better printing */
+    .table-responsive {
+        overflow: visible !important; /* Ensure table content isn't cut off */
+    }
+
+    table {
+        width: 100% !important;
+        margin: 0 !important;
+        border-collapse: collapse; /* Ensure borders are collapsed */
+    }
+
+    th, td {
+        padding: 8px !important;
+        border: 1px solid #ccc !important; /* Add borders for clarity */
+        text-align: left;
+        vertical-align: top;
+    }
+
+    /* Remove highlights from search if they exist */
+    .highlight {
+        background-color: transparent !important;
+        color: inherit !important;
+    }
+
+    /* Ensure text colors are standard for readability */
+    .credit {
+        color: black !important;
+    }
+    .debit {
+        color: black !important;
+    }
+}

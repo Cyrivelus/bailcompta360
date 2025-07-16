@@ -1,0 +1,362 @@
+<?php
+// gestion_tiers.php
+
+// Activer l'affichage des erreurs pour le débogage
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Inclure le fichier de connexion à la base de données
+require_once("../fonctions/database.php");
+
+// Démarrer la session
+session_start();
+
+// Vérifier si l'utilisateur est connecté et a le rôle approprié (par exemple, Admin ou Comptable)
+if (!isset($_SESSION['utilisateur_id']) || !in_array($_SESSION['role'], ['Admin', 'Comptable'])) {
+    header("Location: ../index.php"); // Rediriger si non connecté ou rôle non autorisé
+    exit();
+}
+
+// Traitement des actions (ajouter, modifier, supprimer)
+if (isset($_POST['action'])) {
+    $action = $_POST['action'];
+
+    switch ($action) {
+        case 'ajouter':
+            if (isset($_POST['type_tiers']) && isset($_POST['nom_commercial'])) {
+                $type_tiers = filter_input(INPUT_POST, 'type_tiers', FILTER_SANITIZE_STRING);
+                $nom_commercial = filter_input(INPUT_POST, 'nom_commercial', FILTER_SANITIZE_STRING);
+                $nom_legal = filter_input(INPUT_POST, 'nom_legal', FILTER_SANITIZE_STRING);
+                $adresse = filter_input(INPUT_POST, 'adresse', FILTER_SANITIZE_STRING);
+                $code_postal = filter_input(INPUT_POST, 'code_postal', FILTER_SANITIZE_STRING);
+                $ville = filter_input(INPUT_POST, 'ville', FILTER_SANITIZE_STRING);
+                $pays = filter_input(INPUT_POST, 'pays', FILTER_SANITIZE_STRING);
+                $numero_telephone = filter_input(INPUT_POST, 'numero_telephone', FILTER_SANITIZE_STRING);
+                $adresse_email = filter_input(INPUT_POST, 'adresse_email', FILTER_SANITIZE_EMAIL);
+                $numero_identification_fiscale = filter_input(INPUT_POST, 'numero_identification_fiscale', FILTER_SANITIZE_STRING);
+                $code_comptable = filter_input(INPUT_POST, 'code_comptable', FILTER_SANITIZE_STRING);
+
+                if (!empty($type_tiers) && !empty($nom_commercial)) {
+                    $sql = "INSERT INTO Tiers (Type_Tiers, Nom_Commercial, Nom_Legal, Adresse, Code_Postal, Ville, Pays, Numero_Telephone, Adresse_Email, Numero_Identification_Fiscale, Code_Comptable, Date_Creation)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+                    $params = [$type_tiers, $nom_commercial, $nom_legal, $adresse, $code_postal, $ville, $pays, $numero_telephone, $adresse_email, $numero_identification_fiscale, $code_comptable];
+                    $stmt = executeQuery($db, $sql, $params);
+
+                    if ($stmt) {
+                        $_SESSION['message'] = "Tiers ajouté avec succès.";
+                        $_SESSION['message_type'] = 'success';
+                    } else {
+                        $_SESSION['message'] = "Erreur lors de l'ajout du tiers.";
+                        $_SESSION['message_type'] = 'danger';
+                    }
+                } else {
+                    $_SESSION['message'] = "Le type et le nom commercial du tiers sont requis.";
+                    $_SESSION['message_type'] = 'warning';
+                }
+            }
+            break;
+
+        case 'modifier':
+            if (isset($_POST['id_tiers']) && isset($_POST['type_tiers']) && isset($_POST['nom_commercial'])) {
+                $id_tiers = filter_input(INPUT_POST, 'id_tiers', FILTER_SANITIZE_NUMBER_INT);
+                $type_tiers = filter_input(INPUT_POST, 'type_tiers', FILTER_SANITIZE_STRING);
+                $nom_commercial = filter_input(INPUT_POST, 'nom_commercial', FILTER_SANITIZE_STRING);
+                $nom_legal = filter_input(INPUT_POST, 'nom_legal', FILTER_SANITIZE_STRING);
+                $adresse = filter_input(INPUT_POST, 'adresse', FILTER_SANITIZE_STRING);
+                $code_postal = filter_input(INPUT_POST, 'code_postal', FILTER_SANITIZE_STRING);
+                $ville = filter_input(INPUT_POST, 'ville', FILTER_SANITIZE_STRING);
+                $pays = filter_input(INPUT_POST, 'pays', FILTER_SANITIZE_STRING);
+                $numero_telephone = filter_input(INPUT_POST, 'numero_telephone', FILTER_SANITIZE_STRING);
+                $adresse_email = filter_input(INPUT_POST, 'adresse_email', FILTER_SANITIZE_EMAIL);
+                $numero_identification_fiscale = filter_input(INPUT_POST, 'numero_identification_fiscale', FILTER_SANITIZE_STRING);
+                $code_comptable = filter_input(INPUT_POST, 'code_comptable', FILTER_SANITIZE_STRING);
+
+                if (!empty($id_tiers) && !empty($type_tiers) && !empty($nom_commercial)) {
+                    $sql = "UPDATE Tiers SET Type_Tiers = ?, Nom_Commercial = ?, Nom_Legal = ?, Adresse = ?, Code_Postal = ?, Ville = ?, Pays = ?, Numero_Telephone = ?, Adresse_Email = ?, Numero_Identification_Fiscale = ?, Code_Comptable = ?
+                            WHERE ID_Tiers = ?";
+                    $params = [$type_tiers, $nom_commercial, $nom_legal, $adresse, $code_postal, $ville, $pays, $numero_telephone, $adresse_email, $numero_identification_fiscale, $code_comptable, $id_tiers];
+                    $stmt = executeQuery($db, $sql, $params);
+
+                    if ($stmt) {
+                        $_SESSION['message'] = "Tiers mis à jour avec succès.";
+                        $_SESSION['message_type'] = 'success';
+                    } else {
+                        $_SESSION['message'] = "Erreur lors de la mise à jour du tiers.";
+                        $_SESSION['message_type'] = 'danger';
+                    }
+                } else {
+                    $_SESSION['message'] = "L'ID, le type et le nom commercial du tiers sont requis pour la modification.";
+                    $_SESSION['message_type'] = 'warning';
+                }
+            } else {
+                $_SESSION['message'] = "Informations manquantes pour la modification du tiers.";
+                $_SESSION['message_type'] = 'warning';
+            }
+            break;
+
+        case 'supprimer':
+            if (isset($_POST['id_tiers'])) {
+                $id_tiers = filter_input(INPUT_POST, 'id_tiers', FILTER_SANITIZE_NUMBER_INT);
+
+                // Vérifier si des factures sont liées à ce tiers avant de supprimer (bonne pratique)
+                $sql_check_factures = "SELECT COUNT(*) FROM Factures WHERE ID_Tiers = ?";
+                $stmt_check = executeQuery($db, $sql_check_factures, [$id_tiers]);
+                $count = fetchOne($stmt_check)[0];
+
+                if ($count > 0) {
+                    $_SESSION['message'] = "Ce tiers est lié à des factures et ne peut pas être supprimé.";
+                    $_SESSION['message_type'] = 'danger';
+                } else {
+                    $sql_delete = "DELETE FROM Tiers WHERE ID_Tiers = ?";
+                    $stmt_delete = executeQuery($db, $sql_delete, [$id_tiers]);
+
+                    if ($stmt_delete) {
+                        $_SESSION['message'] = "Tiers supprimé avec succès.";
+                        $_SESSION['message_type'] = 'success';
+                    } else {
+                        $_SESSION['message'] = "Erreur lors de la suppression du tiers.";
+                        $_SESSION['message_type'] = 'danger';
+                    }
+                }
+            }
+            break;
+    }
+
+    // Rediriger pour éviter la soumission multiple du formulaire
+    header("Location: gestion_tiers.php");
+    exit();
+}
+
+// Récupérer la liste des tiers
+$sql_liste = "SELECT ID_Tiers, Type_Tiers, Nom_Commercial, Nom_Legal FROM Tiers ORDER BY Nom_Commercial";
+$stmt_liste = executeQuery($db, $sql_liste);
+$tiers = fetchAll($stmt_liste);
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des Tiers | BailCompta 360</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        .message {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Gestion des Tiers</h2>
+
+        <?php if (isset($_SESSION['message'])): ?>
+            <div class="alert alert-<?= $_SESSION['message_type'] ?> message" role="alert">
+                <?= $_SESSION['message'] ?>
+            </div>
+            <?php unset($_SESSION['message']); ?>
+        <?php endif; ?>
+
+        <h3>Liste des Tiers</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Nom Commercial</th>
+                    <th>Nom Legal</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($tiers): ?>
+                    <?php foreach ($tiers as $tier): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($tier['ID_Tiers']) ?></td>
+                            <td><?= htmlspecialchars($tier['Type_Tiers']) ?></td>
+                            <td><?= htmlspecialchars($tier['Nom_Commercial']) ?></td>
+                            <td><?= htmlspecialchars($tier['Nom_Legal'] ?: '-') ?></td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modifierTiersModal<?= $tier['ID_Tiers'] ?>">Modifier</button>
+                                <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#supprimerTiersModal<?= $tier['ID_Tiers'] ?>">Supprimer</button>
+                            </td>
+                        </tr>
+
+                        <div class="modal fade" id="modifierTiersModal<?= $tier['ID_Tiers'] ?>" tabindex="-1" role="dialog" aria-labelledby="modifierTiersModalLabel<?= $tier['ID_Tiers'] ?>" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modifierTiersModalLabel<?= $tier['ID_Tiers'] ?>">Modifier le Tiers</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post">
+                                            <input type="hidden" name="action" value="modifier">
+                                            <input type="hidden" name="id_tiers" value="<?= $tier['ID_Tiers'] ?>">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="type_tiers">Type de Tiers</label>
+                                                    <select class="form-control" id="type_tiers" name="type_tiers" required>
+                                                        <option value="Client" <?= ($tier['Type_Tiers'] === 'Client') ? 'selected' : '' ?>>Client</option>
+                                                        <option value="Fournisseur" <?= ($tier['Type_Tiers'] === 'Fournisseur') ? 'selected' : '' ?>>Fournisseur</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="nom_commercial">Nom Commercial</label>
+                                                    <input type="text" class="form-control" id="nom_commercial" name="nom_commercial" value="<?= htmlspecialchars($tier['Nom_Commercial']) ?>" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="nom_legal">Nom Legal</label>
+                                                <input type="text" class="form-control" id="nom_legal" name="nom_legal" value="<?= htmlspecialchars($tier['Nom_Legal']) ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="adresse">Adresse</label>
+                                                <input type="text" class="form-control" id="adresse" name="adresse" value="<?= htmlspecialchars($tier['Adresse']) ?>">
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="code_postal">Code Postal</label>
+                                                    <input type="text" class="form-control" id="code_postal" name="code_postal" value="<?= htmlspecialchars($tier['Code_Postal']) ?>">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="ville">Ville</label>
+                                                    <input type="text" class="form-control" id="ville" name="ville" value="<?= htmlspecialchars($tier['Ville']) ?>">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="pays">Pays</label>
+                                                    <input type="text" class="form-control" id="pays" name="pays" value="<?= htmlspecialchars($tier['Pays']) ?>">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="numero_telephone">Numéro de Téléphone</label>
+                                                    <input type="text" class="form-control" id="numero_telephone" name="numero_telephone" value="<?= htmlspecialchars($tier['Numero_Telephone']) ?>">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="adresse_email">Adresse Email</label>
+                                                    <input type="email" class="form-control" id="adresse_email" name="adresse_email" value="<?= htmlspecialchars($tier['Adresse_Email']) ?>">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="numero_identification_fiscale">Numéro d'Identification Fiscale</label>
+                                                    <input type="text" class="form-control" id="numero_identification_fiscale" name="numero_identification_fiscale" value="<?= htmlspecialchars($tier['Numero_Identification_Fiscale']) ?>">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="code_comptable">Code Comptable</label>
+                                                    <input type="text" class="form-control" id="code_comptable" name="code_comptable" value="<?= htmlspecialchars($tier['Code_Comptable']) ?>">
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="supprimerTiersModal<?= $tier['ID_Tiers'] ?>" tabindex="-1" role="dialog" aria-labelledby="supprimerTiersModalLabel<?= $tier['ID_Tiers'] ?>" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="supprimerTiersModalLabel<?= $tier['ID_Tiers'] ?>">Confirmation de Suppression</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Êtes-vous sûr de vouloir supprimer le tiers <strong><?= htmlspecialchars($tier['Nom_Commercial']) ?></strong> ?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                        <form method="post" style="display: inline;">
+                                            <input type="hidden" name="action" value="supprimer">
+                                            <input type="hidden" name="id_tiers" value="<?= $tier['ID_Tiers'] ?>">
+                                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="5">Aucun tiers trouvé.</td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <h3>Ajouter un Nouveau Tiers</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="ajouter">
+            <div class="form-row">
+                <div classclass="form-group col-md-6">
+                    <label for="type_tiers">Type de Tiers</label>
+                    <select class="form-control" id="type_tiers" name="type_tiers" required>
+                        <option value="Client">Client</option>
+                        <option value="Fournisseur">Fournisseur</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="nom_commercial">Nom Commercial</label>
+                    <input type="text" class="form-control" id="nom_commercial" name="nom_commercial" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="nom_legal">Nom Legal</label>
+                <input type="text" class="form-control" id="nom_legal" name="nom_legal">
+            </div>
+            <div class="form-group">
+                <label for="adresse">Adresse</label>
+                <input type="text" class="form-control" id="adresse" name="adresse">
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="code_postal">Code Postal</label>
+                    <input type="text" class="form-control" id="code_postal" name="code_postal">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="ville">Ville</label>
+                    <input type="text" class="form-control" id="ville" name="ville">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="pays">Pays</label>
+                    <input type="text" class="form-control" id="pays" name="pays">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="numero_telephone">Numéro de Téléphone</label>
+                    <input type="text" class="form-control" id="numero_telephone" name="numero_telephone">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="adresse_email">Adresse Email</label>
+                    <input type="email" class="form-control" id="adresse_email" name="adresse_email">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="numero_identification_fiscale">Numéro d'Identification Fiscale</label>
+                    <input type="text" class="form-control" id="numero_identification_fiscale" name="numero_identification_fiscale">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="code_comptable">Code Comptable</label>
+                    <input type="text" class="form-control" id="code_comptable" name="code_comptable">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Ajouter le Tiers</button>
+        </form>
+
+        <p><a href="index.php" class="btn btn-secondary mt-3">Retour à la Gestion des Utilisateurs</a></p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

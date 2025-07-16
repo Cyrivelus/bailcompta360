@@ -1,0 +1,59 @@
+<?php
+// pages/admin/utilisateurs/ajouter.php
+
+// Démarrer la session pour la gestion de l'authentification
+session_start();
+
+// Vérifier si l'utilisateur est connecté et est un administrateur
+if (!isset($_SESSION['utilisateur_id']) || $_SESSION['role'] !== 'Admin') {
+    // Rediriger si non autorisé
+    header("Location: ../../index.php?error=Accès non autorisé");
+    exit();
+}
+
+// Inclure l'en-tête de l'administration
+$title = "Ajouter un Utilisateur";
+include('../includes/header.php');
+
+// Inclure la navigation de l'administration
+include('../includes/navigation.php');
+?>
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Ajouter un Utilisateur</h1>
+    </div>
+
+    <div class="col-lg-6">
+        <form method="post" action="enregistrer_utilisateur.php">
+            <div class="mb-3">
+                <label for="nom" class="form-label">Nom</label>
+                <input type="text" class="form-control" id="nom" name="nom" required>
+            </div>
+            <div class="mb-3">
+                <label for="login" class="form-label">Login</label>
+                <input type="text" class="form-control" id="login" name="login" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Mot de Passe</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="mb-3">
+                <label for="role" class="form-label">Rôle</label>
+                <select class="form-select" id="role" name="role" required>
+                    <option value="">Sélectionner un rôle</option>
+                    <option value="Admin">Administrateur</option>
+                    <option value="Comptable">Comptable</option>
+                    <option value="Utilisateur">Utilisateur</option>
+                    </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Ajouter l'Utilisateur</button>
+            <a href="index.php" class="btn btn-secondary">Annuler</a>
+        </form>
+    </div>
+</main>
+
+<?php
+// Inclure le pied de page de l'administration
+include('../includes/footer.php');
+?>

@@ -1,0 +1,163 @@
+<?php
+// voir_facture.php
+
+$titre = 'Détails de la Facture';
+$current_page = basename($_SERVER['PHP_SELF']);
+
+require_once('../../templates/header.php');
+require_once('../../templates/navigation.php');
+require_once('../../fonctions/database.php');
+require_once('../../fonctions/gestion_factures.php');
+require_once('../../fonctions/gestion_ecritures.php'); // Inclure la gestion des écritures
+require_once('../../fonctions/gestion_tiers.php'); // Inclure la gestion des tiers
+
+// Vérifier si l'ID de la facture est passé en paramètre
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    $_SESSION['error'] = "ID de facture invalide.";
+    header('Location: liste_factures.php');
+    exit();
+}
+
+$idFacture = intval($_GET['id']);
+
+// Récupérer les détails de la facture
+$facture = getFactureById($pdo, $idFacture);
+
+if (!$facture) {
+    $_SESSION['error'] = "Facture non trouvée.";
+    header('Location: liste_factures.php');
+    exit();
+}
+
+// Récupérer les écritures associées à la facture
+$ecritures = getEcrituresByFactureId($pdo, $idFacture);  // Supposons que cette fonction existe
+
+// Récupérer le tiers (client ou fournisseur)
+$tiers = getTiersById($pdo, $facture['ID_Tiers']);
+
+if (!$tiers) {
+    $_SESSION['error'] = "Tiers (Client/Fournisseur) non trouvé.";
+    header('Location: liste_factures.php'); // Ou une autre page appropriée
+    exit();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Détails de la Facture</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/formulaire.css">
+    <link rel="stylesheet" href="../../css/tableau.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .detail-label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .detail-value {
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+        .facture-section {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .facture-section h4 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-header">Détails de la Facture</h2>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger"><?= $_SESSION['error'] ?></div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+
+        <div class="facture-section">
+            <h4>Informations Générales</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><span class="detail-label">Numéro de Facture:</span> <span class="detail-value"><?= htmlspecialchars($facture['Numero_Facture']) ?></span></p>
+                    <p><span class="detail-label">Type de Facture:</span> <span class="detail-value"><?= htmlspecialchars($facture['Type_Facture']) ?></span></p>
+                    <p><span class="detail-label">Date d'Émission:</span> <span class="detail-value"><?= date('d/m/Y', strtotime($facture['Date_Emission'])) ?></span></p>
+                    <p><span class="detail-label">Date de Réception:</span> <span class="detail-value"><?= date('d/m/Y', strtotime($facture['Date_Reception'])) ?></span></p>
+                    <p><span class="detail-label">Date d'Échéance:</span> <span class="detail-value"><?= date('d/m/Y', strtotime($facture['Date_Echeance'])) ?></span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><span class="detail-label">Tiers:</span> <span class="detail-value"><?= htmlspecialchars($tiers['Nom_Commercial']) ?></span></p>
+                     <p><span class="detail-label">Nom Tiers:</span> <span class="detail-value"><?= htmlspecialchars($facture['Nom_Tiers']) ?></span></p>
+                    <p><span class="detail-label">Montant HT:</span> <span class="detail-value"><?= number_format($facture['Montant_HT'], 2, ',', ' ') ?></span></p>
+                    <p><span class="detail-label">Montant TVA:</span> <span class="detail-value"><?= number_format($facture['Montant_TVA'], 2, ',', ' ') ?></span></p>
+                    <p><span class="detail-label">Montant TTC:</span> <span class="detail-value"><?= number_format($facture['Montant_TTC'], 2, ',', ' ') ?></span></p>
+                    <p><span class="detail-label">Statut:</span> <span class="detail-value"><?= htmlspecialchars($facture['Statut_Facture']) ?></span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="facture-section">
+            <h4>Écritures Comptables Associées</h4>
+            <?php if (!empty($ecritures)): ?>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID Écriture</th>
+                                <th>Date de Saisie</th>
+                                <th>Description</th>
+                                <th>Montant</th>
+                                 <th>Journal</th>
+                                <th>Détails</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($ecritures as $ecriture): ?>
+                                <tr>
+                                    <td><?= $ecriture['ID_Ecriture'] ?></td>
+                                    <td><?= date('d/m/Y H:i:s', strtotime($ecriture['Date_Saisie'])) ?></td>
+                                    <td><?= htmlspecialchars($ecriture['Description']) ?></td>
+                                    <td><?= number_format($ecriture['Montant_Total'], 2, ',', ' ') ?></td>
+                                     <td><?= htmlspecialchars($ecriture['Code_Journal']) ?></td>
+                                    <td>
+                                        <a href="details_ecriture.php?id=<?= $ecriture['ID_Ecriture'] ?>" class="btn btn-sm btn-info">
+                                            <span class="glyphicon glyphicon-eye-open"></span> Détails
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <p class="alert alert-info">Aucune écriture comptable n'est associée à cette facture.</p>
+            <?php endif; ?>
+        </div>
+
+        <div class="btn-actions">
+            <a href="liste_factures.php" class="btn btn-default">
+                <i class="glyphicon glyphicon-arrow-left"></i> Retour à la Liste des Factures
+            </a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+<?php
+require_once('../../templates/footer.php');
+?>

@@ -1,0 +1,115 @@
+<?php
+// admin/profils/dupliquer.php
+
+require_once '../../includes/header.php';
+require_once '../../includes/navigation.php';
+require_once '../../fonctions/database.php';
+require_once '../../fonctions/gestion_profils.php';
+
+// Vérifier si l'utilisateur est connecté et a les droits d'administrateur
+if (!estAdminConnecte()) {
+    header('Location: ../index.php');
+    exit();
+}
+
+// Vérifier si l'ID du profil à dupliquer est présent dans l'URL et est un nombre
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    $errorMessage = "ID de profil invalide.";
+} else {
+    $profilIdADupliquer = $_GET['id'];
+
+    // Récupérer les informations du profil à dupliquer
+    $profilADupliquer = getProfilParId($pdo, $profilIdADupliquer);
+    if (!$profilADupliquer) {
+        $errorMessage = "Profil à dupliquer non trouvé.";
+    }
+}
+
+// Traitement de la duplication du profil
+if (isset($_POST['dupliquer_profil'])) {
+    // Vérifier le jeton CSRF
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Erreur CSRF.");
+    }
+
+    $nouveauNomProfil = trim($_POST['nouveau_nom_profil']);
+
+    if (empty($nouveauNomProfil)) {
+        $errorMessage = "Veuillez saisir un nom pour la copie du profil.";
+    } else {
+        // Dupliquer le profil et ses habilitations (si vous en avez)
+        $nouveauProfilId = dupliquerProfilEtHabilitations($pdo, $profilIdADupliquer, $nouveauNomProfil);
+
+        if ($nouveauProfilId) {
+            $successMessage = "Le profil '{$profilADupliquer['Nom_Profil']}' a été dupliqué avec succès sous le nom de '{$nouveauNomProfil}'.";
+            // Rediriger vers la page de modification du nouveau profil ?
+            header("Location: modifier.php?id=" . $nouveauProfilId);
+            exit();
+        } else {
+            $errorMessage = "Erreur lors de la duplication du profil.";
+        }
+    }
+}
+
+// Générer un jeton CSRF
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BailCompta 360 | Administration - Modifier le rôle</title>
+    <link rel="shortcut icon" href="../../images/logo_bailcompta.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/style.css">
+    <?php if (isset($admin_style) && $admin_style): ?>
+        <link rel="stylesheet" href="../../css/admin_style.css">
+    <?php endif; ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Dupliquer le profil : <?php if (isset($profilADupliquer)) echo htmlspecialchars($profilADupliquer['Nom_Profil']); ?></h2>
+
+    <?php if (isset($errorMessage)): ?>
+        <div class="alert alert-danger"><?= $errorMessage ?></div>
+    <?php endif; ?>
+
+    <?php if (isset($successMessage)): ?>
+        <div class="alert alert-success"><?= $successMessage ?></div>
+    <?php endif; ?>
+
+    <?php if (isset($profilADupliquer)): ?>
+        <p>Vous êtes sur le point de dupliquer le profil <strong><?= htmlspecialchars($profilADupliquer['Nom_Profil']) ?></strong>.</p>
+        <p>Veuillez saisir un nom pour la copie de ce profil :</p>
+
+        <form method="post">
+            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+            <div class="form-group">
+                <label for="nouveau_nom_profil">Nouveau nom du profil :</label>
+                <input type="text" class="form-control" id="nouveau_nom_profil" name="nouveau_nom_profil" required>
+            </div>
+            <button type="submit" name="dupliquer_profil" class="btn btn-success">
+                <span class="glyphicon glyphicon-copy"></span> Dupliquer le profil
+            </button>
+            <a href="index.php" class="btn btn-secondary">
+                <span class="glyphicon glyphicon-remove"></span> Annuler
+            </a>
+        </form>
+    <?php elseif (!isset($errorMessage)): ?>
+        <p>Veuillez sélectionner un profil depuis la liste pour le dupliquer.</p>
+        <a href="index.php" class="btn btn-info">
+            <span class="glyphicon glyphicon-arrow-left"></span> Retour à la liste des profils
+        </a>
+    <?php endif; ?>
+</div>
+
+
+<?php require_once '../../includes/footer.php'; ?>
+
+</body>
+</html>
+
