@@ -194,3 +194,5 @@ ou externe, un pr...' at line 1
 [2025-07-09 11:54:00] APPLICATION ERROR: Erreur lors de la vérification d'intégrité 'Doublons potentiels d'écritures': SQLSTATE[42S22]: Column not found: 1054 Unknown column 'Date_Ecriture' in 'field list'
 [2025-07-09 11:54:00] APPLICATION ERROR: Erreur lors de la vérification d'intégrité 'Comptes d'actifs/revenus avec solde négatif inattendu': SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.Solde_Actuel' in 'field list'
 [2025-07-09 11:54:00] APPLICATION ERROR: Erreur lors de la vérification d'intégrité 'Écritures avec montant zéro ou négatif': SQLSTATE[42S22]: Column not found: 1054 Unknown column 'Montant' in 'where clause'
+[2025-08-11 15:32:39] APPLICATION ERROR: Erreur PDO lors de la génération de la Balance Générale (consolidation fournisseurs): SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'DECIMAL(18, 2)), 0) AS DECIMAL(18, 2)) AS ConvertedMontant
+                 ...' at line 6

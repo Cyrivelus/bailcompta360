@@ -423,7 +423,13 @@ if ($estConnecte): // Afficher la navigation si l'utilisateur est connecté (que
                 </li>
                 <li class="nav-item">
                     <a class="dropdown-item <?= isActive('pages/reporting/journal_general.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/journal_general.php') ?>">
-                        <span class="glyphicon glyphicon-book"></span><span>Journal Général</span>
+                        <span class="glyphicon glyphicon-book"></span><span>Journal</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/reporting/balance_generale.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/balance_generale.php') ?>">
+                       <span class="glyphicon glyphicon-stats"></span><span> Balance </span>
+
                     </a>
                 </li>
                 <li class="nav-item">
@@ -446,24 +452,44 @@ if ($estConnecte): // Afficher la navigation si l'utilisateur est connecté (que
         <?php endif; ?>
 
         <?php if (hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_audit_menu')): ?>
-        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/audit_trail/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownAudit" role="button" data-toggle="collapse" data-target="#collapseAudit" aria-expanded="<?= strpos($relative_uri, 'pages/admin/audit_trail/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseAudit">
-            <span class="glyphicon glyphicon-eye-open"></span><span>Audit</span>
-        </a>
-        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/admin/audit_trail/') === 0 ? 'in' : '' ?>" id="collapseAudit">
-            <ul class="nav flex-column" style="padding-left: 1.5rem;">
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/admin/audit_trail/view_activity_log.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/audit_trail/view_activity_log.php') ?>">
-                        <span class="glyphicon glyphicon-file"></span><span>Journal d'Activité</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/admin/audit_trail/view_login_history.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/audit_trail/view_login_history.php') ?>">
-                        <span class="glyphicon glyphicon-log-in"></span><span>Historique de Connexion</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <?php endif; ?>
+    <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/audit_trail/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownAudit" role="button" data-toggle="collapse" data-target="#collapseAudit" aria-expanded="<?= strpos($relative_uri, 'pages/admin/audit_trail/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseAudit">
+        <span class="glyphicon glyphicon-eye-open"></span><span>Audit</span>
+    </a>
+    <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/admin/audit_trail/') === 0 ? 'in' : '' ?>" id="collapseAudit">
+        <ul class="nav flex-column" style="padding-left: 1.5rem;">
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/admin/audit_trail/view_activity_log.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/audit_trail/view_activity_log.php') ?>">
+                    <span class="glyphicon glyphicon-file"></span><span>Journal d'Activité</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/admin/audit_trail/view_login_history.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/audit_trail/view_login_history.php') ?>">
+                    <span class="glyphicon glyphicon-log-in"></span><span>Historique de Connexion</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+<?php endif; ?>
+
+<?php if (hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_plan_comptable_menu')): ?>
+    <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/plan_comptable/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownPCG" role="button" data-toggle="collapse" data-target="#collapsePCG" aria-expanded="<?= strpos($relative_uri, 'pages/admin/plan_comptable/') === 0 ? 'true' : 'false' ?>" aria-controls="collapsePCG">
+        <span class="glyphicon glyphicon-book"></span><span>Plan Comptable</span>
+    </a>
+    <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/admin/plan_comptable/') === 0 ? 'in' : '' ?>" id="collapsePCG">
+        <ul class="nav flex-column" style="padding-left: 1.5rem;">
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/admin/plan_comptable/index.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/plan_comptable/index.php') ?>">
+                    <span class="glyphicon glyphicon-list-alt"></span><span>Gérer les Comptes</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/admin/plan_comptable/importer_pcg.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/plan_comptable/importer_pcg.php') ?>">
+                    <span class="glyphicon glyphicon-upload"></span><span>Importer un PCG</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+<?php endif; ?>
 
         <?php if (hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_data_management_menu')): ?>
         <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/data_management/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownDataManagement" role="button" data-toggle="collapse" data-target="#collapseDataManagement" aria-expanded="<?= strpos($relative_uri, 'pages/admin/data_management/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseDataManagement">

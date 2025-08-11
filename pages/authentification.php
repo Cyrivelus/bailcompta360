@@ -59,8 +59,8 @@ $guestLoginAttempt = isset($_POST['guestLogin']); // Vérifier si le bouton invi
 function authentifier(PDO $pdo, string $login, string $password, int $maxAttempts, int $lockoutMins, bool $isGuest = false): array|string
 {
     $sql = "SELECT ID_Utilisateur, Nom, Login_Utilisateur, Mot_de_Passe, Role, Derniere_Connexion, login_attempts, lockout_until
-            FROM Utilisateurs
-            WHERE Login_Utilisateur = :login";
+             FROM Utilisateurs
+             WHERE Login_Utilisateur = :login";
     try {
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':login', $login);
@@ -142,8 +142,8 @@ function authentifier(PDO $pdo, string $login, string $password, int $maxAttempt
 function restaurerSessionViaCookie(PDO $pdo, int $utilisateurId, string $token): void
 {
     $sql = "SELECT ID_Utilisateur, Nom, Login_Utilisateur, Role, remember_token, remember_expiry, login_attempts, lockout_until
-            FROM Utilisateurs
-            WHERE ID_Utilisateur = :utilisateur_id AND remember_token IS NOT NULL AND remember_expiry > NOW()";
+             FROM Utilisateurs
+             WHERE ID_Utilisateur = :utilisateur_id AND remember_token IS NOT NULL AND remember_expiry > NOW()";
     try {
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':utilisateur_id', $utilisateurId, PDO::PARAM_INT);
@@ -261,37 +261,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($login) && !empty($password)
     if (is_array($authResult)) { // Authentification réussie
         $utilisateur = $authResult;
 
-        // --- NOUVEAU : Vérification du mot de passe temporaire ---
-// Définissez une signature pour les mots de passe temporaires, par exemple un préfixe "TEMP_"
-$tempPasswordPrefix = 'TEMP_';
-
-// Ajout d'une condition spécifique pour le mot de passe "aaaAAA123"
-$isSpecificTempPassword = ($password === 'aaaAAA123' && password_verify($password, $utilisateur['Mot_de_Passe']));
-
-if (str_starts_with($password, $tempPasswordPrefix) && password_verify($password, $utilisateur['Mot_de_Passe']) || $isSpecificTempPassword) {
-    // L'utilisateur s'est connecté avec un mot de passe temporaire
-    $_SESSION['admin_message_warning'] = "Votre mot de passe temporaire doit être changé.";
-    // Ajoutez un indicateur de mot de passe temporaire dans la session
-    $_SESSION['is_temp_password'] = true; 
-    header("Location: ../pages/change_mot_de_passe.php");
-    exit();
-}
-
-        // --- Vérification de l'expiration du mot de passe ---
-        if ($utilisateur['Role'] !== 'Invité' && checkPasswordExpiry($_SESSION['derniere_connexion'], $passwordExpiryMonths)) {
-            $_SESSION['admin_message_warning'] = "Votre mot de passe a expiré. Veuillez le changer.";
-            header("Location: ../pages/change_mot_de_passe.php");
-            exit();
-        }
-        
-
-        // Définir les variables de session
+        // Définir les variables de session en premier
         $_SESSION['utilisateur_id'] = $utilisateur['ID_Utilisateur'];
         $_SESSION['nom_utilisateur'] = $utilisateur['Nom'];
         $_SESSION['role'] = $utilisateur['Role'];
         // Correction ici : Fournir une valeur par défaut si Derniere_Connexion est NULL
         $_SESSION['derniere_connexion'] = $utilisateur['Derniere_Connexion'] ?? date('Y-m-d H:i:s');
         $_SESSION['last_activity'] = time(); // Pour le timeout de session
+        
+        // --- NOUVEAU : Vérification du mot de passe temporaire ---
+        // Définissez une signature pour les mots de passe temporaires, par exemple un préfixe "TEMP_"
+        $tempPasswordPrefix = 'TEMP_';
+
+        // Ajout d'une condition spécifique pour le mot de passe "aaaAAA123"
+        $isSpecificTempPassword = ($password === 'aaaAAA123' && password_verify($password, $utilisateur['Mot_de_Passe']));
+
+        if (str_starts_with($password, $tempPasswordPrefix) && password_verify($password, $utilisateur['Mot_de_Passe']) || $isSpecificTempPassword) {
+            // L'utilisateur s'est connecté avec un mot de passe temporaire
+            $_SESSION['admin_message_warning'] = "Votre mot de passe temporaire doit être changé.";
+            // Ajoutez un indicateur de mot de passe temporaire dans la session
+            $_SESSION['is_temp_password'] = true; 
+            header("Location: ../pages/change_mot_de_passe.php");
+            exit();
+        }
 
         // *** APPEL DE updateDerniereConnexion APRÈS UNE CONNEXION FORMULAIRE RÉUSSIE ***
         updateDerniereConnexion($pdo, $_SESSION['utilisateur_id']);
@@ -300,6 +292,8 @@ if (str_starts_with($password, $tempPasswordPrefix) && password_verify($password
         // --- Vérification de l'expiration du mot de passe ---
         if ($utilisateur['Role'] !== 'Invité' && checkPasswordExpiry($_SESSION['derniere_connexion'], $passwordExpiryMonths)) {
             $_SESSION['admin_message_warning'] = "Votre mot de passe a expiré. Veuillez le changer.";
+            // La redirection pour un mot de passe expiré doit se faire vers une page de changement de mot de passe,
+            // si celle-ci est différente de la page de mot de passe temporaire.
             header("Location: ../pages/changement_mot_de_passe.php");
             exit();
         }

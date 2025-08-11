@@ -288,30 +288,38 @@ $text = $translations[$lang];
         </form>
     </div>
 
-    <div class="language-switcher">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle <?= strpos($_SERVER['REQUEST_URI'], '?lang=') !== false ? 'active' : '' ?>"
-               href="#"
-               id="languageDropdown"
-               role="button"
-               data-toggle="dropdown"
-               aria-haspopup="true"
-               aria-expanded="false"
-               style="
-                    font-weight: bold; 
-                    color: blue; 
-                    border: 2px solid maroon; 
-                    background-color: rgba(255, 255, 255, 0.85);
-                    padding: 5px 10px; 
-                    border-radius: 5px;
-                ">
-                <?= $text['language_label'] ?>
-            </a>
-            <div class="dropdown-menu" aria-labelledby="languageDropdown" 
-                 style="background-color: rgba(255, 255, 255, 0.95); border: 1px solid maroon;">
-                <a class="dropdown-item" href="?lang=fr" style="font-weight: bold; color: blue;">Français</a>
-                <a class="dropdown-item" href="?lang=en" style="font-weight: bold; color: blue;">English</a>
-            </div>
+  <div class="language-switcher">
+    <a class="nav-link dropdown-toggle <?= strpos($_SERVER['REQUEST_URI'], '?lang=') !== false ? 'active' : '' ?>"
+        href="#"
+        id="languageDropdown"
+        role="button"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        style="
+            font-weight: bold; 
+            color: blue; 
+            border: 2px solid maroon; 
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 5px 10px; 
+            border-radius: 5px;
+        ">
+        <span class="glyphicon glyphicon-globe" style="margin-right:5px;"></span>
+        Langue
+    </a>
+    <div class="dropdown-menu" aria-labelledby="languageDropdown" style="background-color: rgba(255, 255, 255, 0.95); border: 1px solid maroon;">
+        <a class="dropdown-item" href="?lang=fr" style="font-weight: bold; color: blue;">
+            <img src="https://flagcdn.com/w20/fr.png" alt="Français" style="width:20px; height:auto; margin-right:5px;">
+            Français
+        </a>
+        <br>
+        <a class="dropdown-item" href="?lang=en" style="font-weight: bold; color: blue;">
+            <img src="https://flagcdn.com/w20/gb.png" alt="English" style="width:20px; height:auto; margin-right:5px;">
+            English
+        </a>
+    </div>
+</div>
+
         </li>
     </div>
 
