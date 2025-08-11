@@ -261,6 +261,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($login) && !empty($password)
     if (is_array($authResult)) { // Authentification réussie
         $utilisateur = $authResult;
 
+        // --- NOUVEAU : Vérification du mot de passe temporaire ---
+// Définissez une signature pour les mots de passe temporaires, par exemple un préfixe "TEMP_"
+$tempPasswordPrefix = 'TEMP_';
+
+// Ajout d'une condition spécifique pour le mot de passe "aaaAAA123"
+$isSpecificTempPassword = ($password === 'aaaAAA123' && password_verify($password, $utilisateur['Mot_de_Passe']));
+
+if (str_starts_with($password, $tempPasswordPrefix) && password_verify($password, $utilisateur['Mot_de_Passe']) || $isSpecificTempPassword) {
+    // L'utilisateur s'est connecté avec un mot de passe temporaire
+    $_SESSION['admin_message_warning'] = "Votre mot de passe temporaire doit être changé.";
+    // Ajoutez un indicateur de mot de passe temporaire dans la session
+    $_SESSION['is_temp_password'] = true; 
+    header("Location: ../pages/change_mot_de_passe.php");
+    exit();
+}
+
+        // --- Vérification de l'expiration du mot de passe ---
+        if ($utilisateur['Role'] !== 'Invité' && checkPasswordExpiry($_SESSION['derniere_connexion'], $passwordExpiryMonths)) {
+            $_SESSION['admin_message_warning'] = "Votre mot de passe a expiré. Veuillez le changer.";
+            header("Location: ../pages/change_mot_de_passe.php");
+            exit();
+        }
+        
+
         // Définir les variables de session
         $_SESSION['utilisateur_id'] = $utilisateur['ID_Utilisateur'];
         $_SESSION['nom_utilisateur'] = $utilisateur['Nom'];
