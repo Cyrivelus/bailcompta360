@@ -1,8 +1,64 @@
+<?php
+session_start();
+
+// Définir la langue par défaut
+$lang = $_SESSION['lang'] ?? 'fr';
+
+// Changer de langue si un paramètre est fourni dans l'URL
+if (isset($_GET['lang']) && in_array($_GET['lang'], ['fr', 'en'])) {
+    $lang = $_GET['lang'];
+    $_SESSION['lang'] = $lang;
+    // Rediriger pour éviter la duplication du paramètre lang dans l'URL
+    header('Location: '.str_replace('?lang='.$_GET['lang'], '', $_SERVER['REQUEST_URI']));
+    exit;
+}
+
+// Charger les textes traduits
+$translations = [
+    'fr' => [
+        'app_name' => 'BailCompta 360',
+        'app_tagline' => 'Gestion Comptable Simplifiée',
+        'username_label' => 'Nom d\'utilisateur',
+        'username_placeholder' => 'Entrez votre nom d\'utilisateur',
+        'password_label' => 'Mot de passe',
+        'password_placeholder' => 'Entrez votre mot de passe',
+        'remember_me' => 'Se souvenir de moi',
+        'login_button' => 'Se connecter',
+        'guest_login_button' => 'Se connecter en tant qu\'invité',
+        'cancel_button' => 'Annuler',
+        'forgot_password' => 'Mot de passe oublié ?',
+        'error_invalid_password' => 'Mot de passe invalide',
+        'error_user_not_found' => 'Nom d\'utilisateur non trouvé',
+        'footer_text' => 'BailCompta 360 - Tous droits réservés ©',
+        'language_label' => 'Langue',
+    ],
+    'en' => [
+        'app_name' => 'BailCompta 360',
+        'app_tagline' => 'Simplified Accounting Management',
+        'username_label' => 'Username',
+        'username_placeholder' => 'Enter your username',
+        'password_label' => 'Password',
+        'password_placeholder' => 'Enter your password',
+        'remember_me' => 'Remember me',
+        'login_button' => 'Log In',
+        'guest_login_button' => 'Log in as Guest',
+        'cancel_button' => 'Cancel',
+        'forgot_password' => 'Forgot password?',
+        'error_invalid_password' => 'Invalid password',
+        'error_user_not_found' => 'Username not found',
+        'footer_text' => 'BailCompta 360 - All rights reserved ©',
+        'language_label' => 'Language',
+    ],
+];
+
+// Récupérer les textes dans la langue courante
+$text = $translations[$lang];
+?>
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="<?= $lang ?>">
 <head>
     <meta charset="UTF-8">
-    <title>BailCompta 360 | Connexion</title>
+    <title><?= $text['app_name'] ?> | <?= $lang === 'fr' ? 'Connexion' : 'Login' ?></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
@@ -166,13 +222,22 @@
             padding: 10px 0;
             font-size: 0.8em;
         }
+        .language-switcher {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .language-switcher .dropdown-menu {
+            right: 0;
+            left: auto;
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
         <header>
-            <h1>BailCompta 360</h1>
-            <p>Gestion Comptable Simplifiée</p>
+            <h1><?= $text['app_name'] ?></h1>
+            <p><?= $text['app_tagline'] ?></p>
         </header>
 
         <?php if (isset($_GET['error'])) { ?>
@@ -183,14 +248,14 @@
 
         <form action="pages/authentification.php" method="POST">
             <div class="form-group">
-                <label for="login">Nom d'utilisateur</label>
-                <input type="text" class="form-control" id="login" name="login" placeholder="Entrez votre nom d'utilisateur">
+                <label for="login"><?= $text['username_label'] ?></label>
+                <input type="text" class="form-control" id="login" name="login" placeholder="<?= $text['username_placeholder'] ?>">
             </div>
 
             <div class="form-group">
-                <label for="password">Mot de passe</label>
+                <label for="password"><?= $text['password_label'] ?></label>
                 <div style="position: relative;">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Entrez votre mot de passe">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="<?= $text['password_placeholder'] ?>">
                     <span
                         style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"
                         onclick="togglePasswordVisibility()"
@@ -202,34 +267,60 @@
 
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe" onclick="showWarning()">
-                <label class="form-check-label" for="rememberMe">Se souvenir de moi</label>
+                <label class="form-check-label" for="rememberMe"><?= $text['remember_me'] ?></label>
             </div>
 
             <button type="submit" class="btn btn-primary">
-                <span class="glyphicon glyphicon-log-in"></span> Se connecter
+                <span class="glyphicon glyphicon-log-in"></span> <?= $text['login_button'] ?>
             </button>
 
             <button type="submit" class="btn btn-secondary" name="guestLogin">
-                <span class="glyphicon glyphicon-user"></span> Se connecter en tant qu'invité
+                <span class="glyphicon glyphicon-user"></span> <?= $text['guest_login_button'] ?>
             </button>
 
             <button type="button" class="btn btn-cancel" onclick="window.location.href='index.php'">
-                <span class="glyphicon glyphicon-remove"></span> Annuler
+                <span class="glyphicon glyphicon-remove"></span> <?= $text['cancel_button'] ?>
             </button>
 
             <div class="forgot-password">
-                <a href="forgot_password.php"><span class="glyphicon glyphicon-lock"></span> Mot de passe oublié ?</a>
+                <a href="forgot_password.php"><span class="glyphicon glyphicon-lock"></span> <?= $text['forgot_password'] ?></a>
             </div>
         </form>
     </div>
 
+    <div class="language-switcher">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle <?= strpos($_SERVER['REQUEST_URI'], '?lang=') !== false ? 'active' : '' ?>"
+               href="#"
+               id="languageDropdown"
+               role="button"
+               data-toggle="dropdown"
+               aria-haspopup="true"
+               aria-expanded="false"
+               style="
+                    font-weight: bold; 
+                    color: blue; 
+                    border: 2px solid maroon; 
+                    background-color: rgba(255, 255, 255, 0.85);
+                    padding: 5px 10px; 
+                    border-radius: 5px;
+                ">
+                <?= $text['language_label'] ?>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="languageDropdown" 
+                 style="background-color: rgba(255, 255, 255, 0.95); border: 1px solid maroon;">
+                <a class="dropdown-item" href="?lang=fr" style="font-weight: bold; color: blue;">Français</a>
+                <a class="dropdown-item" href="?lang=en" style="font-weight: bold; color: blue;">English</a>
+            </div>
+        </li>
+    </div>
+
     <footer>
-        BailCompta 360 - Tous droits réservés © <?= date('Y'); ?>
+        <?= $text['footer_text'] ?> <?= date('Y'); ?>
     </footer>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNLJ5ywYOIDjxxyTwCypxSoOO3FxyYr4fccRoP1h0IWcAukj0jz9uNNs" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/jquery-3.7.1.js"></script>
     <script>
@@ -248,65 +339,8 @@
         }
 
         function showWarning() {
-            alert("Attention ! En cochant cette case, vos informations de connexion seront stockées sur cet appareil. Cela peut poser un risque de sécurité. Assurez-vous de vous déconnecter correctement après chaque session.");
+            alert("<?= $lang === 'fr' ? 'Attention ! En cochant cette case, vos informations de connexion seront stockées sur cet appareil. Cela peut poser un risque de sécurité.' : 'Warning! Checking this box will store your login information on this device. This may pose a security risk.' ?>");
         }
     </script>
 </body>
 </html>
-<?php
-// Excerpt from your login processing logic (e.g., login.php or your authentication handler)
-
-require_once 'fonctions/database.php';
-require_once 'fonctions/gestion_logs.php'; // Or gestion_login_history.php
-
-
-$username_attempted = $_POST['username'] ?? '';
-$password_entered = $_POST['password'] ?? '';
-$ip_address = $_SERVER['REMOTE_ADDR'];
-$user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
-
-$is_successful = false;
-$failure_reason = null;
-$user_id = null;
-
-// --- Your existing authentication logic ---
-// Example: Query database for user
-// NOTE: Selecting plain-text passwords is a severe security risk.
-// You MUST store and compare password hashes using password_hash() and password_verify().
-$stmt = $pdo->prepare("SELECT ID_Utilisateur, Nom, Mot_de_passe, Role FROM Utilisateurs WHERE Nom = :username");
-$stmt->bindParam(':username', $username_attempted, PDO::PARAM_STR);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if ($user) {
-    // INSECURE: Comparing plain-text passwords
-    if ($password_entered === $user['Mot_de_passe']) {
-        // Login successful
-        $_SESSION['user_id'] = $user['ID_Utilisateur'];
-        $_SESSION['username'] = $user['Nom'];
-        $_SESSION['user_role'] = $user['Role'];
-        $is_successful = true;
-        $user_id = $user['ID_Utilisateur'];
-        header('Location: dashboard.php'); // Redirect to dashboard
-        exit;
-    } else {
-        // Invalid password
-        $failure_reason = 'Mot de passe invalide';
-    }
-} else {
-    // User not found
-    $failure_reason = 'Nom d\'utilisateur non trouvé';
-}
-
-// Record the login attempt after the authentication logic
-recordLoginAttempt(
-    $pdo,
-    $username_attempted,
-    $ip_address,
-    $user_agent,
-    $is_successful,
-    $user_id,
-    $failure_reason
-);
-
-?>

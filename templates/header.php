@@ -8,94 +8,99 @@ if (session_status() == PHP_SESSION_NONE) {
 
 // Vérifier si l'utilisateur est connecté
 $estConnecte = isset($_SESSION['utilisateur_id']);
-$nomUtilisateur = (isset($_SESSION['utilisateur_id']) && isset($_SESSION['nom_utilisateur'])) ? $_SESSION['nom_utilisateur'] : '';
+$nomUtilisateur = $estConnecte && isset($_SESSION['nom_utilisateur']) ? $_SESSION['nom_utilisateur'] : 'Invité';
 
-// Définir le titre de la page (peut être dynamique)
+// Définir le titre de la page
 $titrePage = isset($titre) ? $titre : 'BailCompta 360';
 
-// Couleur de l'entreprise (bordeaux)
+// Couleurs principales
 $couleurPrincipale = '#6d071a';
-$couleurTextePrimaire = '#ffffff'; // Texte clair sur fond bordeaux
+$couleurTextePrimaire = '#ffffff';
 
-// Définir les variables de page (pour la navigation active)
-$version = "1.0";
-$current_page = basename($_SERVER['PHP_SELF']);
-// Note: $date_actuelle et $heure_actuelle ne sont pas utilisés dans l'affichage actuel du header
-// $date_actuelle = date('d/m/Y');
-// $heure_actuelle = date('H:i:s');
-
-// Récupérer la dernière activité depuis la session, si elle existe
-$derniereActivite = isset($_SESSION['LAST_ACTIVITY']) ? $_SESSION['LAST_ACTIVITY'] : null; // Utilisez 'LAST_ACTIVITY' pour correspondre au script de navigation
+// Récupération de la dernière activité
+$derniereActivite = $_SESSION['LAST_ACTIVITY'] ?? null;
 $formatDerniereActivite = '';
 
 if ($estConnecte && $derniereActivite) {
-    // Si l'utilisateur est connecté et qu'une dernière activité existe, la formater
-    // Soustraction de 3600 secondes (1 heure)
-    $formatDerniereActivite = '  ' . date('d/m/Y H:i:s', $derniereActivite - 3600);
+    $formatDerniereActivite = ' ' . date('d/m/Y H:i:s', $derniereActivite - 3600);
 } elseif (!$estConnecte) {
-    // Si l'utilisateur n'est pas connecté (Invité), afficher la date et l'heure actuelles comme "dernière connexion"
-    // Soustraction de 3600 secondes (1 heure)
     $formatDerniereActivite = 'Dernière connexion : ' . date('d/m/Y H:i:s', time() - 3600);
 }
 
-
-// Gestion de la déconnexion
+// Déconnexion
 if (isset($_POST['logout'])) {
-    session_unset(); // unset $_SESSION variable for the run-time
-    session_destroy(); // destroy session data in storage
-    header('location:/bailcompta360/index.php'); // Rediriger vers la page de connexion
+    session_unset();
+    session_destroy();
+    header('location:/bailcompta360/index.php');
     exit();
 }
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="application de facilitaion comptable" content="BailCompta 360">
-<meta name="TAMBOUG Cyrille Steve" >
+    <title><?= htmlspecialchars($titrePage) ?></title>
 
-    <title><?php echo htmlspecialchars($titrePage); ?></title>
+    <!-- Fichiers CSS -->
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/formulaire.css">
     <link rel="stylesheet" href="../css/tableau.css">
-	  <link rel="stylesheet" href="../css/bootstrap.min.css">
-	<link rel="shortcut icon" href="../images/LOGO_SCE.ico" type="image/x-icon">
-  
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/loading.css"> <!-- Cercle de chargement -->
+    <link rel="shortcut icon" href="../images/LOGO_SCE.ico" type="image/x-icon">
 
+    <!-- Styles intégrés -->
     <style>
-        /* Styles de base améliorés */
         body {
             font-family: 'Times New Roman', sans-serif;
             background-color: #f5f5f5;
-            /* padding-left est géré par la navigation verticale */
-            /* Ajouter padding-top pour laisser de l'espace au header fixe */
-            padding-top: 80px; /* Ajustez cette valeur en fonction de la hauteur réelle de votre header */
+            padding-top: 80px;
         }
 
-        /* Style du header fixe et décalé */
-        header {
-            background-color: <?php echo $couleurPrincipale; ?> !important;
-            color: <?php echo $couleurTextePrimaire; ?> !important;
-            padding: 5px 20px; /* Ajustez le padding si nécessaire */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-
-            /* Styles pour la fixation et le décalage */
+        /* Overlay de chargement */
+        #loading-overlay {
             position: fixed;
-            top: 0;
-            left: 215px; /* Décalé à droite de la largeur de la navigation verticale */
-            right: 0; /* S'étend jusqu'au bord droit */
-            z-index: 1030; /* Assure que le header est au-dessus du contenu */
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid <?= $couleurPrincipale ?>;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        header {
+            background-color: <?= $couleurPrincipale ?>;
+            color: <?= $couleurTextePrimaire ?>;
+            padding: 5px 20px;
+            position: fixed;
+            top: 0; left: 215px; right: 0;
+            z-index: 1030;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .logo-container {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            /* Padding interne géré par le padding du header */
         }
 
         .logo {
@@ -114,7 +119,7 @@ if (isset($_POST['logout'])) {
         }
 
         .logo span {
-            color: #B22222; /* Couleur spécifique pour "Compta" */
+            color: #B22222;
         }
 
         .user-info {
@@ -141,24 +146,26 @@ if (isset($_POST['logout'])) {
             padding: 5px 15px;
             border-radius: 4px;
             transition: all 0.3s;
-            text-decoration: none; /* Enlever le soulignement par défaut du lien */
-            display: inline-block; /* Permettre l'application de margin-top */
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 5px;
         }
 
         .logout-btn:hover {
             background-color: white;
-            color: <?php echo $couleurPrincipale; ?>;
+            color: <?= $couleurPrincipale ?>;
         }
-
-        /* Ajoutez une classe pour le conteneur principal du contenu si vous n'utilisez pas la structure body padding */
-        /* Par exemple, si vous avez <div class="main-content">...</div> après l'inclusion du header et de la nav */
-        /* .main-content { margin-left: 200px; padding-top: 80px; } */
-
     </style>
 </head>
-<body>
-   
 
+<body>
+
+<!-- Cercle de chargement -->
+<div id="loading-overlay">
+    <div class="spinner"></div>
+</div>
+
+<!-- Header -->
 <header>
     <div class="logo-container">
         <div class="logo">
@@ -166,33 +173,47 @@ if (isset($_POST['logout'])) {
         </div>
 
         <div class="user-info">
-    <div class="user-name">
-    <?php if ($estConnecte): ?>
-        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <?php echo htmlspecialchars($nomUtilisateur); ?>
-    <?php else: ?>
-        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <?php echo htmlspecialchars($nomUtilisateur); ?>
-    <?php endif; ?>
+            <div class="user-name">
+                <?php if ($estConnecte): ?>
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <?= htmlspecialchars($nomUtilisateur) ?>
+                <?php else: ?>
+                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <?= htmlspecialchars($nomUtilisateur) ?>
+                <?php endif; ?>
 
-    <?php if (!empty($formatDerniereActivite)): ?>
-        <small class="last-activity">
-            <span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp;<?php echo htmlspecialchars($formatDerniereActivite); ?>
-        </small>
-    <?php endif; ?>
-</div>
-    <?php if ($estConnecte): ?>
-    <form method="post" action="" class="mt-2">
-	
-        <button type="submit" name="logout" class="logout-btn">
-            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Déconnexion
-        </button>
-		
-    </form>
-<?php else: ?>
-    <a href="<?= generateUrl('index.php') ?>" class="login-btn mt-2">
-        <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Connexion
-    </a>
-<?php endif; ?>
-</div>
+                <?php if (!empty($formatDerniereActivite)): ?>
+                    <small class="last-activity">
+                        <span class="glyphicon glyphicon-time" aria-hidden="true"></span> <?= htmlspecialchars($formatDerniereActivite) ?>
+                    </small>
+                <?php endif; ?>
+            </div>
 
+            <?php if ($estConnecte): ?>
+                <form method="post" action="" class="mt-2">
+                    <button type="submit" name="logout" class="logout-btn">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Déconnexion
+                    </button>
+                </form>
+            <?php else: ?>
+                <a href="<?= generateUrl('index.php') ?>" class="logout-btn mt-2">
+                    <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Connexion
+                </a>
+            <?php endif; ?>
+        </div>
     </div>
 </header>
+
+<!-- Script pour masquer le cercle de chargement -->
+<script>
+    window.addEventListener('load', function () {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 500);
+        }
+    });
+</script>
+
+</body>
+</html>
