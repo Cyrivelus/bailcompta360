@@ -226,7 +226,36 @@ function getLignesEcrituresByCompte(PDO $pdo, $compteId, $dateDebut = null, $dat
         $params[':date_fin'] = $dateFin;
     }
 
-    $sql .= " ORDER BY e.Date_Saisie ASC, le.ID_Ligne ASC"; // Order by date for history
+    // Ajout de la colonne `Lettre_Lettrage` pour la fonctionnalité de lettrage
+    // Il est plus sûr de lister explicitement les colonnes pour éviter les erreurs.
+    $sql = "
+        SELECT 
+            le.ID_Ligne, -- Correction du nom de la colonne
+            le.ID_Ecriture,
+            le.ID_Compte,
+            le.Sens,
+            le.Montant,
+            le.Lettre_Lettrage, -- Ajout de la colonne pour le lettrage
+            e.Date_Saisie, 
+            e.Description, 
+            e.NumeroAgenceSCE,
+            e.NomUtilisateur
+        FROM Lignes_Ecritures le
+        JOIN Ecritures e ON le.ID_Ecriture = e.ID_Ecriture
+        WHERE le.ID_Compte = :compte_id
+    ";
+    
+    // Réapplication des conditions de date
+    if ($dateDebut) {
+        $sql .= " AND e.Date_Saisie >= :date_debut";
+        $params[':date_debut'] = $dateDebut;
+    }
+    if ($dateFin) {
+        $sql .= " AND e.Date_Saisie <= :date_fin";
+        $params[':date_fin'] = $dateFin;
+    }
+
+    $sql .= " ORDER BY e.Date_Saisie ASC, le.ID_Ligne ASC";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);

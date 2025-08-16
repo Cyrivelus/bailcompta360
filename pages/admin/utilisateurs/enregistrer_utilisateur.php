@@ -27,7 +27,7 @@ $password_plain = $_POST['password'] ?? ''; // Renommé pour clarté: c'est le m
 $role = $_POST['role'] ?? '';
 
 // Validation du rôle
-$roles_valides = ['Admin', 'Comptable', 'Invité', 'super_admin']; // Ajout de 'super_admin' si ce rôle est supporté
+$roles_valides = ['Admin', 'Comptable', 'Invité', 'super_admin', 'Caissiere']; // Ajout de 'super_admin' si ce rôle est supporté
 if (!in_array($role, $roles_valides)) {
     $_SESSION['admin_message_error'] = "Rôle invalide sélectionné.";
     header("Location: ajouter.php");
@@ -74,23 +74,23 @@ if ($hashedPassword === false) {
 
 // Insertion de l'utilisateur avec le mot de passe HACHÉ
 $sqlInsert = "INSERT INTO Utilisateurs (Nom, Login_Utilisateur, Mot_de_Passe, Role, Date_Creation)
-              VALUES (:nom, :login, :motdepasse, :role, GETDATE())"; // Ajout de GETDATE() pour Date_Creation
+              VALUES (:nom, :login, :motdepasse, :role, NOW())"; // Corrigé : Utilisation de NOW() à la place de GETDATE()
+
 try {
     $stmtInsert = $pdo->prepare($sqlInsert);
     $stmtInsert->bindParam(':nom', $nom);
     $stmtInsert->bindParam(':login', $login);
-    $stmtInsert->bindParam(':motdepasse', $hashedPassword); // Utilisez le mot de passe HACHÉ ici
+    $stmtInsert->bindParam(':motdepasse', $hashedPassword);
     $stmtInsert->bindParam(':role', $role);
     $stmtInsert->execute();
 
     $_SESSION['admin_message_success'] = "Utilisateur '" . htmlspecialchars($login) . "' ajouté avec succès.";
-    header("Location: index.php"); // Rediriger vers la liste des utilisateurs par exemple
+    header("Location: index.php");
     exit();
 } catch (PDOException $e) {
-    // Si une erreur survient (ex: problème de connexion, contrainte violée non capturée précédemment)
     $_SESSION['admin_message_error'] = "Erreur lors de l'ajout de l'utilisateur : " . htmlspecialchars($e->getMessage());
-    error_log("Erreur insertion utilisateur : " . $e->getMessage()); // Loggez l'erreur pour le débogage
-    header("Location: ajouter.php"); // Rediriger vers le formulaire d'ajout avec l'erreur
+    error_log("Erreur insertion utilisateur : " . $e->getMessage());
+    header("Location: ajouter.php");
     exit();
 }
 

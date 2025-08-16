@@ -71,6 +71,7 @@ if (isset($_SESSION['admin_message_success'])) {
                 <select class="form-select" id="role" name="role" required> <option value="">Sélectionner un rôle</option>
                     <option value="Admin">Administrateur</option>
                     <option value="Comptable">Comptable</option>
+                    <option value="Caissiere">Caissière</option>
                     <option value="Invité">Invité</option> </select>
             </div>
             <button type="submit" class="btn btn-primary">Ajouter l'Utilisateur</button>

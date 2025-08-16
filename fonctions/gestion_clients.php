@@ -15,6 +15,24 @@ require_once("database.php"); // Inclure le fichier de connexion à la base de d
  * - 'total'      : Le nombre total de clients (après filtrage si un terme est fourni).
  * - 'totalPages' : Le nombre total de pages.
  */
+function listerClients(PDO $pdo): array
+{
+    try {
+        // Préparation de la requête pour sélectionner tous les clients
+        $stmt = $pdo->query("SELECT * FROM Clients ORDER BY nom, prenoms");
+        
+        // Exécution de la requête et récupération des résultats sous forme de tableau associatif
+        $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $clients;
+
+    } catch (PDOException $e) {
+        // En cas d'erreur de base de données, on logue l'erreur pour le débogage
+        error_log("Erreur de base de données dans listerClients: " . $e->getMessage());
+        return [];
+    }
+}
+
 function getClients(PDO $pdo, int $page = 1, int $perPage = 10, ?string $searchTerm = null): array
 {
     $offset = ($page - 1) * $perPage;

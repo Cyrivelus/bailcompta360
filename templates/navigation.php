@@ -167,11 +167,11 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Vérification de l'inactivité
-if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > 1800) { // 1800 secondes = 30 minutes
-    session_unset(); // unset $_SESSION variable for the run-time
-    session_destroy(); // destroy session data in storage
-    header('Location: ' . generateUrl('index.php')); // Rediriger vers la page de connexion
+// Vérification de l'inactivité doit être ici, avant tout code HTML
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > 1800) {
+    session_unset();
+    session_destroy();
+    header('Location: ' . generateUrl('index.php'));
     exit();
 }
 
@@ -261,9 +261,93 @@ if ($estConnecte): // Afficher la navigation si l'utilisateur est connecté (que
         <a class="nav-link <?= isActive('pages/ecritures/saisie.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/ecritures/saisie.php') ?>">
             <span class="glyphicon glyphicon-pencil"></span><span>Saisie Écritures</span>
         </a>
+        <ul class="nav flex-column">
+    <li class="nav-item">
+        <a class="nav-link <?= isActive('pages/clients/index.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/clients/index.php') ?>">
+            <span class="glyphicon glyphicon-user"></span><span>Gestion Clients</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
         <a class="nav-link <?= isActive('pages/comptes/index.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/comptes/index.php') ?>">
             <span class="glyphicon glyphicon-list-alt"></span><span>Consul Comptes</span>
         </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/operations/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownOperations" role="button" data-toggle="collapse" data-target="#collapseOperations" aria-expanded="<?= strpos($relative_uri, 'pages/operations/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseOperations">
+            <span class="glyphicon glyphicon-usd"></span><span>Opérations Caisse</span>
+        </a>
+        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/operations/') === 0 ? 'in' : '' ?>" id="collapseOperations">
+            <ul class="nav flex-column" style="padding-left: 1.5rem;">
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/operations/depot.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/operations/depot.php') ?>">
+                        <span class="glyphicon glyphicon-plus"></span><span>Dépôt</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/operations/retrait.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/operations/retrait.php') ?>">
+                        <span class="glyphicon glyphicon-minus"></span><span>Retrait</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/operations/virement.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/operations/virement.php') ?>">
+                        <span class="glyphicon glyphicon-transfer"></span><span>Virement</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/produits/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownProduits" role="button" data-toggle="collapse" data-target="#collapseProduits" aria-expanded="<?= strpos($relative_uri, 'pages/produits/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseProduits">
+            <span class="glyphicon glyphicon-tags"></span><span>Produits Bancaires</span>
+        </a>
+        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/produits/') === 0 ? 'in' : '' ?>" id="collapseProduits">
+            <ul class="nav flex-column" style="padding-left: 1.5rem;">
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/produits/produits_epargne.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/produits/produits_epargne.php') ?>">
+                        <span class="glyphicon glyphicon-piggy-bank"></span><span>Produits Épargne</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/produits/produits_credits.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/produits/produits_credits.php') ?>">
+                        <span class="glyphicon glyphicon-euro"></span><span>Produits Crédits</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/agences/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownAgences" role="button" data-toggle="collapse" data-target="#collapseAgences" aria-expanded="<?= strpos($relative_uri, 'pages/agences/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseAgences">
+            <span class="glyphicon glyphicon-tower"></span><span>Gestion Agences</span>
+        </a>
+        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/agences/') === 0 ? 'in' : '' ?>" id="collapseAgences">
+            <ul class="nav flex-column" style="padding-left: 1.5rem;">
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/agences/liste_agences.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/agences/liste_agences.php') ?>">
+                        <span class="glyphicon glyphicon-list"></span><span>Liste Agences</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/agences/gestion_caisses.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/agences/gestion_caisses.php') ?>">
+                        <span class="glyphicon glyphicon-briefcase"></span><span>Gestion Caisses</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link <?= isActive('pages/securite/audit.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/securite/audit.php') ?>">
+            <span class="glyphicon glyphicon-lock"></span><span>Audit Sécurité</span>
+        </a>
+    </li>
+
+    <!-- Autres menus existants (Reporting, Emprunts, Factures, etc.) -->
+    <!-- ... (conservez ici vos menus existants inchangés) ... -->
+</ul>
         <a class="nav-link <?= isActive('pages/ecritures/liste.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/ecritures/liste.php') ?>">
             <span class="glyphicon glyphicon-list"></span><span>Liste Écritures</span>
         </a>
@@ -405,51 +489,85 @@ if ($estConnecte): // Afficher la navigation si l'utilisateur est connecté (que
         </div>
         <?php endif; ?>
 
-        <?php if (hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_reporting_menu')): ?>
-        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/reporting/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownReporting" role="button" data-toggle="collapse" data-target="#collapseReporting" aria-expanded="<?= strpos($relative_uri, 'pages/reporting/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseReporting">
-            <span class="glyphicon glyphicon-usd"></span><span>Reporting</span>
-        </a>
-        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/reporting/') === 0 ? 'in' : '' ?>" id="collapseReporting">
-            <ul class="nav flex-column" style="padding-left: 1.5rem;">
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/reporting/balance.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/balance.php') ?>">
-                        <span class="glyphicon glyphicon-align-left"></span><span>Bilan</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/reporting/profit_loss.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/profit_loss.php') ?>">
-                        <span class="glyphicon glyphicon-fire"></span><span>Compte de Résultat</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/reporting/journal_general.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/journal_general.php') ?>">
-                        <span class="glyphicon glyphicon-book"></span><span>Journal</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/reporting/balance_generale.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/balance_generale.php') ?>">
-                       <span class="glyphicon glyphicon-stats"></span><span> Balance </span>
+       <?php if (hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_reporting_menu')): ?>
+    <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/reporting/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownReporting" role="button" data-toggle="collapse" data-target="#collapseReporting" aria-expanded="<?= strpos($relative_uri, 'pages/reporting/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseReporting">
+        <span class="glyphicon glyphicon-usd"></span><span>Reporting</span>
+    </a>
+    <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/reporting/') === 0 ? 'in' : '' ?>" id="collapseReporting">
+        <ul class="nav flex-column" style="padding-left: 1.5rem;">
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/reporting/balance.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/balance.php') ?>">
+                    <span class="glyphicon glyphicon-align-left"></span><span>Bilan</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/reporting/profit_loss.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/profit_loss.php') ?>">
+                    <span class="glyphicon glyphicon-fire"></span><span>Compte de Résultat</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/reporting/journal_general.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/journal_general.php') ?>">
+                    <span class="glyphicon glyphicon-book"></span><span>Journal</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/reporting/balance_generale.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/balance_generale.php') ?>">
+                    <span class="glyphicon glyphicon-stats"></span><span>Balance</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/reporting/ledger_accounts.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/ledger_accounts.php') ?>">
+                    <span class="glyphicon glyphicon-folder-open"></span><span>Comptes de Grand Livre</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/reporting/cash_flow_statement.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/cash_flow_statement.php') ?>">
+                    <span class="glyphicon glyphicon-transfer"></span><span>Tableau de Flux de Trésorerie</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/reporting/export_reports.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/export_reports.php') ?>">
+                    <span class="glyphicon glyphicon-download-alt"></span><span>Exporter Rapports</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/reporting/liasse_fiscale.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/liasse_fiscale.php') ?>">
+                    <span class="glyphicon glyphicon-list-alt"></span><span>Liasse Fiscale</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/reporting/export_liasse_fiscale.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/export_liasse_fiscale.php') ?>">
+                    <span class="glyphicon glyphicon-export"></span><span>Exporter Liasse Fiscale</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+<?php endif; ?>
 
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/reporting/ledger_accounts.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/ledger_accounts.php') ?>">
-                        <span class="glyphicon glyphicon-folder-open"></span><span>Comptes de Grand Livre</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/reporting/cash_flow_statement.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/cash_flow_statement.php') ?>">
-                        <span class="glyphicon glyphicon-transfer"></span><span>Tableau de Flux de Trésorerie</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/reporting/export_reports.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/export_reports.php') ?>">
-                        <span class="glyphicon glyphicon-download-alt"></span><span>Exporter Rapports</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <?php endif; ?>
+<?php if (hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_immobilisations_menu')): ?>
+    <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/immobilisations/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownImmo" role="button" data-toggle="collapse" data-target="#collapseImmo" aria-expanded="<?= strpos($relative_uri, 'pages/immobilisations/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseImmo">
+        <span class="glyphicon glyphicon-wrench"></span><span>Immobilisations</span>
+    </a>
+    <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/immobilisations/') === 0 ? 'in' : '' ?>" id="collapseImmo">
+        <ul class="nav flex-column" style="padding-left: 1.5rem;">
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/immobilisations/index.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/immobilisations/index.php') ?>">
+                    <span class="glyphicon glyphicon-dashboard"></span><span>Tableau de bord</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/immobilisations/liste.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/immobilisations/liste.php') ?>">
+                    <span class="glyphicon glyphicon-list"></span><span>Liste des immobilisations</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item <?= isActive('pages/immobilisations/ajouter.php', $relative_uri, $current_page_basename) ? 'active' : '' ?>" href="<?= generateUrl('pages/immobilisations/ajouter.php') ?>">
+                    <span class="glyphicon glyphicon-plus-sign"></span><span>Ajouter</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+<?php endif; ?>
 
         <?php if (hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_audit_menu')): ?>
     <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/audit_trail/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownAudit" role="button" data-toggle="collapse" data-target="#collapseAudit" aria-expanded="<?= strpos($relative_uri, 'pages/admin/audit_trail/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseAudit">
@@ -542,5 +660,22 @@ if ($estConnecte): // Afficher la navigation si l'utilisateur est connecté (que
 <?php
 endif;
 ?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function () {
+    // Empêcher chevauchement : ferme les autres menus quand on en ouvre un
+    $('.panel-collapse').on('show.bs.collapse', function () {
+        $('.panel-collapse.in').not(this).collapse('hide');
+    });
+
+    // Toggle sur le même lien
+    $('.nav-link.dropdown-toggle').on('click', function (e) {
+        e.preventDefault();
+        var target = $(this).data('target');
+        $(target).collapse('toggle');
+    });
+});
+</script>
+
 </body>
 </html>
