@@ -309,16 +309,15 @@ $text = $translations[$lang];
     </a>
     <div class="dropdown-menu" aria-labelledby="languageDropdown" style="background-color: rgba(255, 255, 255, 0.95); border: 1px solid maroon;">
         <a class="dropdown-item" href="?lang=fr" style="font-weight: bold; color: blue;">
-            <img src="https://flagcdn.com/w20/fr.png" alt="Français" style="width:20px; height:auto; margin-right:5px;">
-            Français
+            🇫🇷 Français
         </a>
         <br>
         <a class="dropdown-item" href="?lang=en" style="font-weight: bold; color: blue;">
-            <img src="https://flagcdn.com/w20/gb.png" alt="English" style="width:20px; height:auto; margin-right:5px;">
-            English
+            🇬🇧 English
         </a>
     </div>
 </div>
+
 
         </li>
     </div>

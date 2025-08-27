@@ -26,7 +26,300 @@ require_once("database.php"); // Inclure le fichier de connexion à la base de d
     }
 }
 
+function effectuerDepot(PDO $pdo, int $id_compte_client, float $montant, string $description, string $id_agence, int $id_utilisateur): bool
+{
+    // Démarrer une transaction pour garantir l'intégrité
+    $pdo->beginTransaction();
 
+    try {
+        // 1. Créditer le compte client
+        $stmt_credit_compte = $pdo->prepare("UPDATE comptes SET solde = solde + ? WHERE id_compte = ?");
+        $stmt_credit_compte->execute([$montant, $id_compte_client]);
+        
+        if ($stmt_credit_compte->rowCount() === 0) {
+            throw new Exception("Compte client introuvable.");
+        }
+
+        // 2. Récupérer les numéros de compte comptable
+        $stmt_comptes_comptables = $pdo->prepare("SELECT c.ID_Compte, cc.Numero_Compte FROM comptes c JOIN comptes_compta cc ON c.ID_Compte = cc.ID_Compte WHERE c.ID_Compte = ?");
+        $stmt_comptes_comptables->execute([$id_compte_client]);
+        $compte_compta_client = $stmt_comptes_comptables->fetch(PDO::FETCH_ASSOC);
+
+        // Compte comptable de la caisse (exemple : 5710000000)
+        // Vous devez avoir un ID de compte pour la caisse dans votre table comptes_compta
+        $compte_compta_caisse = '5710000000'; // Exemple de numéro de compte de caisse
+
+        // 3. Créer une nouvelle écriture comptable dans la table "ecritures"
+        $stmt_ecriture = $pdo->prepare("INSERT INTO ecritures (Date_Saisie, Description, Montant_Total, NumeroAgenceSCE, NomUtilisateur, Mois) VALUES (NOW(), ?, ?, ?, ?, ?)");
+        $stmt_ecriture->execute([
+            "Dépôt sur compte client " . $compte_compta_client['Numero_Compte'],
+            $montant,
+            $id_agence,
+            $_SESSION['nom_utilisateur'] ?? 'Système', 
+            date('Y-m') // Format YYYY-MM
+        ]);
+        
+        $id_ecriture = $pdo->lastInsertId();
+
+        // 4. Créer la ligne de crédit pour le compte client
+        $stmt_ligne_credit = $pdo->prepare("INSERT INTO lignes_ecritures (ID_Ecriture, ID_Compte, Montant, Sens, Libelle_Ligne) VALUES (?, ?, ?, 'C', ?)");
+        $stmt_ligne_credit->execute([
+            $id_ecriture,
+            $compte_compta_client['ID_Compte'],
+            $montant,
+            $description
+        ]);
+
+        // 5. Créer la ligne de débit pour le compte de caisse
+        $stmt_ligne_debit = $pdo->prepare("INSERT INTO lignes_ecritures (ID_Ecriture, ID_Compte, Montant, Sens, Libelle_Ligne) VALUES (?, ?, ?, 'D', ?)");
+        $stmt_ligne_debit->execute([
+            $id_ecriture,
+            $compte_compta_caisse,
+            $montant,
+            $description
+        ]);
+        
+        // 6. Enregistrer la transaction client pour l'historique
+        $stmt_transaction_compte = $pdo->prepare("INSERT INTO transactions_comptes (id_compte, type_transaction, montant, date_transaction, solde_apres) VALUES (?, 'Dépôt', ?, NOW(), (SELECT solde FROM comptes WHERE id_compte = ?))");
+        $stmt_transaction_compte->execute([$id_compte_client, $montant, $id_compte_client]);
+
+        // 7. Valider la transaction si toutes les opérations ont réussi
+        $pdo->commit();
+        return true;
+
+    } catch (Exception $e) {
+        $pdo->rollBack(); // Annuler toutes les opérations si une erreur survient
+        error_log("Erreur lors du dépôt : " . $e->getMessage());
+        throw $e; // Rejeter l'exception pour que le script appelant la gère
+    }
+}
+
+function getComptesByClasses(PDO $pdo, array $classes): array
+{
+    if (empty($classes)) {
+        return [];
+    }
+    
+    // Crée une chaîne de marqueurs de position pour la requête
+    $placeholders = implode(',', array_fill(0, count($classes), '?'));
+    
+    // Crée une chaîne de conditions pour la clause WHERE
+    $query_parts = [];
+    foreach ($classes as $classe) {
+        $query_parts[] = "Numero_Compte LIKE ?";
+    }
+    $query_string = implode(' OR ', $query_parts);
+    
+    $query = "SELECT Numero_Compte, Nom_Compte FROM comptes_compta WHERE $query_string ORDER BY Numero_Compte";
+    
+    try {
+        $stmt = $pdo->prepare($query);
+        
+        // Exécute la requête en passant les paramètres un par un
+        $params = array_map(function($c) { return "$c%"; }, $classes);
+        $stmt->execute($params);
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur PDO lors de la récupération des comptes par classes : " . $e->getMessage());
+        return [];
+    }
+}
+
+
+function getComptesByClasse(PDO $pdo, int $classe): array
+{
+    try {
+        $stmt = $pdo->prepare("SELECT Numero_Compte, Nom_Compte FROM comptes_compta WHERE Numero_Compte LIKE ? ORDER BY Numero_Compte");
+        $stmt->execute(["$classe%"]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erreur PDO lors de la récupération des comptes de la classe $classe : " . $e->getMessage());
+        return [];
+    }
+}
+function effectuerRetrait(PDO $pdo, int $id_compte_client, float $montant, string $description, string $id_agence, int $id_utilisateur): bool
+{
+    // Démarrer une transaction pour garantir l'intégrité
+    $pdo->beginTransaction();
+
+    try {
+        // 1. Vérifier le solde du compte client avant de débiter
+        $stmt_solde = $pdo->prepare("SELECT solde FROM comptes WHERE id_compte = ? FOR UPDATE");
+        $stmt_solde->execute([$id_compte_client]);
+        $solde_actuel = $stmt_solde->fetchColumn();
+
+        if ($solde_actuel === false) {
+            throw new Exception("Compte client introuvable.");
+        }
+        
+        if ($solde_actuel < $montant) {
+            throw new Exception("Solde insuffisant pour effectuer ce retrait.");
+        }
+
+        // 2. Débiter le compte client
+        $stmt_debit_compte = $pdo->prepare("UPDATE comptes SET solde = solde - ? WHERE id_compte = ?");
+        $stmt_debit_compte->execute([$montant, $id_compte_client]);
+        
+        // 3. Récupérer les numéros de compte comptable
+        $stmt_comptes_comptables = $pdo->prepare("SELECT c.ID_Compte, cc.Numero_Compte FROM comptes c JOIN comptes_compta cc ON c.ID_Compte = cc.ID_Compte WHERE c.ID_Compte = ?");
+        $stmt_comptes_comptables->execute([$id_compte_client]);
+        $compte_compta_client = $stmt_comptes_comptables->fetch(PDO::FETCH_ASSOC);
+
+        // Compte comptable de la caisse (exemple : 5710000000)
+        $compte_compta_caisse = '5710000000'; // Exemple de numéro de compte de caisse
+
+        // 4. Créer une nouvelle écriture comptable dans la table "ecritures"
+        $stmt_ecriture = $pdo->prepare("INSERT INTO ecritures (Date_Saisie, Description, Montant_Total, NumeroAgenceSCE, NomUtilisateur, Mois) VALUES (NOW(), ?, ?, ?, ?, ?)");
+        $stmt_ecriture->execute([
+            "Retrait sur compte client " . $compte_compta_client['Numero_Compte'],
+            $montant,
+            $id_agence,
+            $_SESSION['nom_utilisateur'] ?? 'Système', 
+            date('Y-m') // Format YYYY-MM
+        ]);
+        
+        $id_ecriture = $pdo->lastInsertId();
+
+        // 5. Créer la ligne de débit pour le compte client
+        $stmt_ligne_debit = $pdo->prepare("INSERT INTO lignes_ecritures (ID_Ecriture, ID_Compte, Montant, Sens, Libelle_Ligne) VALUES (?, ?, ?, 'D', ?)");
+        $stmt_ligne_debit->execute([
+            $id_ecriture,
+            $compte_compta_client['ID_Compte'],
+            $montant,
+            $description
+        ]);
+
+        // 6. Créer la ligne de crédit pour le compte de caisse
+        $stmt_ligne_credit = $pdo->prepare("INSERT INTO lignes_ecritures (ID_Ecriture, ID_Compte, Montant, Sens, Libelle_Ligne) VALUES (?, ?, ?, 'C', ?)");
+        $stmt_ligne_credit->execute([
+            $id_ecriture,
+            $compte_compta_caisse,
+            $montant,
+            $description
+        ]);
+        
+        // 7. Enregistrer la transaction client pour l'historique
+        $stmt_transaction_compte = $pdo->prepare("INSERT INTO transactions_comptes (id_compte, type_transaction, montant, date_transaction, solde_apres) VALUES (?, 'Retrait', ?, NOW(), (SELECT solde FROM comptes WHERE id_compte = ?))");
+        $stmt_transaction_compte->execute([$id_compte_client, $montant, $id_compte_client]);
+
+        // 8. Valider la transaction si toutes les opérations ont réussi
+        $pdo->commit();
+        return true;
+
+    } catch (Exception $e) {
+        $pdo->rollBack(); // Annuler toutes les opérations si une erreur survient
+        error_log("Erreur lors du retrait : " . $e->getMessage());
+        throw $e; // Rejeter l'exception pour que le script appelant la gère
+    }
+}
+
+
+
+function listerComptesActifs(PDO $pdo): array
+{
+    try {
+        // Sélectionne les colonnes nécessaires des deux tables.
+        // Utilise un alias pour éviter les conflits de noms de colonnes (par exemple, 'id_client').
+        $query = "SELECT 
+                    c.nom,
+                    c.prenoms,
+                    co.numero_compte,
+                    co.solde,
+                    co.date_ouverture,
+                    co.statut AS statut_compte
+                  FROM comptes AS co
+                  JOIN clients AS c ON co.id_client = c.id_client
+                  WHERE co.statut = 'actif'
+                  ORDER BY co.date_ouverture DESC";
+
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    } catch (PDOException $e) {
+        error_log("Erreur PDO dans listerComptesActifs() : " . $e->getMessage());
+        return [];
+    }
+}
+
+function effectuerTransfert(PDO $pdo, int $id_compte_source, int $id_compte_destination, float $montant, string $description, string $id_agence, int $id_utilisateur): bool
+{
+    $pdo->beginTransaction();
+
+    try {
+        // 1. Débiter le compte source
+        $stmt_debit = $pdo->prepare("UPDATE comptes SET solde = solde - ? WHERE id_compte = ?");
+        $stmt_debit->execute([$montant, $id_compte_source]);
+        
+        if ($stmt_debit->rowCount() === 0) {
+            throw new Exception("Compte source introuvable ou solde insuffisant.");
+        }
+
+        // 2. Créditer le compte de destination
+        $stmt_credit = $pdo->prepare("UPDATE comptes SET solde = solde + ? WHERE id_compte = ?");
+        $stmt_credit->execute([$montant, $id_compte_destination]);
+
+        if ($stmt_credit->rowCount() === 0) {
+            throw new Exception("Compte de destination introuvable.");
+        }
+
+        // 3. Récupérer les numéros de compte comptable pour les deux comptes
+        $stmt_comptes_comptables = $pdo->prepare("SELECT c.id_compte, cc.Numero_Compte FROM comptes c JOIN comptes_compta cc ON c.id_compte = cc.ID_Compte WHERE c.id_compte IN (?, ?)");
+        $stmt_comptes_comptables->execute([$id_compte_source, $id_compte_destination]);
+        $comptes_compta = $stmt_comptes_comptables->fetchAll(PDO::FETCH_KEY_PAIR);
+        
+        $numero_compte_source = $comptes_compta[$id_compte_source];
+        $numero_compte_destination = $comptes_compta[$id_compte_destination];
+        
+        // 4. Créer une nouvelle écriture comptable dans la table "ecritures"
+        $stmt_ecriture = $pdo->prepare("INSERT INTO ecritures (Date_Saisie, Description, Montant_Total, NumeroAgenceSCE, NomUtilisateur, Mois) VALUES (NOW(), ?, ?, ?, ?, ?)");
+        $stmt_ecriture->execute([
+            "Virement de " . $numero_compte_source . " vers " . $numero_compte_destination,
+            $montant,
+            $id_agence,
+            $_SESSION['nom_utilisateur'] ?? 'Système', // Utilisez le nom de l'utilisateur de la session
+            date('Y-m') // Format YYYY-MM
+        ]);
+        
+        $id_ecriture = $pdo->lastInsertId();
+
+        // 5. Créer la ligne de débit dans la table "lignes_ecritures"
+        $stmt_ligne_debit = $pdo->prepare("INSERT INTO lignes_ecritures (ID_Ecriture, ID_Compte, Montant, Sens, Libelle_Ligne) VALUES (?, ?, ?, 'D', ?)");
+        $stmt_ligne_debit->execute([
+            $id_ecriture,
+            $numero_compte_source,
+            $montant,
+            $description
+        ]);
+
+        // 6. Créer la ligne de crédit dans la table "lignes_ecritures"
+        $stmt_ligne_credit = $pdo->prepare("INSERT INTO lignes_ecritures (ID_Ecriture, ID_Compte, Montant, Sens, Libelle_Ligne) VALUES (?, ?, ?, 'C', ?)");
+        $stmt_ligne_credit->execute([
+            $id_ecriture,
+            $numero_compte_destination,
+            $montant,
+            $description
+        ]);
+        
+        // 7. Enregistrer les transactions client pour l'historique
+        $stmt_transaction_source = $pdo->prepare("INSERT INTO transactions_comptes (id_compte, type_transaction, montant, date_transaction, solde_apres) VALUES (?, 'Virement-Sortie', ?, NOW(), (SELECT solde FROM comptes WHERE id_compte = ?))");
+        $stmt_transaction_source->execute([$id_compte_source, $montant, $id_compte_source]);
+        
+        $stmt_transaction_destination = $pdo->prepare("INSERT INTO transactions_comptes (id_compte, type_transaction, montant, date_transaction, solde_apres) VALUES (?, 'Virement-Entree', ?, NOW(), (SELECT solde FROM comptes WHERE id_compte = ?))");
+        $stmt_transaction_destination->execute([$id_compte_destination, $montant, $id_compte_destination]);
+
+        // 8. Valider la transaction si toutes les opérations ont réussi
+        $pdo->commit();
+        return true;
+
+    } catch (Exception $e) {
+        $pdo->rollBack(); // Annuler toutes les opérations si une erreur survient
+        error_log("Erreur lors du virement : " . $e->getMessage());
+        throw $e; // Rejeter l'exception pour que le script appelant la gère
+    }
+}
 
 function getCompteIdByBankName(PDO $pdo, string $bankName) {
     $stmt = $pdo->prepare("SELECT ID_Compte FROM Comptes_compta WHERE Nom_Compte = :bankName AND Type_Compte = 'Banque'");
@@ -220,28 +513,6 @@ function getComptesPLNByPrefix($pdo, $prefix) {
     }
 }
  
-function getJournaux(PDO $pdo): array|false
-{
-    try {
-        // Préparer la requête SQL pour sélectionner les journaux comptables.
-        // Utilisation de Cde et Lib, correspondant à la structure de la table JAL.
-        $sql = "SELECT Cde AS CdeJournal, Lib AS LibJournal FROM JAL ORDER BY Cde";
-        $stmt = $pdo->prepare($sql);
-
-        // Exécuter la requête préparée.
-        $stmt->execute();
-
-        // Récupérer tous les résultats sous forme de tableau associatif.
-        $journaux = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Retourner le tableau des journaux.
-        return $journaux;
-    } catch (PDOException $e) {
-        // En cas d'erreur PDO, logger l'erreur et retourner false.
-        error_log("Erreur PDO lors de la récupération des journaux : " . $e->getMessage());
-        return false; // Important de retourner false pour indiquer l'échec
-    }
-}
 
 
  

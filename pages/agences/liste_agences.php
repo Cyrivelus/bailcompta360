@@ -12,6 +12,7 @@ session_start();
 // 2. Inclure les fichiers de logique et de base de données.
 require_once '../../fonctions/database.php';
 require_once '../../fonctions/gestion_agences.php';
+require_once '../../fonctions/gestion_comptes.php'; // Inclure la gestion des comptes si nécessaire
 
 // Initialiser les messages d'alerte
 $message = '';
@@ -44,7 +45,7 @@ try {
 
 // 3. Inclure les templates qui contiennent la mise en page HTML.
 include '../../templates/header.php';
-include '../../templates/navigation.php'; 
+include '../../templates/navigation.php';
 ?>
 
 <div class="container-fluid mt-4">

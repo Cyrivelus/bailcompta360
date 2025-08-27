@@ -1,68 +1,56 @@
 <?php
-/**
- * Fichier de fonctions pour la gestion du lettrage des écritures.
- */
-
-require_once 'database.php'; // Assurez-vous que le chemin est correct
+// fonctions/gestion_lettrage.php
 
 /**
- * Effectue le lettrage d'un ensemble de lignes d'écritures.
+ * Récupère les lignes d'écriture d'un compte donné, non lettrées et lettrées par une lettre spécifique.
  *
  * @param PDO $pdo L'objet de connexion PDO.
- * @param array $lignes_ids Tableau des identifiants des lignes d'écritures à lettrer.
- * @param string $lettre_lettrage La lettre à assigner.
- * @return bool Retourne true en cas de succès, false sinon.
- * @throws Exception Si les lignes ne sont pas équilibrées ou en cas d'erreur de base de données.
+ * @param int $idCompte L'ID du compte sur lequel effectuer le lettrage.
+ * @param string $lettreOptionnelle (Optionnel) La lettre de lettrage pour afficher les lignes déjà lettrées.
+ * @return array Un tableau des lignes d'écriture.
  */
-function effectuerLettrage(PDO $pdo, array $lignes_ids, string $lettre_lettrage): bool
+function getLignesPourLettrage(PDO $pdo, int $idCompte, string $lettreOptionnelle = null): array
 {
-    if (empty($lignes_ids) || empty($lettre_lettrage)) {
-        throw new Exception("Veuillez sélectionner au moins une ligne et fournir une lettre de lettrage.");
+    $sql = "SELECT * FROM lignes_ecritures
+            WHERE ID_Compte = :id_compte 
+            AND (Lettre_Lettrage IS NULL OR Lettre_Lettrage = :lettre_optionnelle)
+            ORDER BY reconciled_at, Montant, Sens DESC";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':id_compte', $idCompte, PDO::PARAM_INT);
+    $stmt->bindValue(':lettre_optionnelle', $lettreOptionnelle, PDO::PARAM_STR);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+/**
+ * Applique une lettre de lettrage à une sélection de lignes d'écriture.
+ *
+ * @param PDO $pdo L'objet de connexion PDO.
+ * @param array $idsLignes Un tableau d'IDs de lignes à lettrer.
+ * @param string $lettre La lettre de lettrage à appliquer.
+ * @return bool True si la mise à jour a réussi, false sinon.
+ */
+function appliquerLettrage(PDO $pdo, array $idsLignes, string $lettre): bool
+{
+    if (empty($idsLignes)) {
+        return false;
     }
 
-    // Convertir les IDs en une liste de chaînes pour la clause IN
-    $placeholders = implode(',', array_fill(0, count($lignes_ids), '?'));
+    // Créer une liste de marqueurs pour la requête
+    $placeholders = implode(',', array_fill(0, count($idsLignes), '?'));
     
-    // 1. Vérifier si les lignes sont déjà lettrées
-    $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM Lignes_Ecritures WHERE ID_Ligne_Ecriture IN ($placeholders) AND Lettre_Lettrage IS NOT NULL");
-    $checkStmt->execute($lignes_ids);
-    if ($checkStmt->fetchColumn() > 0) {
-        throw new Exception("Une ou plusieurs lignes sélectionnées sont déjà lettrées.");
-    }
+    $sql = "UPDATE lignes_ecritures 
+            SET Lettre_Lettrage = ?, 
+                is_reconciled = 1, 
+                reconciled_at = NOW() 
+            WHERE ID_Ligne IN ($placeholders)";
 
-    // 2. Vérifier l'équilibre des montants
-    $querySolde = "
-        SELECT SUM(CASE WHEN Sens = 'C' THEN Montant ELSE 0 END) AS TotalCredit,
-               SUM(CASE WHEN Sens = 'D' THEN Montant ELSE 0 END) AS TotalDebit
-        FROM Lignes_Ecritures
-        WHERE ID_Ligne_Ecriture IN ($placeholders)
-    ";
+    $stmt = $pdo->prepare($sql);
     
-    $stmtSolde = $pdo->prepare($querySolde);
-    $stmtSolde->execute($lignes_ids);
-    $solde = $stmtSolde->fetch(PDO::FETCH_ASSOC);
-
-    if (abs($solde['TotalCredit'] - $solde['TotalDebit']) > 0.01) { // Tolérance de 0.01 pour les erreurs de virgule flottante
-        throw new Exception("Les lignes sélectionnées ne sont pas équilibrées. Le total du débit est de " . number_format($solde['TotalDebit'], 2, ',', ' ') . " et le total du crédit est de " . number_format($solde['TotalCredit'], 2, ',', ' '));
-    }
-
-    // 3. Effectuer la mise à jour
-    try {
-        $pdo->beginTransaction();
-
-        $updateStmt = $pdo->prepare("UPDATE Lignes_Ecritures SET Lettre_Lettrage = ? WHERE ID_Ligne_Ecriture IN ($placeholders)");
-        $params = array_merge([$lettre_lettrage], $lignes_ids);
-        $updateSuccess = $updateStmt->execute($params);
-
-        if (!$updateSuccess) {
-            throw new Exception("La mise à jour de la base de données a échoué.");
-        }
-
-        $pdo->commit();
-        return true;
-
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        throw new Exception("Erreur de base de données lors du lettrage : " . $e->getMessage());
-    }
+    // Associer la lettre et les IDs
+    $params = array_merge([$lettre], $idsLignes);
+    
+    return $stmt->execute($params);
 }

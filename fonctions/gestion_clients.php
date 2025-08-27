@@ -33,6 +33,17 @@ function listerClients(PDO $pdo): array
     }
 }
 
+function getAllClients(PDO $pdo): array {
+    try {
+        $stmt = $pdo->prepare("SELECT id_client, nom, prenoms, telephone, email, statut FROM clients ORDER BY nom ASC, prenoms ASC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        // Vous pouvez logger l'erreur avant de relancer
+        throw new Exception("Erreur lors de la récupération des clients : " . $e->getMessage());
+    }
+}
+
 function getClients(PDO $pdo, int $page = 1, int $perPage = 10, ?string $searchTerm = null): array
 {
     $offset = ($page - 1) * $perPage;

@@ -6,20 +6,22 @@
  * Elle permet d'enregistrer le transfert de fonds d'un compte source vers un compte de destination.
  */
 
-require_once '../../../database.php';
-require_once '../../../fonctions/gestion_operations_caisse.php';
-require_once '../../../fonctions/gestion_comptes.php';
-require_once '../../../fonctions/gestion_clients.php';
-
-// Assurez-vous que l'utilisateur est authentifié et que la caisse est ouverte
 session_start();
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['id_agence'])) {
-    header("Location: ../../index.php"); // Redirection si non authentifié
+
+// 1. Inclure la connexion à la base de données
+require_once '../../fonctions/database.php';
+require_once '../../fonctions/gestion_comptes.php';
+require_once '../../fonctions/gestion_operations_caisse.php'; // Pour la gestion de caisse
+
+// Vérification de l'authentification et du rôle
+if (!isset($_SESSION['utilisateur_id'])) {
+    header("Location: ../../auth/login.php"); 
     exit();
 }
 
-$id_caissier = $_SESSION['user_id'];
-$id_agence = $_SESSION['id_agence'];
+// Récupérer les informations de la session
+$id_utilisateur = $_SESSION['utilisateur_id'];
+$id_agence = $_SESSION['id_agence'] ?? null; // Assurez-vous que l'ID de l'agence est stocké en session
 
 $message = '';
 $message_type = '';
@@ -30,34 +32,48 @@ try {
     $comptes_actifs = listerComptesActifs($pdo);
 
     // Traitement du formulaire de virement
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['effectuer_virement'])) {
         $id_compte_source = intval($_POST['id_compte_source']);
         $id_compte_destination = intval($_POST['id_compte_destination']);
         $montant = floatval($_POST['montant']);
         $description = trim($_POST['description']);
         
-        // Appeler la fonction métier pour le virement
-        if (effectuerTransfert($pdo, $id_compte_source, $id_compte_destination, $montant, $description, $id_agence)) {
-            $message = "Le virement de " . number_format($montant, 2, ',', ' ') . " a été effectué avec succès.";
-            $message_type = 'success';
-        } else {
-            throw new Exception("Échec de l'opération de virement.");
+        // Validation basique
+        if ($id_compte_source === $id_compte_destination) {
+            throw new Exception("Le compte source et le compte de destination ne peuvent pas être les mêmes.");
         }
+        if ($montant <= 0) {
+            throw new Exception("Le montant du virement doit être supérieur à zéro.");
+        }
+
+        // Appeler la fonction métier pour le virement
+        effectuerTransfert($pdo, $id_compte_source, $id_compte_destination, $montant, $description, $id_agence, $id_utilisateur);
+        
+        $_SESSION['admin_message_success'] = "Le virement de " . number_format($montant, 2, ',', ' ') . " F CFA a été effectué avec succès.";
+        header("Location: virement.php");
+        exit();
     }
 
 } catch (Exception $e) {
-    $message = "Erreur : " . $e->getMessage();
-    $message_type = 'danger';
+    $_SESSION['admin_message_error'] = "Erreur : " . $e->getMessage();
+    header("Location: virement.php");
+    exit();
 }
 
-// Inclure le header de la page
-include '../../../templates/header.php'; 
+// Récupérer les messages de session s'ils existent
+$message = $_SESSION['admin_message_success'] ?? ($_SESSION['admin_message_error'] ?? '');
+$message_type = isset($_SESSION['admin_message_success']) ? 'success' : (isset($_SESSION['admin_message_error']) ? 'danger' : '');
+unset($_SESSION['admin_message_success'], $_SESSION['admin_message_error']);
+
+// Inclure les fichiers de vue
+include '../../templates/header.php'; 
+include '../../templates/navigation.php'; 
 ?>
 
 <div class="container-fluid mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Opération de Virement</h2>
-        <a href="../operations.php" class="btn btn-secondary">
+     <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Opération de Dépôt</h2>
+        <a href="operations.php" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Retour aux opérations
         </a>
     </div>
@@ -78,7 +94,7 @@ include '../../../templates/header.php';
                         <option value="">Sélectionnez le compte à débiter</option>
                         <?php foreach ($comptes_actifs as $compte): ?>
                             <option value="<?php echo htmlspecialchars($compte['id_compte']); ?>">
-                                <?php echo htmlspecialchars($compte['numero_compte'] . ' - ' . $compte['nom_client'] . ' ' . $compte['prenoms_client']); ?>
+                                <?php echo htmlspecialchars($compte['numero_compte'] . ' - ' . $compte['nom'] . ' ' . $compte['prenoms']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -90,7 +106,7 @@ include '../../../templates/header.php';
                         <option value="">Sélectionnez le compte à créditer</option>
                         <?php foreach ($comptes_actifs as $compte): ?>
                             <option value="<?php echo htmlspecialchars($compte['id_compte']); ?>">
-                                <?php echo htmlspecialchars($compte['numero_compte'] . ' - ' . $compte['nom_client'] . ' ' . $compte['prenoms_client']); ?>
+                                <?php echo htmlspecialchars($compte['numero_compte'] . ' - ' . $compte['nom'] . ' ' . $compte['prenoms']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -107,7 +123,7 @@ include '../../../templates/header.php';
                 <textarea class="form-control" id="description" name="description" rows="3"></textarea>
             </div>
             
-            <button type="submit" class="btn btn-warning mt-3">
+            <button type="submit" name="effectuer_virement" class="btn btn-warning mt-3">
                 <i class="fas fa-exchange-alt"></i> Effectuer le virement
             </button>
         </form>
@@ -115,17 +131,5 @@ include '../../../templates/header.php';
 </div>
 
 <?php 
-// NOTE: La fonction listerComptesActifs est la même que pour depot.php et retrait.php.
-
-function listerComptesActifs(PDO $pdo): array {
-    // Stub: Récupère une liste de comptes actifs pour l'utilisateur
-    return [
-        ['id_compte' => 1, 'numero_compte' => '001-C-00001', 'nom_client' => 'DIOUF', 'prenoms_client' => 'Bintou'],
-        ['id_compte' => 2, 'numero_compte' => '001-C-00002', 'nom_client' => 'TRAORÉ', 'prenoms_client' => 'Moussa'],
-        ['id_compte' => 3, 'numero_compte' => '001-C-00003', 'nom_client' => 'DIALLO', 'prenoms_client' => 'Fatou'],
-    ];
-}
-
-// Inclure le footer de la page
-include '../../../templates/footer.php';
+include '../../templates/footer.php';
 ?>

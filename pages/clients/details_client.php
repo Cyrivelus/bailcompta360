@@ -41,6 +41,7 @@ try {
 }
 
 // Inclure le header de la page (début du HTML, CSS, etc.)
+include '../../templates/navigation.php';
 include '../../templates/header.php'; 
 ?>
 

@@ -22,6 +22,39 @@
  * @return bool True en cas de succès, false en cas d'échec (ex: login déjà existant).
  */
 
+function getUtilisateursConnectesRecemment(PDO $pdo, int $periodeMinutes = 30): array
+{
+    // Définir l'intervalle de temps pour la recherche (ex: 30 minutes)
+    $seuil_temps = new DateTime();
+    $seuil_temps->modify("-{$periodeMinutes} minutes");
+
+    $sql = "
+        SELECT
+            u.ID_Utilisateur,
+            u.Nom,
+            u.Login_Utilisateur,
+            MAX(la.Date_Heure_Action) AS Derniere_Connexion
+        FROM
+            utilisateurs AS u
+        JOIN
+            logs_audit AS la ON u.ID_Utilisateur = la.ID_Utilisateur
+        WHERE
+            la.Action = 'Connexion'
+            AND la.Date_Heure_Action >= :seuil_temps
+        GROUP BY
+            u.ID_Utilisateur, u.Nom, u.Login_Utilisateur
+        ORDER BY
+            Derniere_Connexion DESC
+    ";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':seuil_temps', $seuil_temps->format('Y-m-d H:i:s'));
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
 function creerUtilisateur(PDO $pdo, string $nom, string $login, string $hashedPassword, string $role): bool
 {
     try {

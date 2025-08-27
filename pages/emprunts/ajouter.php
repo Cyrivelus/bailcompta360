@@ -1,9 +1,8 @@
 <?php
 // ajouter.php - Script pour ajouter un nouvel emprunt bancaire et générer son échéancier.
-// Les écritures comptables associées devront être déclenchées séparément.
+// La génération des écritures comptables a été retirée.
 // Utilise des fichiers de fonctions externes et une connexion PDO.
 // --- Configuration et Initialisation Strictes ---
-
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -15,30 +14,27 @@ error_reporting(E_ALL);
 ini_set('default_charset', 'UTF-8');
 mb_internal_encoding('UTF-8');
 
-
 // --- Inclure les fichiers nécessaires ---
 // Connexion à la base de données
 require_once '../../fonctions/database.php';
-// Fonctions pour gérer les emprunts (inclut genererPlanAmortissement)
+// Fonctions pour gérer les emprunts
 require_once '../../fonctions/gestion_emprunts.php';
-// Fonctions pour gérer les comptes (pour récupérer les listes)
+// Fonctions pour gérer les comptes
 require_once '../../fonctions/gestion_comptes.php';
-// Fonction pour récupérer les journaux (même si non utilisés pour les écritures, ils peuvent être pour le formulaire)
-require_once '../../fonctions/gestion_journaux.php';
-
+// Fonction pour récupérer les journaux (maintenu pour les listes déroulantes du formulaire si besoin)
+require_once '../../fonctions/gestion_journaux.php'; 
 
 // --- Inclure l'en-tête et la navigation ---
 require_once('../../templates/header.php');
 require_once('../../templates/navigation.php');
 
 
-$TITRE_PAGE = "Ajout Emprunt";
+$TITRE_PAGE = "Ajout emprunt";
 $messageErreur = "";
-$messageSucces = ""; // Initialize success message
 $agences = [];
 $comptes = [];
-$journaux = [];
-$nom_utilisateur = $_SESSION['nom_utilisateur'] ?? 'SYSTEM'; // Fallback for nom_utilisateur
+$journaux = []; 
+$nom_utilisateur = $_SESSION['nom_utilisateur'] ?? 'SYSTEM';
 
 // --- Récupérer la liste des agences ---
 try {
@@ -46,33 +42,31 @@ try {
     $stmt_agences = $pdo->query($sql_agences);
     $agences = $stmt_agences->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    $messageErreur .= "Erreur lors de la récupération des agences : " . $e->getMessage() . "<br>";
-    error_log("Erreur SQL (ajouter.php - agences) : " . $e->getMessage());
+    $messageErreur = "Erreur lors de la récupération des agences : " . $e->getMessage();
+    echo '<div class="container mt-4"><div class="alert alert-warning">' . $messageErreur . '</div></div>';
 }
 
 // --- Récupérer la liste des comptes comptables ---
-// These are still needed if your form uses them, even if not for generating entries here.
 try {
     $sql_comptes = "SELECT ID_Compte, Numero_Compte, Nom_Compte FROM Comptes_compta ORDER BY Numero_Compte";
     $stmt_comptes = $pdo->query($sql_comptes);
     $comptes = $stmt_comptes->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    $messageErreur .= "Erreur lors de la récupération des comptes comptables : " . $e->getMessage() . "<br>";
-    error_log("Erreur SQL (ajouter.php - comptes) : " . $e->getMessage());
+    $messageErreur = "Erreur lors de la récupération des comptes comptables : " . $e->getMessage();
+    echo '<div class="container mt-4"><div class="alert alert-warning">' . $messageErreur . '</div></div>';
 }
 
 // --- Récupérer la liste des journaux comptables ---
-// Still retrieved as they might be part of the form, even if journal_cde isn't used for entry generation here.
 try {
     $journaux = getJournaux($pdo);
     if (empty($journaux)) {
-        $messageErreur .= "Erreur : Aucun journal comptable trouvé. Veuillez créer un journal comptable avant d'ajouter un emprunt.<br>";
+        $messageErreur = "Erreur : Aucun journal comptable trouvé.";
+        echo '<div class="container mt-4"><div class="alert alert-warning">' . $messageErreur . '</div></div>';
     }
 } catch (PDOException $e) {
-    $messageErreur .= "Erreur lors de la récupération des journaux comptables : " . $e->getMessage() . "<br>";
-    error_log("Erreur SQL (ajouter.php - journaux) : " . $e->getMessage());
+    $messageErreur = "Erreur lors de la récupération des journaux comptables : " . $e->getMessage();
+    echo '<div class="container mt-4"><div class="alert alert-warning">' . $messageErreur . '</div></div>';
 }
-
 
 // --- Traitement du formulaire si soumis ---
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -110,13 +104,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $type_amortissement = htmlspecialchars($_POST['type_amortissement'] ?? '');
     $nombre_mois_differe = intval($_POST['nombre_mois_differe'] ?? 0);
 
-    // Rcupration des IDs des comptes comptables (still needed for the form's display)
+    // Récupération des IDs des comptes comptables (ces champs sont maintenus car ils pourraient être utiles pour d'autres logiques même sans génération d'écritures)
     $compte_principal_id = intval($_POST['compte_principal'] ?? 0);
     $compte_interet_id = intval($_POST['compte_interet'] ?? 0);
     $compte_banque_id = intval($_POST['compte_banque'] ?? 0);
     $compte_taxes_frais_id = intval($_POST['compte_taxes_frais'] ?? 0);
-    $journal_cde = intval($_POST['journal_cde'] ?? 0); // Still retrieved if the form includes it
-
+    $journal_cde = intval($_POST['journal_cde'] ?? 0); 
 
     // --- Préparation des données pour la fonction d'ajout d'emprunt ---
     $emprunt_data = array(
@@ -135,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'Echeance_Fin_Mois' => $echeance_fin_mois,
         'Nombre_Echeances' => $nombre_echeances,
         'Gestion_Differe' => $gestion_differe,
-        'Nombre_Jours_Reels' => isset($_POST['nombre_jours_reels']) ? 1 : 0,
+        'Nombre_Jours_Reels' => isset($_POST['nombre_jours_reels']) ? 1 : 0, 
         'Type_Interet' => $type_interet,
         'Date_Mise_En_Place' => $date_mise_en_place,
         'Date_Premiere_Echeance' => $date_premiere_echeance,
@@ -157,11 +150,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $idEmprunt = ajouterEmprunt($pdo, $emprunt_data);
 
     if ($idEmprunt === false) {
-        $messageErreur .= "<div class='alert alert-danger'>Erreur lors de l'insertion de l'emprunt. Vérifiez les logs serveur pour plus de détails.</div>";
-        error_log("Erreur Emprunt (ajouter.php) : Échec de l'ajout de l'emprunt.");
+        $messageErreur = "<div class='alert alert-danger'>Erreur lors de l'insertion de l'emprunt. Vérifiez les logs serveur pour plus de détails.</div>";
     } else {
-        $messageSucces .= "<div class='alert alert-success'>Emprunt ajouté avec succès (ID: {$idEmprunt}) !</div>";
-
         // L'emprunt a été ajouté avec succès, maintenant générer le plan d'amortissement
         try {
             $planGenere = genererPlanAmortissement(
@@ -178,30 +168,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $emprunt_data['Nombre_Jours_Reels'] ?? false,
                 $emprunt_data['Date_Debut_Amortissement'] ?? null
             );
-
+            
             if ($planGenere) {
-                $messageSucces .= "<div class='alert alert-success'>Échéancier généré avec succès !</div>";
-                // Optionally, redirect to a view page for the loan or a success message
-                // header("Location: view_emprunt.php?id=" . $idEmprunt . "&success=" . urlencode($messageSucces));
-                // exit;
+                $messageSucces = "<div class='alert alert-success'>Emprunt et &eacutech&eacuteancier ajout&eacutes avec succ&egraves !</div>";
             } else {
-                $messageErreur .= "<div class='alert alert-warning'>La génération de l'échéancier a échoué. Vérifiez les logs serveur pour plus de détails.</div>";
-                error_log("Erreur Amortissement (ajouter.php) : Échec de la génération de l'échéancier pour emprunt ID: {$idEmprunt}.");
+                $messageErreur = "<div class='alert alert-warning'>La génération de l'échéancier a échoué. Vérifiez les logs serveur pour plus de détails.</div>";
             }
         } catch (Exception $e) {
-            $messageErreur .= "<div class='alert alert-danger'>Exception lors de la génération de l'échéancier : " . $e->getMessage() . "</div>";
-            error_log("Exception Amortissement (ajouter.php) : " . $e->getMessage());
+            $messageErreur = "<div class='alert alert-danger'>Exception lors de la génération de l'échéancier : " . $e->getMessage() . "</div>";
         }
     }
 
     // Afficher les messages (succès ou erreur)
     if (!empty($messageErreur)) {
         echo '<div class="container mt-4">' . $messageErreur . '</div>';
-    }
-    if (!empty($messageSucces)) { // Display success message only if no errors
+    } elseif (!empty($messageSucces)) {
         echo '<div class="container mt-4">' . $messageSucces . '</div>';
     }
 }
+
+// La connexion PDO est automatiquement fermée à la fin du script
 ?>
 
 <!DOCTYPE html>

@@ -10,9 +10,9 @@
 session_start();
 
 // 1. Inclure la connexion à la base de données en premier pour définir $pdo
-require_once '../../fonctions/database.php';
-require_once '../../fonctions/gestion_comptes.php';
-require_once '../../fonctions/gestion_operations_caisse.php';
+require_once '../../../fonctions/database.php';
+require_once '../../../fonctions/gestion_comptes.php';
+require_once '../../../fonctions/gestion_operations_caisse.php';
 
 // Assurez-vous que l'utilisateur est authentifié
 if (!isset($_SESSION['utilisateur_id'])) {
@@ -69,14 +69,14 @@ $message_type = isset($_SESSION['admin_message_success']) ? 'success' : (isset($
 unset($_SESSION['admin_message_success'], $_SESSION['admin_message_error']);
 
 // Inclure les fichiers de vue
-include '../../templates/header.php'; 
-include '../../templates/navigation.php'; 
+include '../../../templates/header.php'; 
+include '../../../templates/navigation.php'; 
 ?>
 
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Opération de Retrait</h2>
-        <a href="../operations.php" class="btn btn-secondary">
+        <a href="operations.php" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Retour aux opérations
         </a>
     </div>
@@ -122,5 +122,5 @@ include '../../templates/navigation.php';
 
 <?php 
 // Inclure le footer de la page
-include '../../templates/footer.php';
+include '../../../templates/footer.php';
 ?>

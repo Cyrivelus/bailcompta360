@@ -18,6 +18,127 @@
  * @param string $codeComptable          Code comptable du fournisseur.
  * @return int|bool L'ID du fournisseur inséré en cas de succès, false en cas d'erreur.
  */
+
+function getFournisseurByCpt(PDO $pdo, string $cpt)
+{
+    $sql = "SELECT * FROM pln WHERE Cpt = :cpt LIMIT 1";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':cpt', $cpt, PDO::PARAM_STR);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function modifierFournisseur(PDO $pdo, string $cpt, array $data): bool
+{
+    try {
+        $sql = "UPDATE pln SET
+            Lib = :Lib, Sns = :Sns, Aux = :Aux, FAP = :FAP, FGX = :FGX, FB = :FB, FGI = :FGI, FM = :FM, HE = :HE, PRV = :PRV, AT = :AT,
+            DisponibiliteSolde = :DisponibiliteSolde, MentionSiIndisponible = :MentionSiIndisponible, ObservationsSurIndisponibilite = :ObservationsSurIndisponibilite,
+            NumeroAgenceSCE = :NumeroAgenceSCE, PeutObtenirAcompte = :PeutObtenirAcompte, NombreExtraitsPayants = :NombreExtraitsPayants,
+            CompteCloture = :CompteCloture, RecenceOuiNon = :RecenceOuiNon, FraisTenueDeCompteSuspendus = :FraisTenueDeCompteSuspendus,
+            NumeroAgencePaiementTemp = :NumeroAgencePaiementTemp, ExistenceProcuration = :ExistenceProcuration, DateProcuration = :DateProcuration,
+            ReferenceProcuration = :ReferenceProcuration, PaiementSalaireParMobile = :PaiementSalaireParMobile, NoTel_PaiementSalaire = :NoTel_PaiementSalaire,
+            NoTelPaiementSalaire = :NoTelPaiementSalaire
+        WHERE Cpt = :cpt_initial";
+
+        $data[':cpt_initial'] = $cpt;
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute($data);
+
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la modification du fournisseur : " . $e->getMessage());
+        return false;
+    }
+}
+
+
+function ajouterFournisseur(PDO $pdo, array $data): bool
+{
+    try {
+        $sql = "INSERT INTO pln (
+            Cpt, Lib, Sns, Aux, FAP, FGX, FB, FGI, FM, HE, PRV, AT,
+            DisponibiliteSolde, MentionSiIndisponible, ObservationsSurIndisponibilite,
+            NumeroAgenceSCE, PeutObtenirAcompte, NombreExtraitsPayants,
+            CompteCloture, RecenceOuiNon, FraisTenueDeCompteSuspendus,
+            NumeroAgencePaiementTemp, ExistenceProcuration, DateProcuration,
+            ReferenceProcuration, PaiementSalaireParMobile, NoTel_PaiementSalaire,
+            NoTelPaiementSalaire
+        ) VALUES (
+            :Cpt, :Lib, :Sns, :Aux, :FAP, :FGX, :FB, :FGI, :FM, :HE, :PRV, :AT,
+            :DisponibiliteSolde, :MentionSiIndisponible, :ObservationsSurIndisponibilite,
+            :NumeroAgenceSCE, :PeutObtenirAcompte, :NombreExtraitsPayants,
+            :CompteCloture, :RecenceOuiNon, :FraisTenueDeCompteSuspendus,
+            :NumeroAgencePaiementTemp, :ExistenceProcuration, :DateProcuration,
+            :ReferenceProcuration, :PaiementSalaireParMobile, :NoTel_PaiementSalaire,
+            :NoTelPaiementSalaire
+        )";
+
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute($data);
+
+    } catch (PDOException $e) {
+        // En cas d'erreur, vous pouvez la journaliser ou la gérer
+        error_log("Erreur lors de l'ajout d'un fournisseur : " . $e->getMessage());
+        return false;
+    }
+}
+
+function getNombreTotalFournisseurs(PDO $pdo, string $recherche = ''): int
+{
+    $sql = "SELECT COUNT(*) FROM pln WHERE 1=1";
+    $params = [];
+
+    // Si un terme de recherche est fourni, ajoutez la clause WHERE
+    if (!empty($recherche)) {
+        $sql .= " AND (Lib LIKE :recherche OR Cpt LIKE :recherche)";
+        $params[':recherche'] = "%" . $recherche . "%";
+    }
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+
+    return $stmt->fetchColumn();
+}
+
+function getFournisseurs(PDO $pdo, string $recherche = '', int $limit = 25, int $offset = 0): array
+{
+    // Requête de base pour sélectionner toutes les colonnes de la table pln.
+    $sql = "SELECT * FROM pln WHERE 1=1";
+    $params = [];
+
+    // Ajoute une condition de recherche si le terme de recherche n'est pas vide.
+    if (!empty($recherche)) {
+        $sql .= " AND (Lib LIKE :recherche OR Cpt LIKE :recherche)";
+        // Le caractère % permet de trouver des correspondances partielles.
+        $params[':recherche'] = "%" . $recherche . "%";
+    }
+
+    // Ajoute les clauses LIMIT et OFFSET pour la pagination.
+    // Elles permettent de récupérer un nombre limité de résultats à partir d'un certain point.
+    $sql .= " LIMIT :limit OFFSET :offset";
+    $params[':limit'] = $limit;
+    $params[':offset'] = $offset;
+
+    // Prépare la requête pour une exécution sécurisée.
+    $stmt = $pdo->prepare($sql);
+    
+    // Lie les valeurs aux paramètres de la requête.
+    // L'utilisation de bindValue pour les limites et offsets est importante pour la sécurité et la performance.
+    foreach ($params as $key => &$val) {
+        if ($key === ':limit' || $key === ':offset') {
+            $stmt->bindValue($key, $val, PDO::PARAM_INT);
+        } else {
+            $stmt->bindValue($key, $val, PDO::PARAM_STR);
+        }
+    }
+
+    // Exécute la requête préparée.
+    $stmt->execute();
+
+    // Retourne tous les résultats sous forme de tableau associatif.
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
  
  function getComptesFournisseursPLN(PDO $pdo, string $prefix = '401'): array {
     try {
@@ -83,48 +204,6 @@
     }
 }
 
-function ajouterFournisseur(
-    PDO $pdo,
-    string $nomCommercial,
-    string $nomLegal = '',
-    string $adresse = '',
-    string $codePostal = '',
-    string $ville = '',
-    string $pays = '',
-    string $numeroTelephone = '',
-    string $adresseEmail = '',
-    string $numeroIdentificationFiscale = '',
-    string $codeComptable = ''
-): int|bool {
-    try {
-        $stmt = $pdo->prepare("INSERT INTO Tiers (
-            Type_Tiers, Nom_Commercial, Nom_Legal, Adresse, Code_Postal, Ville, Pays,
-            Numero_Telephone, Adresse_Email, Numero_Identification_Fiscale, Code_Comptable
-        ) VALUES (
-            :type_tiers, :nom_commercial, :nom_legal, :adresse, :code_postal, :ville, :pays,
-            :numero_telephone, :adresse_email, :nif, :code_comptable
-        )");
-
-        $typeTiers = 'Fournisseur';
-        $stmt->bindParam(':type_tiers', $typeTiers);
-        $stmt->bindParam(':nom_commercial', $nomCommercial);
-        $stmt->bindParam(':nom_legal', $nomLegal);
-        $stmt->bindParam(':adresse', $adresse);
-        $stmt->bindParam(':code_postal', $codePostal);
-        $stmt->bindParam(':ville', $ville);
-        $stmt->bindParam(':pays', $pays);
-        $stmt->bindParam(':numero_telephone', $numeroTelephone);
-        $stmt->bindParam(':adresse_email', $adresseEmail);
-        $stmt->bindParam(':nif', $numeroIdentificationFiscale);
-        $stmt->bindParam(':code_comptable', $codeComptable);
-
-        $stmt->execute();
-        return $pdo->lastInsertId();
-    } catch (PDOException $e) {
-        error_log("Erreur lors de l'ajout du fournisseur : " . $e->getMessage());
-        return false;
-    }
-}
 
 
 /**
@@ -242,52 +321,6 @@ function getFournisseurParId(PDO $pdo, int $idFournisseur): array|bool {
  * @param string $codeComptable          Code comptable du fournisseur.
  * @return bool True en cas de succès, false en cas d'erreur.
  */
-function modifierFournisseur(
-    PDO $pdo,
-    int $idFournisseur,
-    string $nomCommercial,
-    string $nomLegal = '',
-    string $adresse = '',
-    string $codePostal = '',
-    string $ville = '',
-    string $pays = '',
-    string $numeroTelephone = '',
-    string $adresseEmail = '',
-    string $numeroIdentificationFiscale = '',
-    string $codeComptable = ''
-): bool {
-    try {
-        $stmt = $pdo->prepare("UPDATE Tiers SET
-            Nom_Commercial = :nom_commercial,
-            Nom_Legal = :nom_legal,
-            Adresse = :adresse,
-            Code_Postal = :code_postal,
-            Ville = :ville,
-            Pays = :pays,
-            Numero_Telephone = :numero_telephone,
-            Adresse_Email = :adresse_email,
-            Numero_Identification_Fiscale = :nif,
-            Code_Comptable = :code_comptable
-        WHERE ID_Tiers = :id AND Type_Tiers = 'Fournisseur'");
-
-        $stmt->bindParam(':id', $idFournisseur, PDO::PARAM_INT);
-        $stmt->bindParam(':nom_commercial', $nomCommercial);
-        $stmt->bindParam(':nom_legal', $nomLegal);
-        $stmt->bindParam(':adresse', $adresse);
-        $stmt->bindParam(':code_postal', $codePostal);
-        $stmt->bindParam(':ville', $ville);
-        $stmt->bindParam(':pays', $pays);
-        $stmt->bindParam(':numero_telephone', $numeroTelephone);
-        $stmt->bindParam(':adresse_email', $adresseEmail);
-        $stmt->bindParam(':nif', $numeroIdentificationFiscale);
-        $stmt->bindParam(':code_comptable', $codeComptable);
-
-        return $stmt->execute();
-    } catch (PDOException $e) {
-        error_log("Erreur lors de la modification du fournisseur avec l'ID $idFournisseur : " . $e->getMessage());
-        return false;
-    }
-}
 
 /**
  * Supprime un fournisseur de la base de données par son ID.

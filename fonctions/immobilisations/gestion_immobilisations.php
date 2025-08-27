@@ -15,23 +15,71 @@ require_once(__DIR__ . '/../database.php');
  * @param array $data Un tableau associatif contenant les données de l'immobilisation.
  * @return array Un tableau avec 'success' (bool) et 'message' (string).
  */
-function ajouter_immobilisation(array $data): array {
-    global $pdo;
+function ajouter_immobilisation(array $data, string $compte_immobilisation, string $compte_contrepartie)
+{
+   
+    
+    // Démarre une transaction pour garantir l'intégrité
+    $pdo->beginTransaction();
+
     try {
-        $sql = "INSERT INTO Immobilisations (Designation, Numero_Facture, Date_Acquisition, Montant_HT) VALUES (?, ?, ?, ?)";
-        $stmt = $pdo->prepare($sql);
+        // 1. Enregistrement de l'immobilisation dans la table "immobilisations"
+        $stmt = $pdo->prepare("INSERT INTO immobilisations (designation, numero_facture, date_acquisition, montant_ht, statut, date_creation) VALUES (?, ?, ?, ?, 'Actif', NOW())");
         $stmt->execute([
             $data['designation'],
             $data['numero_facture'],
             $data['date_acquisition'],
             $data['montant_ht']
         ]);
-        return ['success' => true, 'message' => 'Immobilisation ajoutée avec succès.'];
+        $id_immobilisation = $pdo->lastInsertId();
+
+        // 2. Création de l'écriture comptable
+        $description_ecriture = "Acquisition d'immobilisation : " . $data['designation'];
+        $montant_total = $data['montant_ht'];
+
+        $stmt_ecriture = $pdo->prepare("INSERT INTO ecritures (Date_Saisie, Description, Montant_Total, NumeroAgenceSCE, NomUtilisateur, Mois) VALUES (NOW(), ?, ?, ?, ?, ?)");
+        $stmt_ecriture->execute([
+            $description_ecriture,
+            $montant_total,
+            $_SESSION['id_agence'] ?? null,
+            $_SESSION['nom_utilisateur'] ?? null,
+            date('Y-m')
+        ]);
+        $id_ecriture = $pdo->lastInsertId();
+
+        // 3. Création des lignes d'écriture (Débit et Crédit)
+        // Ligne de Débit (Immobilisation)
+        $stmt_debit = $pdo->prepare("INSERT INTO lignes_ecritures (ID_Ecriture, ID_Compte, Montant, Sens, Libelle_Ligne, id_immobilisation) VALUES (?, ?, ?, 'D', ?, ?)");
+        $stmt_debit->execute([
+            $id_ecriture,
+            $compte_immobilisation,
+            $montant_total,
+            $description_ecriture,
+            $id_immobilisation
+        ]);
+
+        // Ligne de Crédit (Contrepartie)
+        $stmt_credit = $pdo->prepare("INSERT INTO lignes_ecritures (ID_Ecriture, ID_Compte, Montant, Sens, Libelle_Ligne, id_immobilisation) VALUES (?, ?, ?, 'C', ?, ?)");
+        $stmt_credit->execute([
+            $id_ecriture,
+            $compte_contrepartie,
+            $montant_total,
+            "Paiement immobilisation",
+            $id_immobilisation
+        ]);
+        
+        // Valide la transaction si tout a réussi
+        $pdo->commit();
+
+        return ['success' => true, 'message' => "L'immobilisation a été ajoutée et l'écriture comptable générée."];
+
     } catch (PDOException $e) {
-        return ['success' => false, 'message' => "Erreur lors de l'ajout de l'immobilisation : " . $e->getMessage()];
+        // Annule la transaction en cas d'erreur
+        $pdo->rollBack();
+        error_log("Erreur lors de l'ajout d'une immobilisation : " . $e->getMessage());
+        return ['success' => false, 'message' => "Erreur lors de l'enregistrement : " . $e->getMessage()];
     }
 }
-
 /**
  * Récupère toutes les immobilisations de la base de données.
  * @return array Une liste d'immobilisations ou un tableau vide en cas d'erreur.

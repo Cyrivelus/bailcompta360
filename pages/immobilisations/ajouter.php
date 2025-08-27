@@ -2,7 +2,7 @@
 // pages/immobilisations/ajouter.php
 session_start();
 
-// Vérifier si l'utilisateur est connecté en tant qu'administrateur
+// Vérifier si l'utilisateur est connecté et a le rôle de Comptable
 if (!isset($_SESSION['utilisateur_id']) || $_SESSION['role'] !== 'Comptable') {
     header("Location: ../../index.php?error=Accès non autorisé");
     exit();
@@ -14,9 +14,12 @@ $current_page = basename(__FILE__);
 
 require_once '../../fonctions/database.php';
 require_once '../../fonctions/immobilisations/gestion_immobilisations.php';
+require_once '../../fonctions/gestion_comptes.php'; // Nouvelle inclusion
 
 $message = null;
 $message_type = null;
+$comptes_immo = getComptesByClasse($pdo, 2); 
+$comptes_contrepartie = getComptesByClasses($pdo, [4, 5]);
 
 // Gérer la soumission du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -24,19 +27,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'designation' => $_POST['designation'] ?? '',
         'numero_facture' => $_POST['numero_facture'] ?? '',
         'date_acquisition' => $_POST['date_acquisition'] ?? '',
-        'montant_ht' => $_POST['montant_ht'] ?? ''
+        'montant_ht' => $_POST['montant_ht'] ?? '',
     ];
+    $compte_immo_saisi = $_POST['compte_immobilisation'] ?? '';
+    $compte_contrepartie_saisi = $_POST['compte_contrepartie'] ?? '';
 
     // Validation simple des données
-    if (empty($data['designation']) || empty($data['date_acquisition']) || empty($data['montant_ht'])) {
+    if (empty($data['designation']) || empty($data['date_acquisition']) || empty($data['montant_ht']) || empty($compte_immo_saisi) || empty($compte_contrepartie_saisi)) {
         $message = "Veuillez remplir tous les champs obligatoires.";
         $message_type = 'danger';
     } else {
-        // Appeler la fonction d'ajout
-        $resultat = ajouter_immobilisation($data);
+        // Appel de la fonction d'ajout avec les comptes
+        $resultat = ajouter_immobilisation($data, $compte_immo_saisi, $compte_contrepartie_saisi);
 
         if ($resultat['success']) {
-            // Redirection en cas de succès
             header("Location: index.php?success=" . urlencode($resultat['message']));
             exit();
         } else {
@@ -85,6 +89,29 @@ require_once('../../templates/navigation.php');
                 <div class="form-group">
                     <label for="montant_ht">Montant HT</label>
                     <input type="number" class="form-control" id="montant_ht" name="montant_ht" step="0.01" required>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label for="compte_immobilisation">Compte d'immobilisation (Débit)</label>
+                    <select class="form-control" id="compte_immobilisation" name="compte_immobilisation" required>
+                        <option value="">Sélectionner un compte</option>
+                        <?php foreach ($comptes_immo as $compte): ?>
+                            <option value="<?= htmlspecialchars($compte['Numero_Compte']) ?>">
+                                <?= htmlspecialchars($compte['Nom_Compte']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="compte_contrepartie">Compte de contrepartie (Crédit)</label>
+                    <select class="form-control" id="compte_contrepartie" name="compte_contrepartie" required>
+                        <option value="">Sélectionner un compte</option>
+                        <?php foreach ($comptes_contrepartie as $compte): ?>
+                            <option value="<?= htmlspecialchars($compte['Numero_Compte']) ?>">
+                                <?= htmlspecialchars($compte['Nom_Compte']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
             </div>
         </div>

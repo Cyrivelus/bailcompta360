@@ -7,19 +7,19 @@
  */
 
 // Inclure la connexion à la base de données et les fonctions nécessaires
-require_once '../../database.php';
+require_once '../../fonctions/database.php';
 
 // Assurez-vous que l'utilisateur est authentifié et que sa caisse est ouverte
 session_start();
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['id_agence'])) {
-    header("Location: ../../index.php"); // Redirection si non authentifié
+if (!isset($_SESSION['utilisateur_id']) || ($_SESSION['role'] !== 'Admin' && $_SESSION['role'] !== 'Caissiere')) {
+    header("Location: ../../index.php"); // Redirection vers la page de connexion si non authentifié ou non autorisé
     exit();
 }
 
-$id_caissier = $_SESSION['user_id'];
-$id_agence = $_SESSION['id_agence'];
+
 
 // Inclure le header de la page (début du HTML)
+include '../../templates/navigation.php'; 
 include '../../templates/header.php'; 
 ?>
 

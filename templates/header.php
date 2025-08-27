@@ -172,33 +172,43 @@ if (isset($_POST['logout'])) {
             <h1>Bail<span>Compta</span> 360</h1>
         </div>
 
-        <div class="user-info">
-            <div class="user-name">
-                <?php if ($estConnecte): ?>
-                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <?= htmlspecialchars($nomUtilisateur) ?>
-                <?php else: ?>
-                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <?= htmlspecialchars($nomUtilisateur) ?>
-                <?php endif; ?>
+       <div class="user-info">
+    <div class="user-name">
+        <?php if ($estConnecte): ?>
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <?= htmlspecialchars($nomUtilisateur) ?>
+        <?php else: ?>
+            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <?= htmlspecialchars($nomUtilisateur) ?>
+        <?php endif; ?>
 
-                <?php if (!empty($formatDerniereActivite)): ?>
-                    <small class="last-activity">
-                        <span class="glyphicon glyphicon-time" aria-hidden="true"></span> <?= htmlspecialchars($formatDerniereActivite) ?>
-                    </small>
-                <?php endif; ?>
+        <?php if (!empty($formatDerniereActivite)): ?>
+            <div class="last-activity" style="font-size:0.8em; opacity:0.8;">
+                <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                <?= htmlspecialchars($formatDerniereActivite) ?>
             </div>
+        <?php endif; ?>
+    </div>
 
-            <?php if ($estConnecte): ?>
-                <form method="post" action="" class="mt-2">
-                    <button type="submit" name="logout" class="logout-btn">
-                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Déconnexion
-                    </button>
-                </form>
-            <?php else: ?>
-                <a href="<?= generateUrl('index.php') ?>" class="logout-btn mt-2">
-                    <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Connexion
-                </a>
-            <?php endif; ?>
+    <?php if ($estConnecte): ?>
+        <div class="mt-2 d-flex align-items-center" style="gap: 0.5rem;">
+            <!-- Lien Modifier mot de passe -->
+            
+            <!-- Bouton Déconnexion -->
+            <form method="post" action="" style="margin:0;">
+                <button type="submit" name="logout" class="btn btn-sm btn-danger">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Déconnexion
+                </button> | <a href="../utilisateurs/modifier_mot_de_passe.php" class="btn btn-sm btn-warning">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Modifier mot de passe
+            </a>
+
+            </form>
         </div>
+    <?php else: ?>
+        <a href="<?= generateUrl('index.php') ?>" class="logout-btn mt-2">
+            <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Connexion
+        </a>
+    <?php endif; ?>
+</div>
+
     </div>
 </header>
 

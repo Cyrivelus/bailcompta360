@@ -10,7 +10,7 @@
 session_start();
 
 // Inclure la configuration de la base de données et les fonctions métier.
-require_once '../../database.php';
+require_once '../../fonctions/database.php';
 require_once '../../fonctions/gestion_clients.php';
 
 // Initialiser les variables pour les messages d'erreur et de succès.
