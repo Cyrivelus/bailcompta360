@@ -20,25 +20,12 @@ require_once 'database.php'; // Inclure le fichier de connexion à la base de do
  * avec les clés 'CodeAgenceSCE', 'LibelleAgenceSCE', 'NoCompteComptable'.
  * Retourne un tableau vide si aucune agence n'est trouvée ou en cas d'erreur.
  */
-function getAllAgences(PDO $pdo): array
-{
-    $agences = [];
-    // Assurez-vous que le nom de la table et les colonnes correspondent à votre schéma [dbo].[AGENCES_SCE]
-    $sql = "SELECT CodeAgenceSCE, LibelleAgenceSCE, NoCompteComptable FROM AGENCES_SCE ORDER BY CodeAgenceSCE";
-
-    try {
-        $stmt = $pdo->query($sql);
-        if ($stmt) {
-            // Utilisez PDO::FETCH_ASSOC pour obtenir un tableau associatif par ligne
-            $agences = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-    } catch (PDOException $e) {
-        // En cas d'erreur de base de données, loggez l'erreur pour le débogage
-        error_log("Erreur BD dans getAllAgences: " . $e->getMessage());
-        // $agences est déjà initialisé à un tableau vide, donc on le retourne tel quel
-    }
-
-    return $agences;
+function getAllAgences($pdo) {
+    // Version simplifiée et correcte pour MySQL
+    // Ne tente pas de vérifier les propriétés des colonnes
+    $sql = "SELECT CodeAgenceSCE FROM AGENCES_SCE";
+    $stmt = $pdo->query($sql);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 /**

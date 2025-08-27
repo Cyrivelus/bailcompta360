@@ -20,7 +20,36 @@ $code_agence = $code_agence ?? '';
 $selected_an = $ligne_p['an'] ?? $code_agence;
 // Use the value from $ligne_p for the 'contrepartie' field
 $selected_contrepartie = $ligne_p['contrepartie'] ?? '';
+$loggedInUserId = $_SESSION['utilisateur_id'] ?? null;
 
+// Initialiser le code d'agence de l'utilisateur Ã  null
+$userAgencyCode = null;
+
+if ($loggedInUserId) {
+    // 2. ExÃ©cuter la requÃªte pour obtenir le code d'agence de l'utilisateur
+    //    Ceci rÃ©cupÃ¨re la valeur pour la variable $userAgencyCode.
+    $sqlUserAgency = "SELECT CodeAgenceSCE FROM Utilisateurs WHERE ID_Utilisateur = :id";
+    $stmtUserAgency = $pdo->prepare($sqlUserAgency);
+    $stmtUserAgency->bindParam(':id', $loggedInUserId, PDO::PARAM_INT);
+    $stmtUserAgency->execute();
+    $userAgency = $stmtUserAgency->fetch(PDO::FETCH_ASSOC);
+
+    if ($userAgency) {
+        $userAgencyCode = $userAgency['CodeAgenceSCE'];
+    }
+}
+
+// 3. ExÃ©cuter la requÃªte pour obtenir la liste complÃ¨te des agences
+//    Ceci remplit la variable $agences utilisÃ©e dans le formulaire.
+$agences = [];
+try {
+    $sqlAgences = "SELECT CodeAgenceSCE, LibelleAgenceSCE FROM AGENCES_SCE ORDER BY CodeAgenceSCE ASC";
+    $stmtAgences = $pdo->query($sqlAgences);
+    $agences = $stmtAgences->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    // GÃ©rer l'erreur si la requÃªte Ã©choue
+    error_log("Erreur de base de donnÃ©es : " . $e->getMessage());
+}
 ?>
 
 <div class="entry-line" data-index="<?= htmlspecialchars($index) ?>">
@@ -32,7 +61,7 @@ $selected_contrepartie = $ligne_p['contrepartie'] ?? '';
                     <option value="">S&eacutelectionner</option>
                     <?php foreach ($GLOBALS['allComptesPLN'] as $compte): ?>
                         <?php
-                        // Assumons que $ligne_p['compte'] doit contenir ID_Compte pour la sélection
+                        // Assumons que $ligne_p['compte'] doit contenir ID_Compte pour la sÃ©lection
                         // Si $ligne_p['compte'] contient Numero_Compte (Cpt), changez la condition en :
                         // ($ligne_p['compte'] == $compte['Cpt'])
                         $selected = (isset($ligne_p['compte']) && isset($compte['ID_Compte']) && $ligne_p['compte'] == $compte['ID_Compte']) ? 'selected' : '';
@@ -51,23 +80,26 @@ $selected_contrepartie = $ligne_p['contrepartie'] ?? '';
             </div>
         </div>
 
-        <div class="col-md-1 col-sm-4">
-            <div class="form-group">
-                <label for="an_<?= htmlspecialchars($index) ?>">An</label>
-                <select class="form-control" id="an_<?= htmlspecialchars($index) ?>" name="an[]" style="width:100%;" >
-                    <option value="">Choisir</option>
-                    <?php foreach ($agences as $agence): ?>
-                        <?php
-                        // Assumons que $selected_an contient la valeur à présélectionner
-                        $selectedAn = (isset($selected_an) && isset($agence['CodeAgenceSCE']) && $selected_an == $agence['CodeAgenceSCE']) ? 'selected' : '';
-                        ?>
-                        <option value="<?= htmlspecialchars($agence['CodeAgenceSCE'] ?? '') ?>" <?= $selectedAn ?>>
-                            <?= htmlspecialchars($agence['CodeAgenceSCE'] ?? '') ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-        </div>
+    <div class="col-md-1 col-sm-4">
+    <div class="form-group">
+        <label for="an_<?= htmlspecialchars($index) ?>">Agence</label>
+        <select class="form-control" id="an_<?= htmlspecialchars($index) ?>" name="an[]" style="width:100%;">
+            <option value="">Choisir</option>
+            <?php foreach ($agences as $agence): ?>
+                <?php
+                // Utilisez le code d'agence de l'utilisateur pour prÃ©-sÃ©lectionner l'option
+                $selectedAn = '';
+                if (isset($agence['CodeAgenceSCE']) && $userAgencyCode == $agence['CodeAgenceSCE']) {
+                    $selectedAn = 'selected';
+                }
+                ?>
+               <option value="<?= htmlspecialchars($agence['CodeAgenceSCE'] ?? '') ?>" <?= $selectedAn ?>>
+    <?= htmlspecialchars(($agence['CodeAgenceSCE'] ?? '') . ' - ' . ($agence['LibelleAgenceSCE'] ?? '')) ?>
+</option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+</div>
 
         <div class="col-md-2 col-sm-6">
             <div class="form-group">
@@ -76,7 +108,7 @@ $selected_contrepartie = $ligne_p['contrepartie'] ?? '';
                     <option value="">S&eacutelectionner</option>
                     <?php foreach ($GLOBALS['allComptesPLN'] as $compte): ?>
                         <?php
-                        // Assumons que $selected_contrepartie doit contenir ID_Compte pour la sélection
+                        // Assumons que $selected_contrepartie doit contenir ID_Compte pour la sÃ©lection
                         // Si $selected_contrepartie contient Numero_Compte (Cpt), changez la condition en :
                         // ($selected_contrepartie == $compte['Cpt'])
                         $selectedCp = (isset($selected_contrepartie) && isset($compte['ID_Compte']) && $selected_contrepartie == $compte['ID_Compte']) ? 'selected' : '';
@@ -121,14 +153,14 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!contrepartieSelect) return;
 
             const selectedOption = selectCompte.options[selectCompte.selectedIndex];
-            const compteText = selectedOption.textContent.trim(); // ex: "560441312900 - Libellé"
+            const compteText = selectedOption.textContent.trim(); // ex: "560441312900 - LibellÃ©"
 
-            // Si on détecte le compte 560441312900
+            // Si on dÃ©tecte le compte 560441312900
             if (compteText.startsWith('56041312900')) {
                 // Parcourir les options du champ contrepartie
                 for (let option of contrepartieSelect.options) {
                     if (option.textContent.trim().startsWith('57512')) {
-                        contrepartieSelect.value = option.value; // Sélectionne 57512
+                        contrepartieSelect.value = option.value; // SÃ©lectionne 57512
                         break;
                     }
                 }
@@ -148,14 +180,14 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!contrepartieSelect) return;
 
             const selectedOption = selectCompte.options[selectCompte.selectedIndex];
-            const compteText = selectedOption.textContent.trim(); // ex: "560441312900 - Libellé"
+            const compteText = selectedOption.textContent.trim(); // ex: "560441312900 - LibellÃ©"
 
-            // Si on détecte le compte 560441312900
+            // Si on dÃ©tecte le compte 560441312900
             if (compteText.startsWith('57512')) {
                 // Parcourir les options du champ contrepartie
                 for (let option of contrepartieSelect.options) {
                     if (option.textContent.trim().startsWith('56041312900')) {
-                        contrepartieSelect.value = option.value; // Sélectionne 57512
+                        contrepartieSelect.value = option.value; // SÃ©lectionne 57512
                         break;
                     }
                 }
@@ -173,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const index = line.getAttribute('data-index');
 
-            // Champs à inverser
+            // Champs Ã  inverser
             const compteSelect = document.getElementById('compte_' + index);
             const contrepartieSelect = document.getElementById('contrepartie_' + index);
             const debitInput = document.getElementById('debit_' + index);
@@ -181,12 +213,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (!compteSelect || !contrepartieSelect || !debitInput || !creditInput) return;
 
-            // Échanger les comptes
+            // Ã‰changer les comptes
             const oldCompte = compteSelect.value;
             compteSelect.value = contrepartieSelect.value;
             contrepartieSelect.value = oldCompte;
 
-            // Échanger les montants
+            // Ã‰changer les montants
             const oldDebit = debitInput.value;
             debitInput.value = creditInput.value;
             creditInput.value = oldDebit;

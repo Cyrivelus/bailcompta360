@@ -311,12 +311,14 @@ function getEcritures(PDO $pdo, int $compteId, string $dateDebut, string $dateFi
 }
 
 
+// fonctions/gestion_ecritures.php (corrected version)
+
 function enregistrerEcriture(
     PDO $pdo,
     string $date, // Le type-hint reste string
     string $description,
     float $montant,
-    int $id_journal, // Keep this if you intend to use it, as it's in your table schema.
+    int $id_journal,
     int $cde_journal,
     string $numero_piece,
     string $mois_comptable,
@@ -324,75 +326,47 @@ function enregistrerEcriture(
     string $libelle2 = '',
     string $numero_agence = ''
 ) {
-    // 1. Récupération du nom de la colonne IDENTITY
-    $colonneId = $pdo->query("
-        SELECT COLUMN_NAME
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = 'Ecritures'
-        AND COLUMNPROPERTY(OBJECT_ID('Ecritures'), COLUMN_NAME, 'IsIdentity') = 1
-    ")->fetchColumn();
-
-    if (!$colonneId) {
-        return [
-            'status' => false,
-            'error' => "La table Ecritures n'a pas de colonne IDENTITY définie",
-            'debug_info' => ["Impossible de trouver la colonne IDENTITY"]
-        ];
-    }
-
-    // 2. Requête avec tous les champs
-    // MODIFICATION HERE: Explicitly convert the date string using CONVERT
-    $sql = "INSERT INTO Ecritures (
-                Date_Saisie, Description, Montant_Total, ID_Journal, Cde,
-                NumeroAgenceSCE, libelle2, NomUtilisateur, Mois, Numero_Piece
-            )
-            OUTPUT INSERTED.$colonneId
-            VALUES (
-                CONVERT(DATETIME, :date_saisie, 120), -- Style 120 for 'YYYY-MM-DD HH:MM:SS' or 'YYYY-MM-DD'
-                :description, :montant_total, :id_journal, :cde_journal,
-                :numero_agence, :libelle2, :nom_utilisateur, :mois_comptable, :numero_piece
-            )";
-
     try {
+        // SQL query for MySQL. We don't need to dynamically get the identity column name.
+        // We also don't use 'OUTPUT INSERTED' or 'IDENT_CURRENT', which are SQL Server specific.
+        $sql = "INSERT INTO Ecritures (
+                    Date_Saisie, Description, Montant_Total, ID_Journal, Cde,
+                    NumeroAgenceSCE, libelle2, NomUtilisateur, Mois, Numero_Piece
+                )
+                VALUES (
+                    :date_saisie, :description, :montant_total, :id_journal, :cde_journal,
+                    :numero_agence, :libelle2, :nom_utilisateur, :mois_comptable, :numero_piece
+                )";
+
         $stmt = $pdo->prepare($sql);
 
-        // Liaison des paramètres
-        if ($date === '') {
-            $stmt->bindValue(':date_saisie', null, PDO::PARAM_NULL);
-        } else {
-            // Ensure the date string is in a format compatible with style 120, like 'YYYY-MM-DD HH:MM:SS'
-            // or simply 'YYYY-MM-DD' if you don't care about the time component (it will default to 00:00:00).
-            // Your provided '2025-05-22' is fine for style 120.
-            $stmt->bindParam(':date_saisie', $date, PDO::PARAM_STR);
-        }
-        
-        $stmt->bindParam(':description', $description, PDO::PARAM_STR);
+        // Bind the parameters
+        $stmt->bindParam(':date_saisie', $date);
+        $stmt->bindParam(':description', $description);
+        // Bind float as a string to avoid precision issues
         $montantStr = (string)$montant;
-        $stmt->bindParam(':montant_total', $montantStr, PDO::PARAM_STR);
+        $stmt->bindParam(':montant_total', $montantStr);
         $stmt->bindParam(':id_journal', $id_journal, PDO::PARAM_INT);
         $stmt->bindParam(':cde_journal', $cde_journal, PDO::PARAM_INT);
-        $stmt->bindParam(':numero_agence', $numero_agence, PDO::PARAM_STR);
-        $stmt->bindParam(':libelle2', $libelle2, PDO::PARAM_STR);
-        $stmt->bindParam(':nom_utilisateur', $nom_utilisateur, PDO::PARAM_STR);
-        $stmt->bindParam(':mois_comptable', $mois_comptable, PDO::PARAM_STR);
-        $stmt->bindParam(':numero_piece', $numero_piece, PDO::PARAM_STR);
+        $stmt->bindParam(':numero_agence', $numero_agence);
+        $stmt->bindParam(':libelle2', $libelle2);
+        $stmt->bindParam(':nom_utilisateur', $nom_utilisateur);
+        $stmt->bindParam(':mois_comptable', $mois_comptable);
+        $stmt->bindParam(':numero_piece', $numero_piece);
 
         if ($stmt->execute()) {
-            $newId = $stmt->fetchColumn();
+            // After a successful insert, use PDO's built-in lastInsertId() method for MySQL.
+            $newId = $pdo->lastInsertId();
 
             if ($newId) {
                 return ['status' => true, 'id' => $newId];
             }
 
-            $newIdFallback = $pdo->query("SELECT IDENT_CURRENT('Ecritures')")->fetchColumn();
-            if ($newIdFallback) {
-                return ['status' => true, 'id' => $newIdFallback];
-            }
-
+            // Fallback for tables without an auto-incrementing primary key (unlikely but good practice)
             return [
                 'status' => false,
-                'error' => "Aucun ID retourné après insertion (même avec fallback)",
-                'debug_info' => ["Colonne ID: $colonneId", "Requête: $sql"]
+                'error' => "Insertion réussie, mais aucun ID retourné. La table 'Ecritures' a-t-elle un ID auto-incrémenté ?",
+                'debug_info' => ["SQL: " . $sql]
             ];
         }
 
@@ -402,18 +376,16 @@ function enregistrerEcriture(
             'error' => $errorInfo[2] ?? 'Erreur inconnue lors de l\'exécution de la requête.',
             'debug_info' => $errorInfo
         ];
-
     } catch (PDOException $e) {
-        $debugData = [
-            "Exception PDO",
-            "Colonne ID: $colonneId",
-            "Requête: $sql",
-            "Valeur du paramètre \$date reçue: '" . htmlspecialchars($date) . "'"
-        ];
         return [
             'status' => false,
             'error' => $e->getMessage(),
-            'debug_info' => $debugData
+            'debug_info' => [
+                "Exception PDO",
+                "Fichier: " . basename(__FILE__),
+                "Ligne: " . $e->getLine(),
+                "Requête SQL: " . $sql ?? 'N/A'
+            ]
         ];
     }
 }
