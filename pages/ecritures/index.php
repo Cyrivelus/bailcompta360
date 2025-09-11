@@ -142,7 +142,7 @@ require_once('../../templates/navigation.php');
                         <th>Journal</th>
                         <th>N° Pièce</th>
                         <th>Description</th>
-                        <th class="text-right">Montant</th>
+                     
                         <th style="width: 150px;">Actions</th>
                     </tr>
                 </thead>
@@ -154,7 +154,7 @@ require_once('../../templates/navigation.php');
                             <td><?= htmlspecialchars($ecriture['Journal_Libelle'] ?? 'N/A') ?></td>
                             <td><?= htmlspecialchars($ecriture['Numero_Piece'] ?? '') ?></td>
                             <td><?= htmlspecialchars($ecriture['Description']) ?></td>
-                            <td class="text-right"><?= number_format($ecriture['Montant_Total'], 2, ',', ' ') ?></td>
+                           
                             <td>
                                 <div class="btn-group btn-group-sm">
                                     <a href="details.php?id=<?= $ecriture['ID_Ecriture'] ?>" class="btn btn-info" title="Détails">

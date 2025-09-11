@@ -1,0 +1,3440 @@
+ Le volume dans le lecteur C n'a pas de nom.
+ Le num‚ro de s‚rie du volume est 1CA4-789E
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+27/08/2025  17:21    <DIR>          .git
+16/07/2025  09:49               385 .gitignore.txt
+03/09/2025  09:31                 0 arborescence.txt
+19/08/2025  08:12    <DIR>          backups
+16/07/2025  09:49           121ÿ205 bootstrap.min.css
+11/08/2025  11:46             3ÿ975 change_mot_de_passe.php
+19/08/2025  08:12    <DIR>          css
+16/07/2025  09:49               328 database.php
+16/07/2025  09:49               449 deconnexion.php
+19/08/2025  08:12    <DIR>          erreurs
+03/09/2025  09:02    <DIR>          fonctions
+16/07/2025  09:49             1ÿ573 forgot_password.html
+11/08/2025  10:53             4ÿ689 forgot_password.php
+19/08/2025  08:12    <DIR>          images
+16/07/2025  09:49             7ÿ632 index.html
+18/08/2025  16:20            12ÿ507 index.php
+19/08/2025  08:12    <DIR>          js
+19/08/2025  08:12    <DIR>          librairies
+19/08/2025  08:12    <DIR>          logs
+16/07/2025  09:49                 0 Nouveau document texte.txt
+03/09/2025  08:57    <DIR>          pages
+16/07/2025  09:49               348 program AffichageASCII;.pas
+16/07/2025  09:49               311 README.md
+16/07/2025  09:49             6ÿ208 README.txt
+19/08/2025  08:11    <DIR>          scripts
+19/08/2025  08:11    <DIR>          securite
+03/09/2025  08:39    <DIR>          templates
+19/08/2025  08:11    <DIR>          uploads
+11/08/2025  17:54            21ÿ079 Voici un guide des 50 commandes Linux les plus utiles et leurs ‚quivalents dans l.docx
+15/08/2025  11:12            15ÿ695 Voici une proposition de structure de dossiers et de pages pour int‚grer les fonctionnalit‚s comptables manquantes.docx
+              16 fichier(s)          196ÿ384 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git
+
+27/08/2025  17:21    <DIR>          .
+27/08/2025  17:21    <DIR>          ..
+27/08/2025  17:21                36 COMMIT_EDITMSG
+16/07/2025  09:49               305 config
+16/07/2025  09:42                73 description
+16/07/2025  09:49               102 FETCH_HEAD
+16/07/2025  09:49                21 HEAD
+19/08/2025  08:11    <DIR>          hooks
+27/08/2025  17:21            55ÿ904 index
+19/08/2025  08:11    <DIR>          info
+19/08/2025  08:11    <DIR>          logs
+27/08/2025  17:21    <DIR>          objects
+16/07/2025  09:49                41 ORIG_HEAD
+19/08/2025  08:12    <DIR>          refs
+               7 fichier(s)           56ÿ482 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\hooks
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:42               478 applypatch-msg.sample
+16/07/2025  09:42               896 commit-msg.sample
+16/07/2025  09:42             4ÿ726 fsmonitor-watchman.sample
+16/07/2025  09:42               189 post-update.sample
+16/07/2025  09:42               424 pre-applypatch.sample
+16/07/2025  09:42             1ÿ649 pre-commit.sample
+16/07/2025  09:42               416 pre-merge-commit.sample
+16/07/2025  09:42             1ÿ374 pre-push.sample
+16/07/2025  09:42             4ÿ898 pre-rebase.sample
+16/07/2025  09:42               544 pre-receive.sample
+16/07/2025  09:42             1ÿ492 prepare-commit-msg.sample
+16/07/2025  09:42             2ÿ783 push-to-checkout.sample
+16/07/2025  09:42             2ÿ308 sendemail-validate.sample
+16/07/2025  09:42             3ÿ650 update.sample
+              14 fichier(s)           25ÿ827 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\info
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:42               240 exclude
+               1 fichier(s)              240 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\logs
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+27/08/2025  17:21             2ÿ262 HEAD
+19/08/2025  08:11    <DIR>          refs
+               1 fichier(s)            2ÿ262 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\logs\refs
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+19/08/2025  08:11    <DIR>          heads
+19/08/2025  08:11    <DIR>          remotes
+               0 fichier(s)                0 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\logs\refs\heads
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+27/08/2025  17:21             1ÿ685 main
+               1 fichier(s)            1ÿ685 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\logs\refs\remotes
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+19/08/2025  08:11    <DIR>          origin
+               0 fichier(s)                0 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\logs\refs\remotes\origin
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+27/08/2025  17:26             1ÿ233 main
+               1 fichier(s)            1ÿ233 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects
+
+27/08/2025  17:21    <DIR>          .
+27/08/2025  17:21    <DIR>          ..
+27/08/2025  15:16    <DIR>          00
+19/08/2025  08:11    <DIR>          01
+27/08/2025  15:16    <DIR>          02
+27/08/2025  15:17    <DIR>          03
+27/08/2025  15:16    <DIR>          04
+19/08/2025  08:11    <DIR>          05
+19/08/2025  08:11    <DIR>          06
+19/08/2025  08:11    <DIR>          07
+27/08/2025  15:16    <DIR>          08
+19/08/2025  08:11    <DIR>          09
+19/08/2025  08:11    <DIR>          0a
+19/08/2025  08:11    <DIR>          0b
+27/08/2025  15:16    <DIR>          0d
+19/08/2025  08:11    <DIR>          0f
+27/08/2025  17:21    <DIR>          10
+19/08/2025  08:11    <DIR>          11
+27/08/2025  15:17    <DIR>          12
+19/08/2025  08:11    <DIR>          13
+19/08/2025  08:11    <DIR>          14
+19/08/2025  08:11    <DIR>          15
+19/08/2025  08:11    <DIR>          16
+27/08/2025  15:17    <DIR>          17
+19/08/2025  08:11    <DIR>          18
+19/08/2025  08:11    <DIR>          19
+19/08/2025  08:11    <DIR>          1a
+19/08/2025  08:11    <DIR>          1b
+19/08/2025  08:11    <DIR>          1c
+27/08/2025  15:17    <DIR>          1d
+19/08/2025  08:11    <DIR>          1e
+19/08/2025  08:11    <DIR>          1f
+19/08/2025  08:11    <DIR>          20
+19/08/2025  08:11    <DIR>          21
+27/08/2025  15:16    <DIR>          22
+19/08/2025  08:11    <DIR>          23
+19/08/2025  08:11    <DIR>          24
+27/08/2025  15:16    <DIR>          25
+19/08/2025  08:11    <DIR>          26
+19/08/2025  08:11    <DIR>          27
+19/08/2025  08:11    <DIR>          28
+19/08/2025  08:11    <DIR>          2a
+19/08/2025  08:11    <DIR>          2b
+19/08/2025  08:11    <DIR>          2c
+19/08/2025  08:11    <DIR>          2d
+19/08/2025  08:11    <DIR>          2e
+19/08/2025  08:11    <DIR>          2f
+19/08/2025  08:11    <DIR>          30
+27/08/2025  15:16    <DIR>          32
+27/08/2025  15:17    <DIR>          33
+19/08/2025  08:11    <DIR>          34
+19/08/2025  08:11    <DIR>          35
+19/08/2025  08:11    <DIR>          36
+19/08/2025  08:11    <DIR>          37
+19/08/2025  08:11    <DIR>          38
+27/08/2025  17:21    <DIR>          3a
+27/08/2025  15:16    <DIR>          3b
+27/08/2025  17:21    <DIR>          3d
+27/08/2025  15:16    <DIR>          3e
+27/08/2025  17:21    <DIR>          3f
+19/08/2025  08:11    <DIR>          40
+27/08/2025  15:17    <DIR>          41
+27/08/2025  17:21    <DIR>          42
+19/08/2025  08:11    <DIR>          43
+19/08/2025  08:11    <DIR>          44
+19/08/2025  08:11    <DIR>          45
+27/08/2025  17:21    <DIR>          48
+27/08/2025  17:21    <DIR>          49
+19/08/2025  08:11    <DIR>          4a
+27/08/2025  15:17    <DIR>          4b
+19/08/2025  08:11    <DIR>          4c
+19/08/2025  08:11    <DIR>          4d
+27/08/2025  15:16    <DIR>          4e
+19/08/2025  08:11    <DIR>          4f
+27/08/2025  15:16    <DIR>          50
+19/08/2025  08:11    <DIR>          51
+19/08/2025  08:11    <DIR>          52
+27/08/2025  15:16    <DIR>          53
+19/08/2025  08:11    <DIR>          54
+19/08/2025  08:11    <DIR>          55
+19/08/2025  08:11    <DIR>          56
+19/08/2025  08:11    <DIR>          57
+19/08/2025  08:11    <DIR>          58
+27/08/2025  17:21    <DIR>          59
+19/08/2025  08:11    <DIR>          5a
+27/08/2025  15:16    <DIR>          5d
+19/08/2025  08:11    <DIR>          5e
+27/08/2025  15:16    <DIR>          5f
+19/08/2025  08:11    <DIR>          60
+27/08/2025  15:16    <DIR>          61
+19/08/2025  08:11    <DIR>          62
+19/08/2025  08:11    <DIR>          63
+19/08/2025  08:11    <DIR>          64
+19/08/2025  08:11    <DIR>          65
+19/08/2025  08:11    <DIR>          66
+27/08/2025  15:16    <DIR>          67
+19/08/2025  08:11    <DIR>          68
+19/08/2025  08:11    <DIR>          69
+27/08/2025  15:17    <DIR>          6a
+27/08/2025  15:17    <DIR>          6b
+19/08/2025  08:11    <DIR>          6c
+19/08/2025  08:11    <DIR>          6d
+19/08/2025  08:11    <DIR>          6e
+19/08/2025  08:11    <DIR>          6f
+19/08/2025  08:11    <DIR>          70
+19/08/2025  08:11    <DIR>          71
+19/08/2025  08:11    <DIR>          72
+27/08/2025  15:16    <DIR>          73
+19/08/2025  08:11    <DIR>          74
+19/08/2025  08:11    <DIR>          75
+27/08/2025  15:17    <DIR>          76
+19/08/2025  08:11    <DIR>          77
+27/08/2025  15:16    <DIR>          78
+19/08/2025  08:11    <DIR>          79
+27/08/2025  15:16    <DIR>          7a
+19/08/2025  08:11    <DIR>          7b
+19/08/2025  08:11    <DIR>          7c
+19/08/2025  08:11    <DIR>          7d
+19/08/2025  08:11    <DIR>          7e
+19/08/2025  08:11    <DIR>          7f
+19/08/2025  08:11    <DIR>          80
+19/08/2025  08:11    <DIR>          81
+19/08/2025  08:11    <DIR>          82
+19/08/2025  08:11    <DIR>          83
+19/08/2025  08:11    <DIR>          84
+19/08/2025  08:11    <DIR>          85
+19/08/2025  08:11    <DIR>          86
+19/08/2025  08:11    <DIR>          87
+19/08/2025  08:11    <DIR>          88
+19/08/2025  08:11    <DIR>          89
+27/08/2025  17:21    <DIR>          8a
+19/08/2025  08:11    <DIR>          8b
+19/08/2025  08:11    <DIR>          8c
+27/08/2025  15:16    <DIR>          8d
+19/08/2025  08:11    <DIR>          8f
+19/08/2025  08:11    <DIR>          90
+19/08/2025  08:11    <DIR>          91
+19/08/2025  08:11    <DIR>          92
+19/08/2025  08:11    <DIR>          93
+27/08/2025  15:17    <DIR>          94
+27/08/2025  15:17    <DIR>          95
+27/08/2025  15:16    <DIR>          96
+19/08/2025  08:11    <DIR>          97
+19/08/2025  08:11    <DIR>          98
+27/08/2025  15:16    <DIR>          99
+19/08/2025  08:11    <DIR>          9a
+27/08/2025  15:17    <DIR>          9b
+19/08/2025  08:11    <DIR>          9c
+19/08/2025  08:11    <DIR>          9d
+19/08/2025  08:11    <DIR>          9e
+19/08/2025  08:11    <DIR>          a0
+27/08/2025  15:17    <DIR>          a1
+27/08/2025  15:17    <DIR>          a2
+19/08/2025  08:11    <DIR>          a4
+19/08/2025  08:11    <DIR>          a5
+19/08/2025  08:11    <DIR>          a6
+19/08/2025  08:11    <DIR>          a7
+19/08/2025  08:11    <DIR>          a8
+27/08/2025  15:17    <DIR>          a9
+19/08/2025  08:11    <DIR>          aa
+27/08/2025  15:16    <DIR>          ab
+19/08/2025  08:11    <DIR>          ac
+19/08/2025  08:11    <DIR>          ad
+19/08/2025  08:11    <DIR>          ae
+27/08/2025  15:16    <DIR>          af
+27/08/2025  15:16    <DIR>          b0
+19/08/2025  08:11    <DIR>          b1
+19/08/2025  08:11    <DIR>          b2
+19/08/2025  08:11    <DIR>          b3
+19/08/2025  08:11    <DIR>          b4
+19/08/2025  08:11    <DIR>          b5
+19/08/2025  08:11    <DIR>          b6
+19/08/2025  08:11    <DIR>          b7
+19/08/2025  08:11    <DIR>          b8
+19/08/2025  08:11    <DIR>          b9
+27/08/2025  15:17    <DIR>          ba
+19/08/2025  08:11    <DIR>          bc
+27/08/2025  15:16    <DIR>          bd
+19/08/2025  08:11    <DIR>          be
+27/08/2025  15:16    <DIR>          bf
+19/08/2025  08:11    <DIR>          c0
+19/08/2025  08:11    <DIR>          c1
+19/08/2025  08:11    <DIR>          c3
+27/08/2025  15:16    <DIR>          c4
+27/08/2025  15:16    <DIR>          c5
+27/08/2025  17:21    <DIR>          c6
+27/08/2025  15:16    <DIR>          c7
+19/08/2025  08:11    <DIR>          c8
+19/08/2025  08:11    <DIR>          c9
+19/08/2025  08:11    <DIR>          ca
+19/08/2025  08:11    <DIR>          cb
+19/08/2025  08:11    <DIR>          cc
+19/08/2025  08:11    <DIR>          cd
+19/08/2025  08:11    <DIR>          ce
+27/08/2025  15:17    <DIR>          cf
+19/08/2025  08:11    <DIR>          d0
+19/08/2025  08:11    <DIR>          d1
+19/08/2025  08:11    <DIR>          d3
+19/08/2025  08:11    <DIR>          d4
+27/08/2025  15:16    <DIR>          d5
+19/08/2025  08:11    <DIR>          d6
+19/08/2025  08:11    <DIR>          d7
+19/08/2025  08:11    <DIR>          d8
+19/08/2025  08:11    <DIR>          d9
+27/08/2025  15:16    <DIR>          db
+19/08/2025  08:11    <DIR>          dc
+19/08/2025  08:11    <DIR>          dd
+19/08/2025  08:11    <DIR>          de
+27/08/2025  15:16    <DIR>          df
+27/08/2025  15:16    <DIR>          e1
+19/08/2025  08:11    <DIR>          e2
+19/08/2025  08:11    <DIR>          e3
+19/08/2025  08:11    <DIR>          e4
+27/08/2025  15:17    <DIR>          e5
+19/08/2025  08:11    <DIR>          e6
+19/08/2025  08:11    <DIR>          e7
+19/08/2025  08:11    <DIR>          e8
+27/08/2025  15:16    <DIR>          e9
+19/08/2025  08:11    <DIR>          ea
+19/08/2025  08:11    <DIR>          eb
+27/08/2025  15:17    <DIR>          ec
+19/08/2025  08:11    <DIR>          ed
+19/08/2025  08:11    <DIR>          ee
+19/08/2025  08:11    <DIR>          ef
+19/08/2025  08:11    <DIR>          f1
+19/08/2025  08:11    <DIR>          f2
+27/08/2025  15:16    <DIR>          f3
+19/08/2025  08:11    <DIR>          f4
+19/08/2025  08:11    <DIR>          f5
+19/08/2025  08:12    <DIR>          f6
+19/08/2025  08:12    <DIR>          f7
+19/08/2025  08:12    <DIR>          f8
+19/08/2025  08:12    <DIR>          f9
+19/08/2025  08:12    <DIR>          fa
+19/08/2025  08:12    <DIR>          fb
+19/08/2025  08:12    <DIR>          fc
+19/08/2025  08:12    <DIR>          fd
+19/08/2025  08:12    <DIR>          fe
+               0 fichier(s)                0 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\00
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/07/2025  09:44             1ÿ162 9c578764d4a0edde3df06b0a450d2a5816ae81
+27/08/2025  15:16             2ÿ227 9f4439070d2cf8717ba7c40604f2c755cb9825
+               2 fichier(s)            3ÿ389 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\01
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             1ÿ308 3505ba76158e2a3642c9a57f794e4d4386254c
+11/08/2025  16:48               280 5a15adffa985db7034461351cc967342cd0278
+16/07/2025  09:44               570 986a0d33dace70fb53ce31e6d79dc60f051ad6
+               3 fichier(s)            2ÿ158 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\02
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/07/2025  09:45                55 2b383c64aa74d9ef367275c39af20543da6b24
+27/08/2025  15:16             1ÿ530 2ed2b4ecc797ebaa63e2ff5d957723072720ee
+11/08/2025  16:48             1ÿ226 43cde4f3b93011b9af699ee84b929e9e408e1b
+16/07/2025  09:45               916 5737400e3d284d909106cec2ad1f3de8ccff3c
+               4 fichier(s)            3ÿ727 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\03
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+16/08/2025  12:15             1ÿ593 42c54ac2eceee3182c400492d7e8df0458270f
+27/08/2025  15:17               193 5a56a538a5c894006e5b2dc4c51c5b0e2d25c3
+16/08/2025  12:15             2ÿ851 878fda2b74065a63d349ca81a3af7580510aae
+16/07/2025  09:44             2ÿ128 a31ab5069a5316e71bfe23bad5bb5756565d6d
+16/07/2025  09:44             2ÿ290 c8124592a406befce80d384d532fcb83032b61
+16/08/2025  12:15            21ÿ656 d9fac50a344ea09837bc501d767e2e2ffa811e
+16/07/2025  09:44             2ÿ557 e7fff5f7bb24fc362a34346da2fba276b1fd43
+               7 fichier(s)           33ÿ268 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\04
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+11/08/2025  16:48               720 9521ab96a4eca56f141866fda85752c27e7126
+27/08/2025  15:16             2ÿ025 d8212875a50adad36e48dd93e7ec2fabcd0d95
+               2 fichier(s)            2ÿ745 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\05
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48            15ÿ255 b3f1b4ef8f06bcf55b9bafa902ea7e55f1fe86
+11/08/2025  16:48               555 b86a42dc315be2903b83e8ecac0bb822a6e63d
+16/07/2025  09:45               470 c834f869cf6e20de0dafc0564702f67cc3cd1b
+               3 fichier(s)           16ÿ280 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\06
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:15             4ÿ945 1498efb0183919fd6cb5c1d9a016c6cbf65dac
+16/07/2025  09:44             1ÿ557 347e15ba75eb7f00254064b69e29026e571873
+16/08/2025  12:15             2ÿ154 367c4c531ca7938450f364564c46aaba1e9f83
+16/07/2025  09:44             2ÿ517 3b55700ca20ebb0a14de86ac03369eb73dd939
+16/07/2025  09:44             4ÿ077 ce11a97b9b3f5078df125ad0fbf6a02d6166bc
+11/08/2025  16:48             1ÿ226 ec735b8ffa59b92fbc60debe7621c28e386255
+               6 fichier(s)           16ÿ476 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\07
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ461 8cd426bd2e821077ec31c92f9c6ea6e3d198e1
+11/08/2025  16:48             1ÿ703 9e10c61cd8e6360bb266cd95cca7672d3872f0
+               2 fichier(s)            3ÿ164 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\08
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16             3ÿ774 883b7d60009c7eece7eef2aba5e49cd98eeb09
+11/08/2025  16:48               518 9e67e2042244b6ac85c50f808af0568a243268
+11/08/2025  16:48             1ÿ227 9f21ab308bda0d986279b2f1d95016b9b47756
+               3 fichier(s)            5ÿ519 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\09
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               544 0e3591b723ab3109ea9414f4f0cfd04deddc72
+16/08/2025  12:16             1ÿ100 77e7b1588fccafd929d0901e1df653367ee9da
+               2 fichier(s)            1ÿ644 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\0a
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:49               633 99fdc36e855f85985a99d77a1e92fc417437a4
+11/08/2025  16:48             1ÿ197 ac59885f57120793606b378053e7361ed6b2ae
+               2 fichier(s)            1ÿ830 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\0b
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               817 17a617b9ca9497df22a5aae6aa1d951dd8021a
+16/07/2025  09:44             1ÿ213 adff23344edd0991396cdbf771f85f7225cfef
+11/08/2025  16:48            22ÿ150 f3b6f465fb019e22a4108672ef44a896f8002e
+               3 fichier(s)           24ÿ180 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\0d
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16               504 f4be23641542b5492b879e50f7e2bc849cef13
+               1 fichier(s)              504 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\0f
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ468 5bb4e6e4b4ccd986c7fc2ea08635d6d3ccf922
+16/07/2025  09:44             1ÿ814 772cd8930d6f2139f52d6826493e7f685cb41c
+16/07/2025  09:44             3ÿ471 807566264f2df8563c8c48c90043f1b9cf988a
+11/08/2025  16:49               107 aa7a0519e5991ab097793514ce390aa070ae9d
+16/07/2025  09:44               830 b3c2ef4454e9ae77cf552d393cef592ed0a86f
+16/08/2025  12:16               255 d8b86db710f5d1a43a5354fbfcab28c6f29b7a
+               6 fichier(s)            7ÿ945 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\10
+
+27/08/2025  17:21    <DIR>          .
+27/08/2025  17:21    <DIR>          ..
+11/08/2025  16:48             1ÿ697 06e6b17f2a9d3cbbd8fc4fadd1c944c562cc1c
+16/07/2025  09:44             5ÿ474 15e3745a755a3fd58adbe9878d31a2ad0e444f
+27/08/2025  17:21               162 32068ab3451574096228cbffeb228de61abc80
+16/07/2025  09:44             3ÿ017 54a34f550867147a96c61a48cd37382e8af348
+11/08/2025  16:48             2ÿ902 7c2089f270affe8553fd508ad7dadbc682bdbb
+11/08/2025  16:48               892 ad3f2128c42ea3ed59792ba51c6ec349bf2f41
+16/07/2025  09:44             2ÿ405 b392a5a1757e7a22524d3d908792e38873cf3e
+11/08/2025  16:48             2ÿ252 ca9f63ba036dfe6abefc8e975f293881dc15d6
+               8 fichier(s)           18ÿ801 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\11
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:16               191 bdf4a523dc241449e3bb634d4d1522a7bd4608
+               1 fichier(s)              191 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\12
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+16/07/2025  09:44               678 542d6304cdd26a622baa78b200d585c2f3d992
+16/07/2025  09:44             2ÿ401 5da04ff7acd917ab21cf9b1221411ee60532b9
+27/08/2025  15:17               191 a29787267ecaceeaa6cd6dc50c1cabf085f42f
+16/08/2025  12:15             1ÿ383 ead8f2dd2b70bb54448f2321b929d4519851ec
+               4 fichier(s)            4ÿ653 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\13
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  10:32               195 a6c6e8769a9f34e4fd6e2e5c1e509f646e6ad7
+16/07/2025  09:44             2ÿ286 c92561e5a45f1c8ec8a8d8ec36ee1e28a30cf5
+               2 fichier(s)            2ÿ481 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\14
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+27/08/2025  15:17               154 ba88745cdadda368ab2d766a1aaf781b47bbd8
+               1 fichier(s)              154 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\15
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:15             1ÿ606 9746f295becbb5713a56c2add55e7ccdb39dd2
+16/07/2025  09:44               671 bb93b41cfd7f04e8d2b04e70f1468e6b942e10
+16/07/2025  09:44                98 c48d848241f3f0a2c0eebffe224adef40f122c
+               3 fichier(s)            2ÿ375 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\16
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44               476 02722a736d7dedc8ae36cc8f4e916c3601aa0d
+16/07/2025  09:44             2ÿ810 b959b51064f34f0068f5315be5f8facb2c52d7
+               2 fichier(s)            3ÿ286 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\17
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+16/07/2025  09:45               104 0001d3990c2de4efabc82b7c909e898b97e60c
+27/08/2025  15:17               238 76ac4a97b35dcf42217a5e04b56d05fe1f312d
+16/07/2025  09:44             2ÿ908 a8a4e3b22e03c8e0b2dcdb982ae804e8ebdc75
+               3 fichier(s)            3ÿ250 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\18
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             4ÿ266 01a42b26ea993b81b3f1815651233fd2f3b47c
+16/07/2025  09:44             1ÿ218 0fda82c3e9e0c067c23133e8e2d40026a0d16b
+16/07/2025  09:44             5ÿ020 764cfb18d1d9a631e4bf8fe7e9d672e4f4b49e
+16/08/2025  12:15             2ÿ907 cf5cee7285baf674b66dfb84f58b7352f462db
+               4 fichier(s)           13ÿ411 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\19
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:16               194 f3079df60a3373b47a21c677cef5e8c4b4a5e1
+               1 fichier(s)              194 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\1a
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44               765 515cae6a65e7d418db736adc9ac08b2aa1ddde
+11/08/2025  16:48               684 797fbf8a1d53806ce3e45ec71d250f2f6cab6f
+16/07/2025  09:44           102ÿ485 86433c223039bda5f68f8b6ef10d15e5e0eff7
+11/08/2025  10:32               438 ef22ff4c489b0d77a38413731eb84ac84a3bd7
+               4 fichier(s)          104ÿ372 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\1b
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:15             1ÿ535 29cefd3c5a97ac839bee1573d97b53efe9d9c7
+16/07/2025  09:44             2ÿ130 34be480f4a5cd9bf3296fac9e5277d35e4715f
+11/08/2025  16:48             1ÿ063 7d14c14d1af081ba1e96181e3449ed5ec3024f
+               3 fichier(s)            4ÿ728 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\1c
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:45               323 dd7090b2fcb770509c364d27aa3975794112f9
+               1 fichier(s)              323 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\1d
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+16/08/2025  12:15             1ÿ978 034da0cf6df060f883df96e705ed68fdd8dd25
+16/07/2025  09:44             3ÿ055 20196ef63ac900808e53aaba02568fdbb90349
+11/08/2025  10:32             2ÿ280 a94e641353a69d4c535aec545d9405920a712b
+27/08/2025  15:17                54 ed231a0d17165c87b6fbf8d01d5c7b2b05cbdd
+               4 fichier(s)            7ÿ367 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\1e
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             5ÿ246 c1276bba12938770caf4f877a5277cfa5f6172
+               1 fichier(s)            5ÿ246 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\1f
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               725 766e06bbcc45f497c54ff2b6707d3dc744186c
+16/07/2025  09:44             1ÿ909 f6a93b033f161344d15d3ea844d575dc351f9a
+               2 fichier(s)            2ÿ634 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\20
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             1ÿ705 2c8fe594186cf762126b1265d7e2f73f7f92ac
+               1 fichier(s)            1ÿ705 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\21
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             5ÿ577 0627e0affa49af4a2b2eb0f84224eb8b8942f7
+16/07/2025  09:45               116 47303e9433bc68212533417c6ce6239806db75
+               2 fichier(s)            5ÿ693 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\22
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/07/2025  09:44             1ÿ981 0ad72aeaea71a94aa51d4eab70f60768dfdf2f
+27/08/2025  15:16            21ÿ752 9c70305b6a0acad576a1f3a31a569e7a899b9f
+16/07/2025  09:44             2ÿ537 c0acfd43744721a10d67a6702ceadd74904e62
+               3 fichier(s)           26ÿ270 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\23
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44               134 dd10e8e082915dbaa8bb25742269673004bfde
+               1 fichier(s)              134 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\24
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ856 8f1fca69c2f1805c3df4e2886aa25d337c4489
+16/08/2025  12:15            18ÿ441 aa5adb1836abd81a12594f47e20eda396015bf
+11/08/2025  16:48               717 ffd1f9b651a3cf960bd0a995c8ab2577dd4b0e
+               3 fichier(s)           21ÿ014 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\25
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/07/2025  09:44            21ÿ471 057c423aff31a66a5f659607dbb56d40469972
+11/08/2025  16:48             1ÿ230 4e03dfc03ffb4f1a1b4bb6d0c280fc8bef89e6
+27/08/2025  15:16             2ÿ051 72f9af13b82767d0ecb406f3175afc1e034683
+               3 fichier(s)           24ÿ752 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\26
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             1ÿ071 2967ac479a7821d0b46b99a325be9ffee47e4a
+               1 fichier(s)            1ÿ071 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\27
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  12:46               915 1788135f35a4b1d807bcc4cd7264a70b12d891
+11/08/2025  16:48               463 f85e9110e8416a5dbfe05dcc5b95e2695f3ee4
+               2 fichier(s)            1ÿ378 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\28
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               677 07058c8bf9da76900afd933f56de90035a8325
+16/07/2025  09:44             2ÿ870 123a632b5642e1b0b3bf534ff97daec8434483
+11/08/2025  16:48             2ÿ394 4a0071c850b5a2f1ba86f16775c5c0da9fe082
+11/08/2025  12:46             5ÿ898 a1a21902674316526ed67bf8f4498e5c172130
+16/07/2025  09:44            54ÿ545 a522dc4c52ebaee6773391d16bb7f864fb9d9f
+               5 fichier(s)           66ÿ384 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\2a
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             5ÿ004 1de787e619439499a212302e7339fc468ff5f6
+               1 fichier(s)            5ÿ004 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\2b
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ374 06a7cb0ba81ce9a8be7978c1f37b6907874459
+16/07/2025  09:44             1ÿ515 26ff88b41676baab65a35bb1254928d59c0467
+16/07/2025  09:44             4ÿ076 435dc50821d3b255f8b6ad12da40ff46d9875f
+16/07/2025  09:44             4ÿ102 8fcb086135c62dee6dce4fb46bb81b5a918270
+16/07/2025  09:44             1ÿ122 c665fa89543e94f41a99469c89ea40c2ed424d
+               5 fichier(s)           14ÿ189 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\2c
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             3ÿ597 147ac163d09f65d7217bf14255d23cdf3f40c7
+11/08/2025  16:49               500 4fc51173a6ce8bd88663ca8782f117e2799d7b
+               2 fichier(s)            4ÿ097 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\2d
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ513 637f3ecb552330c9a88b862620a894517eb38f
+16/07/2025  09:44             7ÿ882 914eabeadc2ed36854f6fba0abee931e4485a0
+               2 fichier(s)            9ÿ395 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\2e
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44               655 337fcce425deb386f8b4ff8e228d282d291a8f
+16/07/2025  09:44             3ÿ230 5504f53f0c1dcbd2ccf8b41bf93c39d2c27b7a
+16/07/2025  09:44             7ÿ519 655c73053c78d2e2aaca22aeca7ce3a8c150f1
+16/07/2025  09:44               238 6d220bd2ee07a4d52aa09cba8fe84cab80038c
+               4 fichier(s)           11ÿ642 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\2f
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             1ÿ762 2ecfa21dabe90c8cfa15e1738f2cd3c149d2a2
+16/07/2025  09:49               187 5ae9dd9a8fcd565a6b5b094a14791fd558df2c
+16/07/2025  09:45               325 7dcff7203071042eca183b4352e153f3d6ec21
+11/08/2025  16:48               705 bffb5c784c21f114ed90297a1af51bd908d428
+16/08/2025  12:16               361 fb366be8e9e84326727568107ef663d3dbea25
+               5 fichier(s)            3ÿ340 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\30
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44            10ÿ522 41be587e6b02ea1011f38ab2f4b4880785d550
+11/08/2025  16:48               847 58c0722e7c7e818e5931a0991b98c7546082ce
+16/07/2025  09:44             4ÿ538 5d5bb2eea91d8bb79e80978588955f7e166b62
+               3 fichier(s)           15ÿ907 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\32
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+11/08/2025  16:49             1ÿ445 1849bd3216d780ebf594aa69c6df16d773e0df
+27/08/2025  15:16             3ÿ162 4e9fecf3aac69da4bc7c40ed5cca1a75254dae
+16/07/2025  09:44             1ÿ210 79c1b7d72f40a35eace933562ac44fb1ec5ca9
+16/07/2025  09:44             1ÿ012 a6c598bcd45bca0518164dfd4e2f874e0425b0
+11/08/2025  16:48               568 c404f4fd1adc176290db3a5a55babd6a1ee689
+               5 fichier(s)            7ÿ397 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\33
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+27/08/2025  15:17             1ÿ080 1160cc510e6a20cf29e2d87e7f407a850c9665
+16/07/2025  09:44             2ÿ645 7469d7640e7ee2d2b79ecd956613e44cd7195a
+11/08/2025  16:48               584 9fca4c1a17964df8f9bdf6c1427f047c26c277
+16/07/2025  09:44             3ÿ901 c4788664426fc7e1dab3e9e9eda8b1df59b056
+               4 fichier(s)            8ÿ210 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\34
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             2ÿ739 7ef5f0893a11ec318055afb0f08b3b6a002bbd
+16/07/2025  09:44             8ÿ403 9eefbecbeef7676a5c4fb75d21e898d02254d1
+16/07/2025  09:44             1ÿ897 cb9bef89036cb17ad9160a87963168c2e4f0e2
+16/07/2025  09:45               298 f74c1c899d52dd4e2b8314423b4b66aeb96bb9
+               4 fichier(s)           13ÿ337 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\35
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  10:32               829 316ef31eec1a7007c8d93c05d94c22bfd86e0d
+               1 fichier(s)              829 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\36
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:49                53 3f155d88e3c34f2ee2368df4816bad4d856eca
+16/07/2025  09:44               678 774e934f5108a1bc0ebdbbb090e664f58ad3df
+11/08/2025  16:48             1ÿ616 e02305eef997d6dd85d43cee4d5be162aa36f3
+               3 fichier(s)            2ÿ347 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\37
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ529 51ca635f7184c83a8f8e7227dde6062fe1244c
+               1 fichier(s)            1ÿ529 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\38
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ579 01efbfaa684e681d44e5c90fe9766569a7adeb
+16/07/2025  09:44             2ÿ064 0491a831c2dfeebd280fd0ed99270dbd112275
+11/08/2025  16:49               334 0b3dec24b6c69b8a55d2be1c503b8a66287504
+16/07/2025  09:45               515 3ceac5b3d36a4c720b8ad96c73e20dc9ae94a9
+               4 fichier(s)            6ÿ492 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\3a
+
+27/08/2025  17:21    <DIR>          .
+27/08/2025  17:21    <DIR>          ..
+27/08/2025  17:21             3ÿ102 b528aaef467b51156d93d4b52395164fb4948f
+               1 fichier(s)            3ÿ102 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\3b
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/08/2025  12:16               132 26d4de54696b9111d84f04e02daeed885e13e0
+27/08/2025  15:16             3ÿ712 c746c99e3ffab217c0079ed7e4891d4eeb8daf
+               2 fichier(s)            3ÿ844 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\3d
+
+27/08/2025  17:21    <DIR>          .
+27/08/2025  17:21    <DIR>          ..
+27/08/2025  17:21             2ÿ823 18670a5d8abf46c5b1a50c6c4ac7d16bb4fe0c
+16/07/2025  09:44            10ÿ372 a5a7f63cfe80be2aa3880a96af8cf0d9f4bc79
+16/07/2025  09:44             3ÿ335 ac4172372f34ae80a514e6602901e1a89a7d08
+               3 fichier(s)           16ÿ530 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\3e
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16             1ÿ117 2ff0f2b6a2c49d6b682dc24c74f22e016c7f76
+16/08/2025  12:16               298 379c349aead7e0a07cac1d15f346881ff08f2e
+               2 fichier(s)            1ÿ415 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\3f
+
+27/08/2025  17:21    <DIR>          .
+27/08/2025  17:21    <DIR>          ..
+11/08/2025  16:48               422 00298c8838f6111b263b04ec3847a073bd793f
+27/08/2025  17:21               923 5195f077a750331b930b452804e1bbdb81f30e
+               2 fichier(s)            1ÿ345 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\40
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ243 244e0522e9cea9a25b278d2a5ddb92950da6f2
+16/07/2025  09:44             3ÿ404 36b18b45c53b940e7bb2b022592c5fc9e118f6
+11/08/2025  16:48             1ÿ863 a7e4fd7e52a0433e42b5502cf4d9a23cf11e2e
+16/07/2025  09:44             3ÿ477 bf42403992981db198cfa4f870cbaf33ec08d7
+               4 fichier(s)            9ÿ987 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\41
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+27/08/2025  15:17               286 20a9f760f0f47020693f89779aaa81b9668ca8
+27/08/2025  15:16             2ÿ137 84fa753c78d5740e2a4d24616b84b6abdf3417
+11/08/2025  16:48               171 ad2eed7a4b37694499b794fec675344d812da9
+16/07/2025  09:44             2ÿ975 b8a8558c7afbac4727a4cb20b46e858de990c7
+               4 fichier(s)            5ÿ569 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\42
+
+27/08/2025  17:21    <DIR>          .
+27/08/2025  17:21    <DIR>          ..
+27/08/2025  17:21             1ÿ661 ede4c721e2d457d9f68ccc555c2fd3e7dd3b94
+               1 fichier(s)            1ÿ661 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\43
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ469 013f85cf6c4f9fc895d2d61f877af12bb62a17
+16/07/2025  09:44               480 0e7f397c5eefc7305f058484a1ebe1b7578b1f
+16/07/2025  09:44               963 c9356b2538f304e5e5f846a6cbcac0f6f6e69d
+16/07/2025  09:44             1ÿ836 e1946ec392edf6e9980ab4def3651947393e5a
+16/07/2025  09:45               161 f5b97b1b7449f6cf962cde42daaf0b7cc7db29
+               5 fichier(s)            4ÿ909 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\44
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:45               923 382ea83dd4c8c260f2ccfc9ba9328099ef71da
+16/07/2025  09:44             1ÿ933 d4e8df66f782935d9da22150734e30b572018c
+               2 fichier(s)            2ÿ856 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\45
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44               245 698c2a69ca3149a727d4f595f6d5fcc1203a91
+16/07/2025  09:45               637 a49a64e1f579bdbc100b0746d0f8cb8545e615
+16/07/2025  09:44            53ÿ299 b357d369a6ee2f658bebc1f68d54d140df4522
+               3 fichier(s)           54ÿ181 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\48
+
+27/08/2025  17:21    <DIR>          .
+27/08/2025  17:21    <DIR>          ..
+27/08/2025  17:21             1ÿ084 6b6945b06de8a399c2663fd7c2b145ae9d4500
+11/08/2025  16:48             1ÿ668 c123ae6f6b6bee1186517e7d6557fb2fee8055
+11/08/2025  16:48               494 fa6f60fe874e506b6f2a0cfd3b482037f744ab
+               3 fichier(s)            3ÿ246 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\49
+
+27/08/2025  17:21    <DIR>          .
+27/08/2025  17:21    <DIR>          ..
+16/07/2025  09:44             1ÿ103 5eb504afd37cfbf452590e73fbca1ab6dc76f8
+27/08/2025  17:21             1ÿ246 f5b12920dfb48d57d8d0a085800248b6cbc93f
+               2 fichier(s)            2ÿ349 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\4a
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               386 811ed5e1746c4c6365845c025ca2dcbc63bb1c
+               1 fichier(s)              386 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\4b
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+16/07/2025  09:44               232 019f841fc6d49034fc01ce935ee8c55ec10732
+27/08/2025  15:16             2ÿ347 135537c83549f4410410f1b92a91262c7b2aba
+16/07/2025  09:44             1ÿ904 451ed4b28c92368ddeeb93dd7e74e9ebcf11a8
+16/07/2025  09:44             1ÿ885 a24fb9f9fc32ee654fc86f0f3f28352d1d9a3f
+11/08/2025  16:48             1ÿ745 d826fb2652c285e2d5ada788827e5d0085c31f
+27/08/2025  15:17                54 e08d70a2ed96bd91d4b2327d3febe50afcc779
+               6 fichier(s)            8ÿ167 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\4c
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ143 68c5e6d5ab105d94acc82d276ae758a083a616
+16/07/2025  09:44             1ÿ399 c05ff39a0b3d63f2375737214b42d0cc8e6ba2
+               2 fichier(s)            4ÿ542 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\4d
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:49               421 64c2056eb2d063c8a2f81e3ec27b12cdbf207b
+               1 fichier(s)              421 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\4e
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/07/2025  09:44             4ÿ354 04bc79f9a6950573306e5ca6d952934fe9583c
+11/08/2025  16:48               501 0e83b75517c9cd7ca00aada71ab1927267b50f
+16/07/2025  09:44             6ÿ386 824f02301df91664b9453d4de7e82583d5d2b3
+27/08/2025  15:16             2ÿ081 a875834d452e8befe23fa499ab89e09a19c5c0
+               4 fichier(s)           13ÿ322 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\4f
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             2ÿ951 13a286028fde367367f789a462c49bea16619b
+16/07/2025  09:44             6ÿ181 3d2157e4cd6b3a1d3e576f3532dbe97c1f48f0
+16/08/2025  12:16               163 8975ac7c7a84f8b7f39ede86cf256d342deda7
+               3 fichier(s)            9ÿ295 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\50
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/08/2025  12:16             1ÿ082 32fe3dafce2b544e8a81c532618997c89e62f9
+16/07/2025  09:44            10ÿ028 50b7cefbadd29d307baf26d794d345598187d7
+16/07/2025  09:44             1ÿ254 790a3cb6a80810ca26a8db980c006d900f6cb5
+27/08/2025  15:16             1ÿ380 bfb60a05925cdb750ad4756e6ce22201a416a2
+               4 fichier(s)           13ÿ744 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\51
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             5ÿ264 47343a522b9f6b2728f8e9651d0784ec3527a6
+16/08/2025  12:15             1ÿ884 cb1b9d2449d606ab9b3389edfbbc2d4da0adba
+16/07/2025  09:44             3ÿ104 d98915171b41a91f45f12412c9ac17e5dfb609
+               3 fichier(s)           10ÿ252 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\52
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             2ÿ938 07545f816a6585b0bb5213da8d3f032df5a29d
+16/08/2025  12:15             1ÿ623 1904600b04b62653fc5fd1b42b1e7c04353ca6
+16/07/2025  09:44             2ÿ696 4e82c0f31656cdab40f05448d358c08cdf5192
+16/07/2025  09:45               233 6e8b4e7ef8a0ad3abb1de7d1cd7b9ad1137147
+               4 fichier(s)            7ÿ490 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\53
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/07/2025  09:44            16ÿ088 4d533433ab94ca11eb8dd3eea559c7f1c0f50e
+27/08/2025  15:16             1ÿ488 a1b4256eb545d16159e78e885eab1271bcd1bd
+               2 fichier(s)           17ÿ576 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\54
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             3ÿ254 5ba6cc39122904924605ba57ac781cca9f54fb
+16/08/2025  12:15             1ÿ090 a82f2547a77145066cd4f1378dce2a9417ae91
+               2 fichier(s)            4ÿ344 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\55
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ864 84b61e88e151f138d94b87052b0c6f6bcf7f1a
+16/07/2025  09:44               913 dd6dd0aa6856d5e145e3ca0cbdf29202f871a0
+               2 fichier(s)            4ÿ777 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\56
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:15             2ÿ212 d66f4725f35e028e8a53e35d53001eb4e0e1d9
+               1 fichier(s)            2ÿ212 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\57
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ661 1ec923a0e2f20d058fda3728aab3ccfb68eef2
+16/07/2025  09:44             2ÿ501 478864fcfedd452af89b151d9668217c3839d2
+11/08/2025  16:48               330 ca8d7cbae357fa3d84cb695cc59d56761b3716
+               3 fichier(s)            6ÿ492 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\58
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               572 0f9af23c1435a31ec3ebf1cd68048c1e866c70
+11/08/2025  16:48               369 1ac216f0734f48006b4137d0f9dc6c08bd000a
+16/07/2025  09:44             1ÿ539 49b454e00335de0f906e18dcd7c72c2c746a88
+16/07/2025  09:44             1ÿ968 7977a73f3cb29fcd107088fc2b0d2125aca3a0
+16/07/2025  09:44             1ÿ377 90574b27e5cb9483d34455c9b97ed0156006be
+16/07/2025  09:44             3ÿ966 c3981bfbe2d9d1cc0ddfd42f64f3bf6958e436
+               6 fichier(s)            9ÿ791 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\59
+
+27/08/2025  17:21    <DIR>          .
+27/08/2025  17:21    <DIR>          ..
+16/07/2025  09:49               828 1cacb4130f9831de3b73016c458162f553ba37
+27/08/2025  17:21             2ÿ517 48762b24e8f815f011a4163e2968b839b34e72
+               2 fichier(s)            3ÿ345 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\5a
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ778 3174b69965d9adcb3ca287fa41c6ae54c637eb
+11/08/2025  12:46               889 ebde46ecf0a4108b6d31ebb1f2f5a9ba7812c3
+               2 fichier(s)            4ÿ667 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\5d
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16             1ÿ878 5ed9df46f299b4486914e8c5de7403764f920f
+               1 fichier(s)            1ÿ878 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\5e
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+27/08/2025  15:16             2ÿ739 9b1b4197409b6378ab3a03cca5e75ee5880441
+               1 fichier(s)            2ÿ739 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\5f
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/08/2025  12:16               163 cd0e87de59d7ddd8f47bf2c59ccfd3dc3f3929
+27/08/2025  15:16               860 d302da9363333b40cb9032fc7d40b5d0c256f6
+               2 fichier(s)            1ÿ023 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\60
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ765 84e16df3af14df09cabacea53f1f199e7050ce
+               1 fichier(s)            1ÿ765 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\61
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+11/08/2025  16:48               249 07ee477756e1f0c85684c4686bee89392e562e
+27/08/2025  15:16             8ÿ336 43591f167a2e880406ed94722b43ccdd0b7a6a
+11/08/2025  16:48             1ÿ651 740a38fa3faa456159466766a92581b976d565
+16/08/2025  12:15             1ÿ254 7dc8ff686e1b45b6b52b69f83ab075297b0944
+11/08/2025  12:46             1ÿ627 83babddb9b4ef2dbded1dec2e8c134010d59c3
+16/07/2025  09:44               962 bd3fdb59b154e3089a47ae61b4e51d97d63b5e
+               6 fichier(s)           14ÿ079 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\62
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:45               151 da2a8937ef42935c89975277c80170fe7c4e53
+               1 fichier(s)              151 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\63
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:16               449 40aecfdf294e105d6837f94ddc3f5399faedf8
+               1 fichier(s)              449 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\64
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ052 03ef92898a896f3ec72cb8f2e1235d67f81a1c
+11/08/2025  16:48               570 d1260b50ad2b45cc75814a53a1940c84234210
+11/08/2025  16:48             1ÿ397 e9d0b39ed3286ecc977bc9245256e34f18b73d
+               3 fichier(s)            5ÿ019 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\65
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             1ÿ689 ae09f95819ca5841b87ffe81e0e9326318cd75
+16/07/2025  09:45               311 cf2dd607fff228486817c4ae78f197de1290e8
+               2 fichier(s)            2ÿ000 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\66
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             2ÿ692 9f7dcbc1dea331495352e21ed24eaf4424de41
+16/07/2025  09:44             3ÿ488 a4240e7cbc117a3b8d859032f4be23b84344db
+               2 fichier(s)            6ÿ180 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\67
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16             2ÿ199 1b54d569739a54ee0f89b9496addbabea716d1
+16/07/2025  09:44             6ÿ105 60bf9a940d4b9b2364491eb7788b70d6ca3432
+16/07/2025  09:44             3ÿ857 ab05c77acc933646093cd1183e92c4028c3231
+               3 fichier(s)           12ÿ161 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\68
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:45               228 0ff4bcb829326818321e4e9b6843eaf036b127
+11/08/2025  16:48             3ÿ753 4acb12c44dcacd3f0c73ef69aa88d756a0fb99
+               2 fichier(s)            3ÿ981 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\69
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             6ÿ502 152fd9ee564df63ffed92c5dde81c939952fa6
+11/08/2025  16:48             3ÿ608 26f22d4ddf0d9d6345394610ac9a73a83d627c
+16/07/2025  09:44             8ÿ722 a713cd7235a328fb243dc6e50f8aac5b64d70b
+11/08/2025  16:48               139 dec8250fb0ab9b50517e8ebf5c3b9109b98251
+               4 fichier(s)           18ÿ971 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\6a
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+16/07/2025  09:44             1ÿ742 47279c9501e3896c3621f148ee781700079012
+27/08/2025  15:17                54 703048f40e08ec477ab77435eed0f2528525c2
+11/08/2025  16:48             1ÿ853 d5d05d0dacf74138044384c23f319f830482ae
+               3 fichier(s)            3ÿ649 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\6b
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+27/08/2025  15:17               168 c83ad9227b4c0472fb689153c1d0fdbd5e2183
+               1 fichier(s)              168 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\6c
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             1ÿ663 2b5712793d7eed6fec0f72e80ee3cd2ccf79ea
+16/07/2025  09:44             2ÿ303 8c7990c75bd1a05a6a7588956ba03a1e8c2724
+               2 fichier(s)            3ÿ966 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\6d
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ002 d1dbda030974063af28f5da820b39a9afa5644
+               1 fichier(s)            3ÿ002 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\6e
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  12:46               195 61cd35dcf37ad2c4100e7a5318f6ce666c4fec
+16/07/2025  09:44             2ÿ090 f91b2ad4e702d5d8c6805dccd57ed3833f90b8
+               2 fichier(s)            2ÿ285 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\6f
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:49               387 801614a284922646e87cebab57cec51b7ae782
+               1 fichier(s)              387 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\70
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44               117 9c70cc50fa28f54c1e2f302871cca8c061c4e6
+16/07/2025  09:44             1ÿ287 f0f02321fbc18552474f89e0dd30cebf346517
+               2 fichier(s)            1ÿ404 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\71
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:45               205 94137ca441bd2e369e09267368e818d5af658a
+               1 fichier(s)              205 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\72
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ674 80d9a1aba6e0a8642decca0e4e1cc752dfdbe5
+11/08/2025  16:48             1ÿ517 9a4c65b2433fe87d2572a9b88b7d2d8435a1f4
+16/07/2025  09:44             2ÿ196 baad9fe4d474a34332110813ec14477035bb6b
+               3 fichier(s)            7ÿ387 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\73
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/07/2025  09:44             3ÿ295 07d23a988b87b422b063a5d542365be764f001
+16/08/2025  12:15             1ÿ320 11fec48aa88b31e40e665a972abaabc1c8299c
+27/08/2025  15:16             2ÿ502 a8d49f692aeb4c35ae5dbc604015c6a3783ad2
+               3 fichier(s)            7ÿ117 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\74
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             1ÿ057 0141489bacbcbe8321bd40645fbb904d83ed34
+16/07/2025  09:44             3ÿ969 04769d1cc6d27bc46c4a0f7604010daf037a3b
+               2 fichier(s)            5ÿ026 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\75
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44            15ÿ714 36980f55f94a1a98633e26ffb99eb5acbc0e73
+16/07/2025  09:44             1ÿ738 7caca927bb317defcb1bf88c8ca2cfe8f46e49
+               2 fichier(s)           17ÿ452 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\76
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+27/08/2025  15:17               494 0f55e2b3dfa713fb4e91707c6494980c525cd9
+27/08/2025  15:17               243 2cad26929ffe19f204edd9ae6db54f752d3f66
+16/07/2025  09:45               162 998b3dbb7b38c42c858f3dcba1e0af1520d501
+               3 fichier(s)              899 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\77
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ017 55e1e08e2279223d77403e26852ce9e6deb5ba
+               1 fichier(s)            3ÿ017 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\78
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+11/08/2025  16:48               674 6f907447d49082d411d4d0d7bbf2514f10a338
+16/07/2025  09:44             2ÿ294 72cef3c060ab16b9784383cb42ca6127b3129a
+27/08/2025  15:16             2ÿ854 9978bcde7a5e4c49872f06378d46a4fb0f8a90
+11/08/2025  16:49               915 b3509284789b436ab6cb1852c22929029d57a6
+               4 fichier(s)            6ÿ737 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\79
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44               844 22bd60eb4ad30489f14204a6663b9472e100a3
+16/08/2025  12:15             1ÿ125 58e7e88e8848b7f21830808a5f4bb6e7edf538
+16/07/2025  09:44             2ÿ868 82bfc7089f39fee3b79cf7f5bcdfa82ec95fe1
+16/07/2025  09:44             2ÿ351 a049746cbb675dad9e054048a5ff90ae973532
+               4 fichier(s)            7ÿ188 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\7a
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16             2ÿ025 56421fadc917f698ba196d99c7e5f2cb1a78c6
+16/07/2025  09:44             7ÿ381 a77170a8f22a22a21c4c00d115632f8a6f0c3f
+               2 fichier(s)            9ÿ406 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\7b
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             4ÿ420 5fec9b0ce6e2c15a7f57ab635642ac78c8469e
+16/07/2025  09:44             2ÿ159 944ec0496c4437d2ffcfb99d2e983fa876a546
+               2 fichier(s)            6ÿ579 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\7c
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             2ÿ490 18ad59dfc37f537cfd158e9222062fa9196e37
+11/08/2025  16:48             1ÿ347 2cb5e4cf016064a1b77740bd60d4003fd4d83a
+               2 fichier(s)            3ÿ837 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\7d
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             1ÿ222 b704fd48b2efbcc4fa2af7659fa66a5d84c8d9
+               1 fichier(s)            1ÿ222 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\7e
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44            82ÿ703 ec4e6d9a40ba3548c11c5a8d576f7195bc0c5f
+               1 fichier(s)           82ÿ703 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\7f
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             7ÿ450 db7fbda88cc46586acccc760a7bcba6f01cda2
+16/08/2025  12:15             1ÿ313 ebf60b30bda443314126dbd4c906ae645e7f8b
+               2 fichier(s)            8ÿ763 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\80
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             9ÿ774 84ff481a70e4f0af2a33d102c719b8ff3e3285
+               1 fichier(s)            9ÿ774 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\81
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               571 196b3922e6c0883d7cf9278d50bf4a38be5ec7
+16/07/2025  09:44             1ÿ004 45d088fbcf81a3ffc764916fb36a4cc232f038
+16/08/2025  12:15             3ÿ304 4ee0555d46510ceea9ebf7e3e658c67373bf3b
+16/07/2025  09:44               432 bf7f1d6ac686deedda6d76c7677183597db9f2
+11/08/2025  16:48             2ÿ358 c7d83aacc2e705d395dd59f34d3862d1893da7
+11/08/2025  16:48             1ÿ221 f2a8b4bd9cbc0ceea5b03e7b08e293043e21db
+               6 fichier(s)            8ÿ890 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\82
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             1ÿ766 9473b28c5e53c7f89c68808151f7e45d5dc89e
+16/08/2025  12:16               105 f5be2eec0637c3957ba1f8f11e43b3ee4eaec6
+16/08/2025  12:15             1ÿ780 fe0b1113aa6c38ed0e17e245c2f1cba045b007
+               3 fichier(s)            3ÿ651 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\83
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:15             2ÿ145 c1d538887f43f23e2d73fd19a4f736599d514f
+16/07/2025  09:44             1ÿ519 ed1f8ce95387f2b4be05a9a0e0cdc24fda9313
+               2 fichier(s)            3ÿ664 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\84
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ889 39b3beeb6cece68c23d826f6b7352cc915f057
+16/07/2025  09:44             3ÿ923 fc44892c4df35176d9166dcf9946b336cc22ea
+               2 fichier(s)            5ÿ812 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\85
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             2ÿ553 4722c1b56aac33a616953a47928d1573e21280
+               1 fichier(s)            2ÿ553 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\86
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ156 c0bf8f1832eb8cb96b7e52695c8192305d1819
+16/07/2025  09:44             3ÿ453 c9b92462eb4694bf3003c94a462b25b42a02fb
+               2 fichier(s)            4ÿ609 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\87
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ470 67ce7dddc4c0c723f7ac25090d70d02def0ab7
+               1 fichier(s)            1ÿ470 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\88
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44               617 b34f40940d01e688cc4937931f9c2d345bb9e0
+11/08/2025  16:49               130 d08ef981bac0d9fb6f163d28c74198c0824974
+               2 fichier(s)              747 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\89
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ235 86e803c3552205c46887d4e9cf8e79d9cf6138
+16/07/2025  09:44             2ÿ805 d4e223d28a9fb547e9f9bdc2446139d2d066e1
+               2 fichier(s)            6ÿ040 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\8a
+
+27/08/2025  17:21    <DIR>          .
+27/08/2025  17:21    <DIR>          ..
+16/07/2025  09:44               296 234331cf90c4b3569d00c80d91357ed38aeb0b
+16/07/2025  09:44             2ÿ348 51cb02eb53c967c84290792d3cb7d8d3182afd
+27/08/2025  17:21            21ÿ274 902e9b12fa3fbd7c0611cdd0bfe8116f3aa620
+16/07/2025  09:44             2ÿ013 f7f42d946c41795b04c613e580ff0bb1ffbd82
+11/08/2025  12:46             1ÿ344 fa0af92b8119305a8b45753452040a5167816d
+               5 fichier(s)           27ÿ275 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\8b
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               575 6cc878fd6c7c041dff8fec2d261a950f1d709c
+16/07/2025  09:44             2ÿ821 c83993fd00afddda1c6c041edca1a55924b83e
+               2 fichier(s)            3ÿ396 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\8c
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44           147ÿ451 439a28383d40e569d2a771dd9f4fb5e8092111
+16/08/2025  12:15            19ÿ684 c5764c45144d3956a3b2904eab0d964aa31c5c
+11/08/2025  16:48               502 fa33d73a6a6b283c678cd116fc4b53e996ac99
+               3 fichier(s)          167ÿ637 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\8d
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/07/2025  09:44             3ÿ148 0280ea092e9d87311025c5779dc5c1ae25ab02
+16/08/2025  12:15             1ÿ665 67c35ddee3e00b27c09c1b57016ef103f80c6f
+16/07/2025  09:44             3ÿ354 7902cd477a064fad3d8d5643d38e40589a594f
+16/07/2025  09:44             3ÿ587 81904e4a467bd724ea2187aabb7b5f897c9ff6
+27/08/2025  15:16             2ÿ449 8adde6f71ea52e94635137309b9b5dbd7e11ae
+16/07/2025  09:44             1ÿ601 94a5da77da957e70bdd904f599394da86a3ff0
+16/07/2025  09:45               437 df3802ef9876b354ff126d6f60434092885598
+               7 fichier(s)           16ÿ241 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\8f
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               368 63b31548ed529bf548a5f715d41c71b8bc1c4d
+16/07/2025  09:45               144 c562553b73d74b08ac8aed8814985f0f5c0a30
+               2 fichier(s)              512 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\90
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               368 3da7cf3b989a7dc8b32599084493a3a8b0568b
+16/07/2025  09:44             3ÿ350 6f09c1ba1d880aac23637cabbb33073f1ef35a
+16/07/2025  09:44             1ÿ659 a230e6b95106cb1aa6b2a0b00ada8163b6d5bb
+11/08/2025  16:48             2ÿ426 effc6e8f4c4649e851085e5f25143159af0413
+               4 fichier(s)            7ÿ803 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\91
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               145 1b8986274222dfbd62f49154908074620efbba
+11/08/2025  16:48             1ÿ761 688120667161d4acf8066f456d67d31a2bc0d9
+16/07/2025  09:44             3ÿ224 9e44e8223aef19ddf1a5c0fdbf7048b2f17a75
+16/07/2025  09:44             1ÿ615 c4dba2904326a54ba2073fc45ea8c76bb05138
+16/07/2025  09:44             9ÿ057 ef56025667914eb575cb628552b1146fad9e14
+               5 fichier(s)           15ÿ802 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\92
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44            13ÿ296 2b81d8d1784cd000b555c5ddeffb0d6073b0cc
+16/07/2025  09:44             3ÿ110 3402dd168d8e46c32b9a5cb2b770c9070182e6
+16/07/2025  09:44             3ÿ671 4e7c53a0eda2b5f0d7070e064c56236a92ec7b
+11/08/2025  16:48             1ÿ215 7759b9a6cd489c0390704b384e96cc6ca8edad
+16/08/2025  12:15             1ÿ802 fd3113801552f2a409e3cd89be66d95995c9d7
+               5 fichier(s)           23ÿ094 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\93
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  10:32             3ÿ696 81ab389af878cc1889ae4bdb010219bb5359d3
+16/07/2025  09:45               105 a0f8d1d5f1bb9cb3f69b000a6ede8c6c73ffe5
+               2 fichier(s)            3ÿ801 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\94
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+16/07/2025  09:44             8ÿ255 351bbb9a7fa33097e9af1adde99d2dceab161a
+16/07/2025  09:44             1ÿ650 6d78a2a39398958f54d3e9a800343f2ede22f5
+16/07/2025  09:44             2ÿ676 7eefcc6670e031abda6f50f06fb71d0bc8c207
+27/08/2025  15:16             1ÿ391 bffe92ec1113e14de0ea66a9bd0bca501bd0d1
+27/08/2025  15:17               636 c0af557ed3b34d81fe40529493156f95a71494
+               5 fichier(s)           14ÿ608 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\95
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+27/08/2025  15:17                70 09a851b08ad6fb60d22b6283d27f88fc0c8c20
+16/07/2025  09:44             1ÿ004 973dc6199bcf57b2a335f0769261b83b00410a
+16/08/2025  12:15             1ÿ230 f6d0c9dc06f2ffeb165e51d189a1bbe4303ca9
+16/07/2025  09:44             4ÿ037 ffd6c79b912e63dc3a9f4c507c7e64b50c9e3f
+               4 fichier(s)            6ÿ341 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\96
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16             2ÿ054 15df3ffad633d38a798328f4944ab69f47ce49
+11/08/2025  16:48             1ÿ368 c6ef8ed6e911b9d91ef1ce065f0bd948ffbf21
+11/08/2025  16:48               560 e95bc80edb266e25bc199d812d11e693eed3a2
+               3 fichier(s)            3ÿ982 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\97
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ623 6f14d05de989500f24b70175147cd08af70e05
+16/07/2025  09:44             4ÿ469 72edd709c9d27c8327659e49b6e605a89132c9
+11/08/2025  16:48               274 ecd701c884d3ebe18988ab405dc7298f4840a8
+               3 fichier(s)            6ÿ366 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\98
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:15             1ÿ114 bfd82974a3e7991e521f83cd97ca58a9e02b33
+16/07/2025  09:44             6ÿ841 c3c3b6b2d997b823fa020780f7fafc278f90e9
+16/07/2025  09:44             2ÿ067 e2e311f7147c49b7050bda2075a5507a179958
+               3 fichier(s)           10ÿ022 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\99
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16             1ÿ941 0db250388fe0420f4ae901c0234134f8b55a8f
+16/07/2025  09:44             4ÿ234 3fb87fd7835ff1022d9797b726d483de189286
+               2 fichier(s)            6ÿ175 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\9a
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               631 46262f581eb4258bc237fbcb9bf868d3423867
+16/08/2025  12:15             2ÿ123 80acda84156f1a99e89426ef1c83e3e72e0ae5
+16/07/2025  09:45                55 8b40fa4a075d890fb4780fbf788c417f339e71
+               3 fichier(s)            2ÿ809 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\9b
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+27/08/2025  15:17               263 5bb5949b7c39df01e2ebd073d6b44eec7ab04b
+               1 fichier(s)              263 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\9c
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:45               612 fd7444bac84ba824cf0130c4e6ed33675b0ce6
+               1 fichier(s)              612 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\9d
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ768 385e243f19657a149a48e89811ab504aba2fbf
+16/07/2025  09:44             5ÿ878 b8976c15c3191098be05c8eb9be62dd757e233
+11/08/2025  16:48             2ÿ573 e6750c26cc70300e65f3a66a943034dcb27522
+               3 fichier(s)           10ÿ219 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\9e
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44               765 2088043ea8583c0727dc5b6091826cb13d1725
+11/08/2025  16:48               473 3f8cd010328d3914b852379419dca777c2d82d
+16/07/2025  09:44             1ÿ483 48832a70591f9b8875d6ec3efb8d87330068d9
+11/08/2025  16:48               893 e6c34d29e29ab42c9242370001e1ed817423df
+16/07/2025  09:44             3ÿ302 f7878c3519e6894b1333692e2d61630f324dcd
+               5 fichier(s)            6ÿ916 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\a0
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:16               611 340033032b8158fbe2e73492145e6fad653dfd
+16/07/2025  09:44               508 ace0b11ee1388edfc11965c2969899165872f3
+16/08/2025  12:15               415 b11760e69d7d5dbcd54e95f7932f8f59cc480e
+16/07/2025  09:44               244 d30dedd5321ab3f7716a1e9da8100d4a85826f
+               4 fichier(s)            1ÿ778 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\a1
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+16/07/2025  09:45               301 2bdf358744dd40ac9380392be34b17090ff1c8
+27/08/2025  15:17               198 74a9a69f477ed715f89671a88b05da8083cf5d
+16/07/2025  09:45               152 98e3aa9fccdd30aa9bac4626d28afb17cdb17a
+16/07/2025  09:44             3ÿ345 c8125017b51294001fc9acef653b01c49d8621
+               4 fichier(s)            3ÿ996 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\a2
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+16/07/2025  09:44             1ÿ602 046521a5221a3ab8977db51d91fbab8bf9c5bd
+11/08/2025  16:48               613 9f96a26788135258386ffffde5b48265ea6720
+11/08/2025  16:48            15ÿ520 c23252dff58aebc0dbfac20ef7685a7000b2b9
+27/08/2025  15:17               118 fa8e621f49e88e31b71a0f58972ce170c46883
+               4 fichier(s)           17ÿ853 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\a4
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               379 c3565fa0dbfcd81f83864ed9a2d92114544089
+16/08/2025  12:15             1ÿ412 ec7f428951004b1bcd9092fab836e7d65175bf
+               2 fichier(s)            1ÿ791 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\a5
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             2ÿ265 53212a28f626c77f4fd054e81ab9072955079d
+16/08/2025  12:15             7ÿ739 5dbe05c75b557ae950d380ecac0405443f745f
+16/08/2025  12:15             1ÿ974 a0b53a0ec886bbab39692fc934a4fc2e2326c5
+16/08/2025  12:15             2ÿ790 a672f6b8d26eac3b7b4e1a53a04844126223b7
+               4 fichier(s)           14ÿ768 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\a6
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               703 8c6cfbd712ca71fba9870a09f488412eb9b1f9
+11/08/2025  10:32               162 b17976a055668e4093587f993db3d3d3fb2e6f
+16/07/2025  09:44             2ÿ000 ed21bb0b4f62cf43b871a87ff80ea949b7e71d
+               3 fichier(s)            2ÿ865 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\a7
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             1ÿ672 d87bf3ef2a97e84de2aa4e1b46c4dbb9fec239
+               1 fichier(s)            1ÿ672 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\a8
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:15             1ÿ712 68ef6e85f13d0c370d70c604a5337531f185ca
+11/08/2025  16:49             1ÿ212 6e8368075f50fd44e096a9437a4989f503df94
+16/07/2025  09:44             1ÿ730 d28ef4adf1e122ac7097c942c3b10c9a807927
+               3 fichier(s)            4ÿ654 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\a9
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+27/08/2025  15:17                54 d45b3efa1e7d05a38f3b59e7ee5d0806e9ea38
+               1 fichier(s)               54 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\aa
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ744 1ab79e15263980daff803376f00fffe794f191
+16/07/2025  09:44               885 4a4aaa3daa263d72f8860ec170272a1a97c458
+11/08/2025  16:48             3ÿ146 ab45f57065ef9f05eb38354152c408236b488d
+16/08/2025  12:15             2ÿ905 f97da5ae64ea14c98e1d934299cd5d1eb5e122
+               4 fichier(s)           10ÿ680 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\ab
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16             1ÿ915 93458e81092268394aa409498dd110abde4e2e
+16/07/2025  09:44             4ÿ356 fac70eb79da5338e523af83d42f117425218c2
+               2 fichier(s)            6ÿ271 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\ac
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44           135ÿ763 9d2c038eda94a53180e225aec98c2565b99e57
+               1 fichier(s)          135ÿ763 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\ad
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             2ÿ174 0b0280bea17fca9a61e5c204d6bcf1a2efce5e
+16/07/2025  09:45               308 c2691f960712e9786f71a23a4b1464257a9e4e
+               2 fichier(s)            2ÿ482 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\ae
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ873 709a630302277ba33ae3398fe85dcf57407c26
+16/08/2025  12:15             2ÿ713 c5fa4f201b56be7b7ad6dc195948f7d5b05829
+16/07/2025  09:44             1ÿ656 f1702f988cee8b10783185a787ee218796b762
+16/07/2025  09:44             2ÿ750 f4d669cdff465fd598828351b2c0d5b276ca21
+               4 fichier(s)           10ÿ992 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\af
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/07/2025  09:45               801 81d5b0254bbbfa836f570138e25c947b34b61d
+27/08/2025  15:16             1ÿ809 8bac18596c4729ddaf387fa46910e577c0e136
+16/07/2025  09:44             4ÿ068 ddcf633ee159ce29f699016f4e93c151d76181
+               3 fichier(s)            6ÿ678 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\b0
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16             2ÿ791 4fcc9ff15bdf4a8ef1da68e3ab5128ef8904c4
+16/07/2025  09:44             1ÿ845 d1e3e3c1fceb53abca7f3796036e7c7facfeff
+               2 fichier(s)            4ÿ636 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\b1
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:49               162 0151e4bab4699fe05f9a16456278494f5c1bf9
+               1 fichier(s)              162 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\b2
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             4ÿ488 12d79fd7df0944b1f53d91bfe5b28508080e72
+16/07/2025  09:44             3ÿ898 1db003f967cc0ee49baa8088033f08cf87ecb5
+11/08/2025  16:48               982 262e34a6417c584d31791734b1770a15e7cedf
+16/07/2025  09:44             1ÿ517 6226f588a8a9143f51f7b5160f4fd34a7251a6
+11/08/2025  16:48             1ÿ933 6d58ec21543203c47842d794c0199f449f51ea
+16/08/2025  12:15             2ÿ318 76b10c2a1d08d58a78b15283bfd95c163b57f2
+27/08/2025  15:16             2ÿ795 eb4390b02c2fa7c64e86eae9b78d8c425f6867
+               7 fichier(s)           17ÿ931 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\b3
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ595 0a81e5f25ec8efaf93c338c7b626d8fa241436
+16/07/2025  09:44             2ÿ391 2a246f8ccf435045ea28ea2da3f07c20084ade
+16/07/2025  09:44             3ÿ120 8a9304f85fd531cf66a3a7387b43aed1058453
+               3 fichier(s)            9ÿ106 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\b4
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             4ÿ521 08574ab7c37dc6c5173e9d074fa416c59ba9af
+               1 fichier(s)            4ÿ521 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\b5
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44               978 b806248b7be27e1c7f3af01127352b678674a1
+               1 fichier(s)              978 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\b6
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:49               791 64adc4c109fc1c8683df0c09ade37baeaaeddb
+16/07/2025  09:45               214 b60080ed7df08a73583b96364b378de1367df3
+               2 fichier(s)            1ÿ005 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\b7
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ041 ce29fab4c4d073348a6432959d3dfa3fcd60c9
+               1 fichier(s)            3ÿ041 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\b8
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ657 303384ea7736fddd5ef7137e2dd7d14467cae3
+11/08/2025  16:49               193 5ab60e0eb1b0b245fac72b76702edbb0f99264
+               2 fichier(s)            1ÿ850 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\b9
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  10:32               322 0e77fc9acb5e2f7fbd7545014018edfa00d130
+16/07/2025  09:45                71 3915c20088568dd5c742976f7e72d066bccbc2
+16/08/2025  12:15             2ÿ249 c3a3470668deed5307bce9066cba521bcc9808
+16/08/2025  12:15             1ÿ782 dc207dbb9454f75b9ba381cfa311bc0f31bd33
+               4 fichier(s)            4ÿ424 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\ba
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+27/08/2025  15:17               162 6d602c9fcdd2018eac6c6616a1da668412aa5f
+16/07/2025  09:45               104 c39d0d979b974fc15560b55461bf9c0f07a1f5
+16/07/2025  09:44             7ÿ901 c43fab8a8530d3df653dd80adf6eb3554c7fe3
+16/07/2025  09:44             2ÿ418 cfe4ef7d4a0ed6d4314b9e5b7f364a1f47312b
+               4 fichier(s)           10ÿ585 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\bc
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               269 8478eb30e9fb24a6b65fb89bdd002fc197c12e
+16/07/2025  09:44             1ÿ145 cbeb8d90644d2b636094eb19382ad369c12d07
+11/08/2025  16:48             1ÿ215 d736723cecd33816f470bdf5d5c925a349af9b
+               3 fichier(s)            2ÿ629 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\bd
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16             1ÿ976 87940fe6564dc4f6ef5b145d3803a014683445
+16/07/2025  09:44               744 94e26a7018f52ffd97d6bfc1c118cc4d3223fd
+16/07/2025  09:44             3ÿ878 de136b0ede5d2727e749aebc7cef096ab23099
+               3 fichier(s)            6ÿ598 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\be
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               548 50291b00ded1a216b64d6da802be1f8c716185
+               1 fichier(s)              548 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\bf
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16               537 455dcdcf4f546bc957a7f950343cc065972784
+11/08/2025  12:46               161 5a41f83d60c46959371a3b26fef2d447cd09cb
+27/08/2025  15:16             3ÿ733 dd54d0432ab1276d9751849d4bbccab94cdd6b
+27/08/2025  15:16             1ÿ001 fd2a22f54aef67e95343296df23d9a80ea6e48
+               4 fichier(s)            5ÿ432 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\c0
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:45               321 9a16c61e1d12192a7b520610e85b886b75afc6
+11/08/2025  10:32             1ÿ294 cc12c98456d5cf90e047a2d040c6fe3d9f9960
+16/07/2025  09:44             1ÿ497 fc596b520717fbfa5b334f6b78ec37dc92cf39
+               3 fichier(s)            3ÿ112 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\c1
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             4ÿ692 198f8466d714964c956f4b56e108720174117c
+16/08/2025  12:15             9ÿ784 61acd9a93598c9a8cd6571795b0acff09f5ad7
+16/07/2025  09:44             6ÿ343 fdc30b1c525acb64bf7ee29fc064388af480a4
+               3 fichier(s)           20ÿ819 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\c3
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:45               148 22dec35abad7178b5f8a38ec766cd477b0a4ed
+11/08/2025  16:48               612 eb7cbd99f4bc1be9d025545d66fc850c9520cc
+               2 fichier(s)              760 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\c4
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/07/2025  09:44             2ÿ379 367ad8567f90c944a2593c9c33c15785da509a
+27/08/2025  15:16             3ÿ195 ac5c621b83117bd67e8be2be02bce24b2c2de8
+11/08/2025  16:48               284 bfff881f1e5742f5bd7d5fc8059f3bdfe968a1
+16/07/2025  09:44             1ÿ750 c6d10108441be6f57ca03914af6a7c49af5fcf
+16/07/2025  09:45               463 f6e11faba2a3001972a248131b5472491a951d
+               5 fichier(s)            8ÿ071 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\c5
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16            12ÿ270 799a397f9dfbb0f9844561c9bb97f7c2abe220
+27/08/2025  15:16             6ÿ067 c7df6399db4e11c5210dbb439598c4608d03f4
+               2 fichier(s)           18ÿ337 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\c6
+
+27/08/2025  17:21    <DIR>          .
+27/08/2025  17:21    <DIR>          ..
+27/08/2025  17:21               194 2657fed971be35c1f17f506cf3fc16c10f0be4
+11/08/2025  16:48               503 d8b6b3b0cb2c6760e3982919b8efe54854f3e9
+               2 fichier(s)              697 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\c7
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16             2ÿ436 408b91792049bd41093da997102ca21db35a83
+11/08/2025  16:48             1ÿ176 950dcdab7d7c799a19d177aa7d48ee766c25ad
+16/07/2025  09:44             5ÿ320 deaf3ab3c5d7455c9061008c938b42288026a0
+27/08/2025  15:16               900 f2dcfd446d8b957025d911a7f2b3d9e0673b67
+16/07/2025  09:44             5ÿ340 fb292490754ed6fb66d184185b30a03250b934
+               5 fichier(s)           15ÿ172 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\c8
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             2ÿ533 f6f57ea2249544cb2a1c7f07d8aae614d88e4a
+               1 fichier(s)            2ÿ533 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\c9
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:45                92 1bcc8bfca4f0f436ed21a27a897b1339ea4728
+16/07/2025  09:44             2ÿ078 8297b8c91f53ed79e77012e74c98833c366337
+16/07/2025  09:44             3ÿ208 cd30102c5e67566b3389bdc483c496661b185e
+               3 fichier(s)            5ÿ378 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\ca
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44               276 1a2650ab00e4d7ebcfdc96631549078e8149ce
+11/08/2025  16:48             1ÿ571 5c411bc1ae8a31fc83b81b9c12e016c3279833
+16/08/2025  12:16               500 70c54f9ef26d3be358860bb105f8b90bdc391b
+               3 fichier(s)            2ÿ347 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\cb
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               492 547dcb920ca2d2ac22f569746b3d276c7f9c24
+16/07/2025  09:45               149 984f66f1d0beb24e4ac4d781b6fa2e15a49736
+               2 fichier(s)              641 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\cc
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44               572 1703528d78091fd3f10d13bf51f3c2db8e044a
+16/07/2025  09:45             1ÿ176 8d7fda781724ad5348f4bdb4a4f8ae7ef2c5a6
+               2 fichier(s)            1ÿ748 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\cd
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             2ÿ736 8e6295d056460f70eb34af5abdd61c52f92348
+16/07/2025  09:44             4ÿ282 90150bf340904484cdbedfc227b252b6a6a156
+16/07/2025  09:44                19 eb27b14399d9197e7f10504bbe0c03c311fe17
+               3 fichier(s)            7ÿ037 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\ce
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             6ÿ507 b09510ea2d9bfb6f5aa0931c82777af4cfec1f
+16/07/2025  09:44             3ÿ040 d2964b5484eca3e59aa40439f2275180c850f9
+16/08/2025  12:15             2ÿ020 f4198c42649b066a12a30ac832a3e2c55ca916
+               3 fichier(s)           11ÿ567 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\cf
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+27/08/2025  15:17             1ÿ660 de2ff86100b430ab3ba30d0426b6f6990a863d
+               1 fichier(s)            1ÿ660 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\d0
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             1ÿ983 12992ec80e7020af605ca986d388913385054d
+16/08/2025  12:15               754 9330072a20c2879740dfa15e3ece126c6fd00d
+16/07/2025  09:44               597 fd50ec593d5dd3a7b187a67a074b0a80c5558f
+               3 fichier(s)            3ÿ334 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\d1
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:45               108 8db50a1ee6cd9eba1c61109aaa1fe296e38e94
+               1 fichier(s)              108 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\d3
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:15             1ÿ982 0099b718b6c37aff1e7bfe8edab97c3a2902d9
+16/08/2025  12:15             1ÿ961 21a653f8287300c9afbb265baf9ad59e07ad28
+16/07/2025  09:44             2ÿ911 85ab97481436dd4ce67874d990656b9ed51044
+16/07/2025  09:44             1ÿ451 f0360b92f072a645f56b667ac87cde95ed76cd
+               4 fichier(s)            8ÿ305 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\d4
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             1ÿ981 0c56cbce260d21c1a4d39a2b14ba56073d8234
+16/07/2025  09:44             2ÿ026 8f49081064ed6be48520e85d7e7435244d4f54
+               2 fichier(s)            4ÿ007 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\d5
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/07/2025  09:44               277 c2ba411a4b973ff309012b3cc28449e7b566eb
+11/08/2025  16:48               462 df058786dd9ac19a5f5f922842d9c77e5ad26d
+27/08/2025  15:16             3ÿ998 fdb3112f8da457bb4182e8e687a722af69e0be
+               3 fichier(s)            4ÿ737 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\d6
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44               256 391fb60fbcb4c7498ab2ce00e005049e8b0394
+11/08/2025  16:48               731 e5b67829077849a3046aa2f0523ff5c906f6ff
+               2 fichier(s)              987 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\d7
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             1ÿ517 fd0a0bbeaced4e0fab634597c3307f3217ef4b
+               1 fichier(s)            1ÿ517 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\d8
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             1ÿ697 4c68b3c38d20b1cdd563defffc78e05f5e349b
+16/07/2025  09:44               177 4d68fb147fa760fc80b9dfbcd3ab0d15e36573
+16/07/2025  09:44             1ÿ251 5459838068cb0b04af56a397ab5e4591a5c483
+               3 fichier(s)            3ÿ125 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\d9
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             3ÿ537 0cec369ea59beb04953bb7b374123b89981c9c
+16/08/2025  12:16               202 6ac111520e515f832893fa12dba645236ba301
+16/08/2025  12:15            13ÿ081 83a3176388899e6f642a4baaae9576a21c26d2
+               3 fichier(s)           16ÿ820 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\db
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/07/2025  09:45               205 1c1b81a24f5490ff7511704de98d5731ec4869
+16/07/2025  09:44           127ÿ199 317dfa4434b615e86256de9e08a022bd6aa881
+16/07/2025  09:44               915 577f5bfa5b3120d6f28e53b50af648e7d95302
+16/07/2025  09:44             1ÿ464 77b704bd48a224801c2cefb57585d4a3d6c0fb
+16/07/2025  09:44            10ÿ047 b2f438aa98f08ac4d7d0b10e22b8ca6455ce51
+27/08/2025  15:16             1ÿ784 b47a3c7a1342463f4ab787a3f7b669b2fe7845
+               6 fichier(s)          141ÿ614 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\dc
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             2ÿ024 9fdc3fbd4be1424e83252af6112ef2b71979d1
+               1 fichier(s)            2ÿ024 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\dd
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  12:46             1ÿ548 2243738cf817ac5b5047a83041f0de96040d5b
+11/08/2025  16:48             1ÿ760 490e5961485ea47e527508691007e31e376fe9
+16/07/2025  09:45               192 9f7c4e2b5c3e40cf93f8c33dfc9de1502b7421
+16/07/2025  09:44             4ÿ406 a62dcd020dc391c1e667b6a61126aa46d96241
+               4 fichier(s)            7ÿ906 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\de
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             3ÿ403 0abcb43c45da9ef9dbae95dc89a288899c76e3
+11/08/2025  16:48             1ÿ853 6a198d99d9d17db29f02633e3b0e66c9a60e98
+16/07/2025  09:44             1ÿ193 7099460925179819923dedb34e5321ced742c3
+               3 fichier(s)            6ÿ449 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\df
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16             2ÿ594 2244bb6f4aab3e77b0c7af79f8f8fef02b6f5c
+16/08/2025  12:16                70 6d05c59abd9b3bbe57617b7b851df22c03699c
+16/08/2025  12:15             1ÿ924 7bb9631355f76641eea58c52ae61c650b629e1
+16/07/2025  09:44             1ÿ305 cb109fd897f273b86fb0145ae004f7e0963ef9
+               4 fichier(s)            5ÿ893 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\e1
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16               947 07529b8eb576097ef56099d8182e5752fd6d0c
+16/07/2025  09:44             1ÿ595 5a1ff6dd49508a91fb5a6861df0ac01cd4e1fa
+11/08/2025  16:48             1ÿ684 63796b1cad3004dc8f80315217c838a6df77aa
+               3 fichier(s)            4ÿ226 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\e2
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:16               200 4ab32cf1493154cff12502943f984eb9146534
+16/07/2025  09:44            50ÿ638 d4776638ea62eb671ed95bc74a8618b6f68bd1
+               2 fichier(s)           50ÿ838 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\e3
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:15             2ÿ452 6c01902dfc62c28fc832a777347a80d84e5ae8
+11/08/2025  16:49               323 8559075a71b69352cbdd61b9f524063689392f
+11/08/2025  16:48               352 92f578f62c1e701ed0702d55b21cc912a82c9d
+16/07/2025  09:44             1ÿ707 af640b307fabbafefd2b1e2e622094147db70c
+               4 fichier(s)            4ÿ834 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\e4
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44            23ÿ864 2142643427554bf79962526d538f2d9c57ce86
+16/07/2025  09:44            12ÿ285 541e7b033063745b412715cba21c685159791b
+11/08/2025  16:48             2ÿ084 eabd8b0d063e1a7f502fef7ae335154f425cb0
+               3 fichier(s)           38ÿ233 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\e5
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+27/08/2025  15:17             1ÿ247 d75250e4046738581495b48828f38d1e5fb93e
+               1 fichier(s)            1ÿ247 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\e6
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+27/08/2025  15:16                15 9de29bb2d1d6434b8b29ae775ad8c2e48c5391
+               1 fichier(s)               15 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\e7
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             6ÿ364 77f3a795f4fd78c36e4e961a02d1a0208d4201
+16/07/2025  09:44             2ÿ564 f738b2e000df73e1e5a136f1f1d58142beb7d1
+               2 fichier(s)            8ÿ928 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\e8
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             2ÿ284 237f4833cdb3c280a5c8dc0632457025385005
+11/08/2025  16:48               452 9f46d446afb905ee6bf8cddb31f5eb38d122d2
+16/07/2025  09:44             1ÿ462 b3699d1cc9709f94d9b5ea84ae5f01f2aea96d
+               3 fichier(s)            4ÿ198 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\e9
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+27/08/2025  15:16             1ÿ651 373f25f41f145d1719e64170660ef6c4dd49ef
+               1 fichier(s)            1ÿ651 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\ea
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44               494 46feab3f23a9b33a0e1583b1585283e84cbb96
+               1 fichier(s)              494 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\eb
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             1ÿ153 0d186f2f9401d01f38fdba57eb2216752b7c29
+11/08/2025  16:48             4ÿ685 4ef8c8283185595ef3c44092468ae1ac437f6b
+16/07/2025  09:44             3ÿ800 fe30042da3181a8e623ef83f72cac8be40b5be
+16/07/2025  09:45               520 ffe2a5f89f6a723f6d75587618112212d2b243
+               4 fichier(s)           10ÿ158 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\ec
+
+27/08/2025  15:17    <DIR>          .
+27/08/2025  15:17    <DIR>          ..
+11/08/2025  16:48             1ÿ810 110af06108ab961c9eafd5fc45a7488ca6cce0
+11/08/2025  10:32               347 43987111981b36153967e1adcef075eb402db4
+16/08/2025  12:15             1ÿ606 5ae7ea6169c7f659622b155605194b466b9738
+11/08/2025  16:49               889 68303a0b29c45bf22703e487bf4c5b76be54f6
+16/07/2025  09:44             5ÿ647 991b156fd7dac62c895da3d9974048951b5b98
+27/08/2025  15:17               361 9ab2f62969f57d9b91fbfa55779924517ff5ed
+               6 fichier(s)           10ÿ660 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\ed
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             6ÿ555 03d24aec002e98a3e4301493222f9b147fd2fc
+16/07/2025  09:44            25ÿ195 3905e0e0c91d4ed7d8aa14412dffeb038745ff
+16/08/2025  12:15               959 c4dc99a2bc81838eae753e43ddbdf733aee4d9
+16/07/2025  09:44             1ÿ514 cb8eb759526a504afa0d3bcd70bbd4f6c2744e
+               4 fichier(s)           34ÿ223 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\ee
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48             6ÿ674 c3c7feeae7a2e9a40aa01666487862459f1479
+16/08/2025  12:15             2ÿ094 efefc68b38ba45eff04849fabab41b0bdab320
+               2 fichier(s)            8ÿ768 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\ef
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/08/2025  16:48               606 4f5523b705695fedf115b320918a1e738eb4d9
+16/08/2025  12:15             2ÿ650 b16c69166306aa95798a3c04e4d220255cee0b
+               2 fichier(s)            3ÿ256 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\f1
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             5ÿ814 15d5ac12c8b7510b3fecc15993c42d07d51f25
+16/07/2025  09:44             2ÿ752 5f9a31e5321f4464d7c8f65817fc886f2ab72b
+               2 fichier(s)            8ÿ566 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\f2
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:44             2ÿ044 e2a34de0b82fbb3b79e0517c545fb9d30c68ad
+               1 fichier(s)            2ÿ044 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\f3
+
+27/08/2025  15:16    <DIR>          .
+27/08/2025  15:16    <DIR>          ..
+16/07/2025  09:45               190 7e290c007d957b5f73e26fe4d7ee28bd7b48b8
+16/07/2025  09:44             3ÿ791 acdca98d774c95965dca57880532c92a3d8f51
+27/08/2025  15:16             1ÿ830 b8ab473f46e863f59fcfdaa6e078b518e310bd
+               3 fichier(s)            5ÿ811 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\f4
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:45               208 cec23f015fd23a7075b7493d597a78426b4523
+               1 fichier(s)              208 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\f5
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  12:15             1ÿ355 cc93e00c42e2763eb88374635cd54ac1566d13
+               1 fichier(s)            1ÿ355 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\f6
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/08/2025  12:16             1ÿ548 0493b066361e37fe0141decb41b23857e384d8
+11/08/2025  16:49               709 28f237440ef68b39ee1ab894e573e97bfa4b2b
+16/07/2025  09:44               444 4ddbe52d1c9578e42b1033ebfd31cb726eca97
+11/08/2025  16:48             4ÿ156 bce9366ac9f81837e14e8cefe0155b14f30d7b
+               4 fichier(s)            6ÿ857 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\f7
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:44            20ÿ395 ab16241772a6cf98b85acfdd7db36155929984
+16/07/2025  09:44             1ÿ643 daa50c06d43a8024aa27e27f53a956f77700ee
+               2 fichier(s)           22ÿ038 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\f8
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+11/08/2025  16:48               992 301e8d9e332e1f535424d6735cc71c7105757b
+16/08/2025  12:15             7ÿ718 d88dfc123d099758a4f9c223b144ea3a302dea
+11/08/2025  16:48             1ÿ728 f0c3309a83fccebc8cd5178b8baccaae70a40b
+               3 fichier(s)           10ÿ438 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\f9
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+11/08/2025  16:48             1ÿ224 58b5b672aab2ed8e0fc52a285f2324ff9ba897
+11/08/2025  16:48             1ÿ670 cd4edcf85de8e6206ff0ad32d64356101ce723
+               2 fichier(s)            2ÿ894 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\fa
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+11/08/2025  16:48               528 196064ac1911fc061881ee7daa310e96381f36
+16/07/2025  09:44               888 3ae86b8df876b5a6b9ac1d781b61145c6c8dd8
+               2 fichier(s)            1ÿ416 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\fb
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+11/08/2025  16:48             5ÿ960 522c2b7b4870590985cc12156e256ec7f349b9
+16/08/2025  12:15             1ÿ265 7c76fae6cb7e16d003e7fde066a1d74dc98207
+               2 fichier(s)            7ÿ225 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\fc
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:45               142 02067c65d84df79c239a898811ba98d76f6558
+16/08/2025  12:15             2ÿ491 b7150392c9fad6ae5902d1d79dd1ce3d03766d
+               2 fichier(s)            2ÿ633 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\fd
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+11/08/2025  16:48             2ÿ055 47c1e2630b76f286329958d0abc88c5d4b692e
+16/07/2025  09:45                95 89dbb3e94d30d7547055f8640ec0084fe0a387
+               2 fichier(s)            2ÿ150 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\objects\fe
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49               212 ab8928d2c36ac8518d7a51015a731272e04c31
+11/08/2025  16:48             1ÿ775 d915f7152ca24e30fb33d1922de45177d84428
+               2 fichier(s)            1ÿ987 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\refs
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+27/08/2025  17:21    <DIR>          heads
+19/08/2025  08:12    <DIR>          remotes
+               0 fichier(s)                0 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\refs\heads
+
+27/08/2025  17:21    <DIR>          .
+27/08/2025  17:21    <DIR>          ..
+27/08/2025  17:21                41 main
+               1 fichier(s)               41 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\refs\remotes
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+27/08/2025  17:26    <DIR>          origin
+               0 fichier(s)                0 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\.git\refs\remotes\origin
+
+27/08/2025  17:26    <DIR>          .
+27/08/2025  17:26    <DIR>          ..
+27/08/2025  17:26                41 main
+               1 fichier(s)               41 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\backups
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49               126 bailcompta360_backup_20250707_173432.sql
+16/07/2025  09:49               126 bailcompta360_backup_20250707_173528.sql
+16/07/2025  09:49             2ÿ313 bailcompta360_backup_20250709_105313.sql
+16/07/2025  09:49             2ÿ313 bailcompta360_backup_20250709_105720.sql
+16/07/2025  09:49             2ÿ313 bailcompta360_backup_20250709_110252.sql
+16/07/2025  09:49             2ÿ313 bailcompta360_backup_20250709_110355.sql
+16/07/2025  09:49             2ÿ313 bailcompta360_backup_20250709_110544.sql
+16/07/2025  09:49             2ÿ313 bailcompta360_backup_20250709_111227.sql
+16/07/2025  09:49             2ÿ313 bailcompta360_backup_20250709_111345.sql
+16/07/2025  09:49             2ÿ155 bailcompta360_backup_20250709_114450.sql
+16/07/2025  09:49             2ÿ155 bailcompta360_backup_20250709_114529.sql
+16/07/2025  09:49             2ÿ155 bailcompta360_backup_20250709_115015.sql
+              12 fichier(s)           22ÿ908 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\css
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49           121ÿ205 bootstrap.min.css
+16/07/2025  09:49             4ÿ259 formulaire.css
+08/08/2025  16:30               809 loading.css
+08/08/2025  16:29                 0 Nouveau document texte (2).txt
+16/07/2025  09:49                 0 Nouveau document texte.txt
+16/07/2025  09:49             1ÿ316 print.css
+16/07/2025  09:49            31ÿ225 select2-bootstrap-5-theme.min.css
+16/07/2025  09:49            14ÿ967 select2.min.css
+16/07/2025  09:49             4ÿ875 style.css
+16/07/2025  09:49             2ÿ970 tableau.css
+              10 fichier(s)          181ÿ626 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\erreurs
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49               846 404.html
+16/07/2025  09:49               846 404.php
+16/07/2025  09:49               878 500.html
+16/07/2025  09:49               878 500.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+               5 fichier(s)            3ÿ448 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\fonctions
+
+03/09/2025  09:02    <DIR>          .
+03/09/2025  09:02    <DIR>          ..
+16/07/2025  09:49            23ÿ328 api_queue.php
+15/08/2025  09:05             4ÿ845 calcul_amortissement.php
+19/08/2025  08:12    <DIR>          config
+16/08/2025  10:40             2ÿ966 database.php
+16/07/2025  09:49             8ÿ476 filter_factures.php
+27/08/2025  17:04             8ÿ007 gestion_agences.php
+15/08/2025  14:02             3ÿ402 gestion_audit.php
+03/09/2025  09:00             4ÿ510 gestion_avances.php
+16/07/2025  09:49            15ÿ015 gestion_budgets.php
+03/09/2025  09:29             2ÿ862 gestion_clients.php
+18/08/2025  21:41            50ÿ031 gestion_comptes.php
+18/08/2025  17:29               885 gestion_contrats_assurance.php
+16/07/2025  09:49            16ÿ841 gestion_droits.php
+27/08/2025  17:11            77ÿ158 gestion_ecritures.php
+16/07/2025  09:49            50ÿ874 gestion_emprunts.php
+16/07/2025  09:49            40ÿ437 gestion_factures.php
+16/07/2025  09:49            14ÿ691 gestion_factures_fournisseurs.php
+18/08/2025  14:29            14ÿ561 gestion_fournisseurs.php
+16/07/2025  09:49            18ÿ034 gestion_habilitations.php
+03/09/2025  08:33             5ÿ717 gestion_hors_bilan.php
+03/09/2025  09:02             4ÿ546 gestion_hypotheques.php
+15/08/2025  08:51             4ÿ697 gestion_immobilisations.php
+16/07/2025  09:49            15ÿ872 gestion_import_statements.php
+18/08/2025  14:39             6ÿ598 gestion_journaux.php
+18/08/2025  14:46             2ÿ034 gestion_lettrage.php
+15/08/2025  10:48             9ÿ021 gestion_liasse_fiscale.php
+16/07/2025  09:49            13ÿ638 gestion_logs.php
+16/07/2025  09:49             8ÿ446 gestion_notification.php
+18/08/2025  10:28            14ÿ371 gestion_operations_caisse.php
+15/08/2025  11:41             5ÿ815 gestion_produits_bancaires.php
+16/07/2025  09:49            11ÿ129 gestion_profils.php
+18/08/2025  14:55             2ÿ797 gestion_reconciliation.php
+16/07/2025  09:49            17ÿ366 gestion_recurring_entries.php
+15/08/2025  10:58             6ÿ381 gestion_reporting.php
+16/07/2025  09:49            13ÿ634 gestion_reports.php
+18/08/2025  17:56             4ÿ640 gestion_sinistres.php
+16/07/2025  09:49            22ÿ659 gestion_tiers.html
+16/07/2025  09:49             9ÿ983 gestion_tiers.php
+16/07/2025  09:49            14ÿ800 gestion_utilisateurs.html
+18/08/2025  14:00            11ÿ934 gestion_utilisateurs.php
+16/07/2025  09:49             2ÿ145 handle_messages.php
+03/09/2025  08:44             9ÿ506 hors_bilan_fonctions.php
+19/08/2025  08:12    <DIR>          immobilisations
+18/08/2025  14:43             1ÿ120 lettrage.php
+15/08/2025  10:26             2ÿ127 lettrage_fonctions.php
+19/08/2025  08:12    <DIR>          logs
+16/07/2025  09:49             1ÿ574 logs.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+16/07/2025  09:49             4ÿ253 PdfGenerator.php
+19/08/2025  08:12    <DIR>          plan_comptable
+16/07/2025  09:49             5ÿ882 process_api_queue.php
+19/08/2025  08:12    <DIR>          reporting
+16/07/2025  09:49             4ÿ278 traitement_donnees.php
+18/08/2025  14:42             1ÿ120 Untitled-2.php
+16/07/2025  09:49             3ÿ641 validation.php
+              50 fichier(s)          598ÿ647 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\fonctions\config
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49               103 config.ini
+               1 fichier(s)              103 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\fonctions\immobilisations
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+18/08/2025  10:45             6ÿ975 gestion_immobilisations.php
+               1 fichier(s)            6ÿ975 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\fonctions\logs
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49                 0 application.log
+16/07/2025  09:49                 0 erreurs_authentification.txt
+16/07/2025  09:49                 0 Nouveau document texte.txt
+16/07/2025  09:49                 0 php_errors.log.txt
+16/07/2025  09:49                 4 php_errors.txt
+               5 fichier(s)                4 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\fonctions\plan_comptable
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+11/08/2025  16:15             7ÿ313 gestion_plan_comptable.php
+11/08/2025  15:53             3ÿ335 import_pcg.php
+               2 fichier(s)           10ÿ648 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\fonctions\reporting
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+15/08/2025  10:06             2ÿ188 export_liasse_fiscale.php
+15/08/2025  10:07             4ÿ572 liasse_fiscale.php
+15/08/2025  09:41             4ÿ392 liasse_fiscale_fonctions.php
+               3 fichier(s)           11ÿ152 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\images
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49            12ÿ444 compta.ico
+16/07/2025  09:49             7ÿ358 courrier.ico
+16/07/2025  09:49            18ÿ324 logo_bailcompta.png
+16/07/2025  09:49            42ÿ750 LOGO_SCE.ico
+16/07/2025  09:49           128ÿ695 sces.jpg
+               5 fichier(s)          209ÿ571 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\js
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49           159ÿ814 Bellingham-et-Tchouameni.jpg
+16/07/2025  09:49           202ÿ183 bootstrap.bundle.js
+16/07/2025  09:49            48ÿ950 bootstrap.min.js
+16/07/2025  09:49           208ÿ355 chart.min.js
+16/07/2025  09:49             5ÿ611 formulaire.js
+16/07/2025  09:49           296ÿ030 jquery-3.7.1.js
+16/07/2025  09:49             8ÿ907 liste_ecritures.js
+16/07/2025  09:49            59ÿ666 MENACES-INTERNES-DEFI-SOPHOS-shutterstock_277944830.jpg
+16/07/2025  09:49                 0 Nouveau document texte.txt
+16/07/2025  09:49             5ÿ186 script.js
+16/07/2025  09:49            70ÿ892 select2.min.js
+16/07/2025  09:49            10ÿ048 tableau_dynamique.js
+              12 fichier(s)        1ÿ075ÿ642 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\librairies
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+19/08/2025  08:12    <DIR>          abs2000_generator
+19/08/2025  08:12    <DIR>          csv_parser
+               0 fichier(s)                0 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\librairies\abs2000_generator
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49             5ÿ004 Abs2000Generator.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+               2 fichier(s)            5ÿ004 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\librairies\csv_parser
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49             6ÿ556 CsvParser.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+               2 fichier(s)            6ÿ556 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\logs
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+11/08/2025  14:32            43ÿ533 application_errors.log
+16/07/2025  09:49               488 error.log
+03/09/2025  08:57            67ÿ771 php_errors.log
+18/08/2025  22:36             7ÿ812 user_activity.log
+               4 fichier(s)          119ÿ604 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages
+
+03/09/2025  08:57    <DIR>          .
+03/09/2025  08:57    <DIR>          ..
+16/07/2025  09:49             1ÿ860 acces_refuse.html
+16/07/2025  09:49             1ÿ863 acces_refuse.php
+16/07/2025  09:49             3ÿ499 accueil_invite.php
+27/08/2025  08:37    <DIR>          admin
+27/08/2025  10:01    <DIR>          agences
+19/08/2025  08:12    <DIR>          aide
+19/08/2025  08:12    <DIR>          analyse
+19/08/2025  08:12    <DIR>          auth
+29/08/2025  10:14            18ÿ352 authentification.php
+19/08/2025  08:12    <DIR>          budgets
+16/07/2025  09:49            10ÿ451 changement_mot_de_passe.html
+16/07/2025  09:49            10ÿ451 changement_mot_de_passe.php
+19/08/2025  08:12    <DIR>          clients
+19/08/2025  08:12    <DIR>          comptes
+15/08/2025  14:40            33ÿ667 dashboard.php
+16/07/2025  09:49               449 deconnexion.php
+19/08/2025  08:11    <DIR>          ecritures
+19/08/2025  08:11    <DIR>          emprunts
+19/08/2025  08:11    <DIR>          factures
+19/08/2025  08:11    <DIR>          Fournisseurs
+19/08/2025  08:11    <DIR>          generation
+19/08/2025  08:11    <DIR>          habilitations
+03/09/2025  09:20    <DIR>          hors_bilan
+20/08/2025  10:53    <DIR>          immobilisations
+20/08/2025  09:43    <DIR>          import
+19/08/2025  08:11    <DIR>          journaux
+19/08/2025  08:11    <DIR>          lettrage
+19/08/2025  08:11    <DIR>          logs
+19/08/2025  08:11    <DIR>          notifications
+16/07/2025  09:49                 0 Nouveau document texte.txt
+04/07/2025  08:19    <DIR>          Nouveau dossier
+19/08/2025  08:11    <DIR>          operations
+19/08/2025  08:11    <DIR>          produits
+19/08/2025  08:11    <DIR>          profils
+19/08/2025  08:11    <DIR>          reconciliation
+19/08/2025  08:11    <DIR>          reporting
+19/08/2025  08:11    <DIR>          scripts
+19/08/2025  08:11    <DIR>          securite
+19/08/2025  08:11    <DIR>          sinistres
+16/07/2025  09:49             4ÿ831 tableau_bord.html
+16/08/2025  15:13            33ÿ667 tableau_bord.php
+19/08/2025  08:11    <DIR>          utilisateurs
+              11 fichier(s)          119ÿ090 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\admin
+
+27/08/2025  08:37    <DIR>          .
+27/08/2025  08:37    <DIR>          ..
+19/08/2025  08:12    <DIR>          audit
+19/08/2025  08:12    <DIR>          configuration
+19/08/2025  08:12    <DIR>          css
+19/08/2025  08:12    <DIR>          data_management
+19/08/2025  08:12    <DIR>          habilitations
+16/07/2025  09:49            10ÿ007 header.php
+19/08/2025  08:12    <DIR>          includes
+16/07/2025  09:49             4ÿ710 index.html
+11/08/2025  15:38             6ÿ068 index.php
+19/08/2025  08:12    <DIR>          js
+16/07/2025  09:49                 0 Nouveau document texte.txt
+19/08/2025  08:12    <DIR>          plan_comptable
+19/08/2025  08:12    <DIR>          profils
+19/08/2025  08:12    <DIR>          utilisateurs
+               4 fichier(s)           20ÿ785 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\admin\audit
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49                 0 Nouveau document texte.txt
+16/07/2025  09:49             8ÿ260 view_activity_log.php
+16/07/2025  09:49             8ÿ535 view_login_history.php
+               3 fichier(s)           16ÿ795 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\admin\configuration
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49             2ÿ594 base_de_donnees.html
+16/07/2025  09:49             2ÿ598 base_de_donnees.php
+16/07/2025  09:49             4ÿ109 index.html
+16/07/2025  09:49             4ÿ755 index.php
+16/07/2025  09:49             3ÿ431 logs.html
+16/07/2025  09:49             3ÿ431 logs.php
+16/07/2025  09:49             3ÿ856 modifier_parametre.html
+16/07/2025  09:49            10ÿ820 modifier_parametre.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+               9 fichier(s)           35ÿ594 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\admin\css
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49             8ÿ133 admin_style.css
+16/07/2025  09:49           121ÿ205 bootstrap.min.css
+16/07/2025  09:49                 0 Nouveau document texte.txt
+               3 fichier(s)          129ÿ338 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\admin\data_management
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49            20ÿ678 backup_restore.php
+16/07/2025  09:49                 0 backup_restore.txt
+16/07/2025  09:49            27ÿ973 data_integrity_check.php
+16/07/2025  09:49             3ÿ801 index.php
+16/07/2025  09:49             9ÿ452 purge_old_data.php
+               5 fichier(s)           61ÿ904 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\admin\habilitations
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49             5ÿ097 afficher_details.html
+16/07/2025  09:49             4ÿ170 afficher_details.php
+16/07/2025  09:49             8ÿ843 ajouter.php
+16/07/2025  09:49             7ÿ015 index.html
+16/07/2025  09:49            17ÿ097 index.php
+16/07/2025  09:49                 0 index.txt
+16/07/2025  09:49             6ÿ218 modifier.html
+16/07/2025  09:49             6ÿ282 modifier.php
+16/07/2025  09:49             4ÿ390 traitement_ajout_habilitation.php
+               9 fichier(s)           59ÿ112 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\admin\includes
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49               404 footer.html
+16/07/2025  09:49               404 footer.php
+16/07/2025  09:49             1ÿ538 header.html
+16/07/2025  09:49             1ÿ538 header.php
+16/07/2025  09:49             5ÿ564 index.html
+16/07/2025  09:49             5ÿ564 index.php
+16/07/2025  09:49             3ÿ553 navigation.html
+16/07/2025  09:49             3ÿ553 navigation.php
+16/07/2025  09:49             7ÿ069 Nouveau document texte.txt
+               9 fichier(s)           29ÿ187 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\admin\js
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49             2ÿ165 admin_script.js
+16/07/2025  09:49           121ÿ205 bootstrap.min.css
+16/07/2025  09:49                 0 Nouveau document texte.txt
+               3 fichier(s)          123ÿ370 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\admin\plan_comptable
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+11/08/2025  14:59             5ÿ121 importer_pcg.php
+11/08/2025  16:42             7ÿ039 index.php
+11/08/2025  15:01             5ÿ466 modifier_compte.php
+               3 fichier(s)           17ÿ626 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\admin\profils
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49             2ÿ524 ajouter.html
+16/07/2025  09:49             9ÿ572 ajouter.php
+16/07/2025  09:49             5ÿ518 assigner_utilisateurs.html
+16/07/2025  09:49             6ÿ174 assigner_utilisateurs.php
+16/07/2025  09:49             4ÿ604 dupliquer.html
+16/07/2025  09:49             5ÿ031 dupliquer.php
+16/07/2025  09:49             7ÿ280 enregistrer_profil.php
+16/07/2025  09:49             4ÿ666 index.html
+16/07/2025  09:49             8ÿ464 index.php
+16/07/2025  09:49             7ÿ028 mettre_a_jour_profil.php
+16/07/2025  09:49             3ÿ615 modifier.html
+16/07/2025  09:49             8ÿ037 modifier.php
+16/07/2025  09:49             6ÿ174 Nouveau document texte.txt
+16/07/2025  09:49             1ÿ495 supprimer.php
+              14 fichier(s)           80ÿ182 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\admin\utilisateurs
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49             2ÿ392 ajouter.html
+16/08/2025  10:44             3ÿ953 ajouter.php
+16/07/2025  09:49             4ÿ617 deconnecter_force.html
+16/07/2025  09:49             3ÿ917 deconnecter_force.php
+16/08/2025  10:50             3ÿ964 enregistrer_utilisateur.php
+16/07/2025  09:49             5ÿ321 index.html
+16/07/2025  09:49            14ÿ828 index.php
+16/07/2025  09:49             6ÿ953 index.txt
+16/07/2025  09:49             5ÿ639 mettre_a_jour_utilisateur.php
+16/07/2025  09:49             4ÿ774 modifier.html
+16/07/2025  09:49             7ÿ228 modifier.php
+16/07/2025  09:49             5ÿ268 modifier_role.html
+16/07/2025  09:49             2ÿ581 modifier_role.php
+16/07/2025  09:49             5ÿ075 reinitialiser.html
+16/07/2025  09:49             3ÿ861 reinitialiser.php
+16/07/2025  09:49             1ÿ549 supprimer.html
+16/07/2025  09:49             3ÿ525 supprimer.php
+16/07/2025  09:49             3ÿ177 suspendre.php
+16/07/2025  09:49             1ÿ512 unsuspendre.php
+              19 fichier(s)           90ÿ134 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\agences
+
+27/08/2025  10:01    <DIR>          .
+27/08/2025  10:01    <DIR>          ..
+27/08/2025  09:59             5ÿ618 ajouter_agence.php
+18/08/2025  09:48            10ÿ929 gestion_caisses.php
+16/08/2025  11:11             2ÿ635 index.php
+27/08/2025  09:53             4ÿ850 liste_agences.php
+16/08/2025  12:10             5ÿ280 modifier_agence.php
+15/08/2025  12:31                 0 Nouveau document texte.txt
+18/08/2025  10:22             9ÿ036 transactions_caisse.php
+               7 fichier(s)           38ÿ348 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\aide
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49             9ÿ463 index.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+               2 fichier(s)            9ÿ463 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\analyse
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49            26ÿ527 index.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+16/07/2025  09:49             8ÿ390 process_risk.php
+               3 fichier(s)           34ÿ917 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\auth
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49               904 logout.php
+               1 fichier(s)              904 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\budgets
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49            10ÿ937 create_budget.php
+16/07/2025  09:49            10ÿ356 edit_budget.php
+16/07/2025  09:49            22ÿ689 forecasts.php
+16/07/2025  09:49             7ÿ161 index.php
+16/07/2025  09:49             9ÿ634 manage_budgets.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+16/07/2025  09:49             5ÿ576 report.php
+16/07/2025  09:49            25ÿ347 view_budget_performance.php
+               8 fichier(s)           91ÿ700 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\clients
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+18/08/2025  22:47             6ÿ500 ajouter_client.php
+18/08/2025  17:40             7ÿ807 details_client.php
+16/08/2025  12:12             4ÿ161 index.php
+18/08/2025  17:44             6ÿ256 liste_clients.php
+15/08/2025  12:54             6ÿ959 modifier_client.php
+               5 fichier(s)           31ÿ683 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\comptes
+
+19/08/2025  08:12    <DIR>          .
+19/08/2025  08:12    <DIR>          ..
+16/07/2025  09:49               955 ajax_get_ecritures.php
+15/08/2025  12:55             6ÿ105 creer_compte.php
+15/08/2025  12:56             9ÿ305 details_compte.php
+16/07/2025  09:49             6ÿ312 generate_csv.php
+15/08/2025  10:18             8ÿ925 index.php
+16/07/2025  09:49             9ÿ171 index.txt
+15/08/2025  10:27               815 lettrage_action.php
+15/08/2025  11:08            38ÿ913 liste.php
+               8 fichier(s)           80ÿ501 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\ecritures
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:49               405 ajax_ecritures.php
+16/07/2025  09:49               945 ajax_get_ecritures.php
+16/07/2025  09:49             2ÿ486 ajax_get_ecritures_autr.php
+16/07/2025  09:49             3ÿ491 ajax_suggestion_contrepartie.php
+16/07/2025  09:49             9ÿ337 details.php
+16/07/2025  09:49            13ÿ654 details_ecriture.php
+16/07/2025  09:49            13ÿ689 import_bank_statements.php
+16/07/2025  09:49             8ÿ919 index.html
+16/07/2025  09:49             7ÿ617 index.php
+16/07/2025  09:49             8ÿ142 liste.html
+16/07/2025  09:49            13ÿ871 liste.php
+16/07/2025  09:49            15ÿ468 modifier.html
+16/07/2025  09:49            12ÿ314 modifier.php
+16/07/2025  09:49             7ÿ722 nouveau 1.php
+16/07/2025  09:49            27ÿ301 nouveau 1.txt
+16/07/2025  09:49             4ÿ163 Nouveau document texte.txt
+16/07/2025  09:49            15ÿ285 reconciliation.php
+16/07/2025  09:49            36ÿ971 Recurring_Ecritures.php
+16/07/2025  09:49            15ÿ994 saisie.html
+28/08/2025  15:48           111ÿ907 saisie.php
+16/07/2025  09:49            16ÿ664 saisie2.php
+16/07/2025  09:49            16ÿ663 SaisieNouveau.html
+16/07/2025  09:49            17ÿ757 SaisieNouveau.php
+16/07/2025  09:49             4ÿ114 supprimer.php
+16/07/2025  09:49             2ÿ353 supprimer_ecritures_groupe.php
+16/07/2025  09:49             8ÿ484 valider_remboursement.php
+27/08/2025  17:14            11ÿ798 _partial_ligne_ecriture.php
+              27 fichier(s)          407ÿ514 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\emprunts
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:49            10ÿ387 ajouter.html
+27/08/2025  09:03            38ÿ113 ajouter.php
+16/07/2025  09:49             9ÿ156 detail.html
+16/07/2025  09:49            16ÿ272 details.html
+16/07/2025  09:49            37ÿ050 details.php
+16/07/2025  09:49            19ÿ853 details_comptable.php
+16/07/2025  09:49            18ÿ764 detail_echeance_ancien.txt
+16/07/2025  09:49               200 error.log
+16/07/2025  09:49             8ÿ794 index.html
+16/07/2025  09:49            11ÿ069 index.php
+16/07/2025  09:49            14ÿ074 index.txt
+16/07/2025  09:49            25ÿ156 mark_echeance_paid.php
+16/07/2025  09:49            16ÿ209 modifier.html
+16/07/2025  09:49            34ÿ036 modifier.php
+16/07/2025  09:49             9ÿ552 payment_errors.log
+16/07/2025  09:49            87ÿ383 php_debug.log
+16/07/2025  09:49             4ÿ043 supprimer.php
+16/07/2025  09:49             3ÿ747 supprimer_groupe.php
+16/07/2025  09:49             9ÿ902 valider_remboursement.php
+              19 fichier(s)          373ÿ760 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\factures
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:49             1ÿ377 ajax_get_factures.php
+16/07/2025  09:49             7ÿ276 index.php
+16/07/2025  09:49            11ÿ163 integration.html
+16/07/2025  09:49            50ÿ430 integration.php
+16/07/2025  09:49             7ÿ077 listes_factures.html
+16/07/2025  09:49            20ÿ385 listes_factures.php
+16/07/2025  09:49            14ÿ175 modifier_facture.html
+16/07/2025  09:49            21ÿ371 modifier_facture.php
+16/07/2025  09:49             4ÿ664 Nouveau document texte.txt
+16/07/2025  09:49            13ÿ070 process_payment.php
+16/07/2025  09:49             5ÿ340 process_payment_sans_banque.php
+16/07/2025  09:49             4ÿ475 supprimer_facture.html
+16/07/2025  09:49             4ÿ083 supprimer_facture.php
+16/07/2025  09:49             7ÿ616 voir_facture.html
+16/07/2025  09:49            13ÿ053 voir_facture.php
+              15 fichier(s)          185ÿ555 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\Fournisseurs
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+18/08/2025  14:27             7ÿ713 ajouter.php
+18/08/2025  14:19             5ÿ846 index.php
+18/08/2025  14:32             8ÿ870 modifier.php
+18/08/2025  14:05                 0 Nouveau document texte.txt
+               4 fichier(s)           22ÿ429 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\generation
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:49         1ÿ027ÿ482 application_errors.log
+29/08/2025  12:16            17ÿ716 GenEcriture.php
+16/07/2025  09:49             9ÿ775 GenEmprunt.php
+16/07/2025  09:49             3ÿ731 generer_csv.html
+16/07/2025  09:49             3ÿ731 generer_csv.php
+16/07/2025  09:49            13ÿ993 GenFacture.php
+16/07/2025  09:49             3ÿ644 index.html
+16/07/2025  09:49             3ÿ644 index.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+16/07/2025  09:49           202ÿ665 Plan Comptable.csv
+16/07/2025  09:49           148ÿ117 Plan_Comptable.xlsx
+16/07/2025  09:49             3ÿ611 telecharger.html
+16/07/2025  09:49             8ÿ240 telecharger.php
+              13 fichier(s)        1ÿ446ÿ349 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\habilitations
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:49             4ÿ860 gestion_droits.html
+16/07/2025  09:49            12ÿ015 gestion_droits.php
+16/07/2025  09:49             8ÿ836 index.html
+16/07/2025  09:49             8ÿ836 index.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+16/07/2025  09:49            12ÿ091 profils.html
+16/07/2025  09:49             9ÿ283 profils.php
+16/07/2025  09:49            13ÿ864 utilisateurs.html
+16/07/2025  09:49            13ÿ378 utilisateurs.php
+               9 fichier(s)           83ÿ163 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\hors_bilan
+
+03/09/2025  09:20    <DIR>          .
+03/09/2025  09:20    <DIR>          ..
+03/09/2025  09:25             4ÿ567 ajouter_hypotheque.php
+03/09/2025  09:28             6ÿ027 avance_client.php
+03/09/2025  09:07               806 Bureau - Raccourci.lnk
+03/09/2025  09:04    <DIR>          hors_bilan
+03/09/2025  08:31             3ÿ524 hors_bilan_list.php
+03/09/2025  09:03             4ÿ430 hypotheque.php
+03/09/2025  09:20             4ÿ665 index.php
+               6 fichier(s)           24ÿ019 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\hors_bilan\hors_bilan
+
+03/09/2025  09:04    <DIR>          .
+03/09/2025  09:04    <DIR>          ..
+03/09/2025  09:18             4ÿ567 ajouter_hypotheque.php
+03/09/2025  08:52             4ÿ259 avance_client.php
+03/09/2025  08:54             2ÿ694 hors_bilan_list.php
+03/09/2025  08:53             4ÿ269 hypotheque.php
+               4 fichier(s)           15ÿ789 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\immobilisations
+
+20/08/2025  10:53    <DIR>          .
+20/08/2025  10:53    <DIR>          ..
+18/08/2025  11:14             5ÿ993 ajouter.php
+20/08/2025  11:11             8ÿ147 calcul_amortissement.php
+15/08/2025  08:50             5ÿ747 index.php
+15/08/2025  08:54             4ÿ822 liste.php
+15/08/2025  09:02             5ÿ479 modifier.php
+15/08/2025  08:37                 0 Nouveau document texte.txt
+               6 fichier(s)           30ÿ188 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\import
+
+20/08/2025  09:43    <DIR>          .
+20/08/2025  09:43    <DIR>          ..
+16/07/2025  09:49             1ÿ561 confirmation.php
+16/07/2025  09:49            11ÿ424 index.html
+16/07/2025  09:49            10ÿ677 index.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+20/08/2025  09:51            14ÿ802 releves.php
+16/07/2025  09:49            10ÿ990 traitement.html
+16/07/2025  09:49            17ÿ862 traitement.php
+               7 fichier(s)           67ÿ316 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\journaux
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+18/08/2025  14:37             4ÿ642 ajouter.php
+18/08/2025  14:35             5ÿ097 index.php
+18/08/2025  14:39             5ÿ604 modifier.php
+               3 fichier(s)           15ÿ343 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\lettrage
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+18/08/2025  14:49             8ÿ280 index.php
+               1 fichier(s)            8ÿ280 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\logs
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:49             6ÿ993 application_errors.log
+16/07/2025  09:49                 0 php_errors.log
+               2 fichier(s)            6ÿ993 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\notifications
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:49             6ÿ945 index.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+               2 fichier(s)            6ÿ945 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\Nouveau dossier
+
+04/07/2025  08:19    <DIR>          .
+04/07/2025  08:19    <DIR>          ..
+               0 fichier(s)                0 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\operations
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+18/08/2025  21:45             5ÿ319 depot.php
+15/08/2025  13:02                 0 Nouveau document texte.txt
+16/08/2025  15:30             3ÿ559 operations.php
+18/08/2025  08:59             5ÿ359 retrait.php
+19/08/2025  08:11    <DIR>          transactions
+18/08/2025  08:47             6ÿ192 virement.php
+               5 fichier(s)           20ÿ429 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\operations\transactions
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+18/08/2025  21:44             5ÿ334 depot.php
+               1 fichier(s)            5ÿ334 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\produits
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/08/2025  09:33             5ÿ544 ajouter_produit.php
+15/08/2025  13:17             4ÿ340 index.php
+15/08/2025  14:28             5ÿ904 produits_credits.php
+15/08/2025  14:26             5ÿ819 produits_epargne.php
+               4 fichier(s)           21ÿ607 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\profils
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:49             4ÿ687 ajouter.html
+16/07/2025  09:49             4ÿ687 ajouter.php
+16/07/2025  09:49             9ÿ988 index.html
+16/07/2025  09:49             9ÿ138 index.php
+16/07/2025  09:49             6ÿ205 modifier.html
+16/07/2025  09:49             6ÿ205 modifier.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+               7 fichier(s)           40ÿ910 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\reconciliation
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+18/08/2025  14:56             8ÿ042 index.php
+               1 fichier(s)            8ÿ042 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\reporting
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:49             5ÿ455 balance.php
+11/08/2025  14:36            28ÿ915 balance_generale.php
+16/07/2025  09:49            25ÿ231 cash_flow_statement.php
+15/08/2025  11:03             4ÿ424 export_liasse_fiscale.php
+16/07/2025  09:49            15ÿ765 export_reports.php
+19/08/2025  08:11    <DIR>          fpdf186
+16/07/2025  09:49            24ÿ951 journal_general.php
+16/07/2025  09:49            16ÿ399 ledger_accounts.php
+16/07/2025  09:49            16ÿ599 ledger_accounts.txt
+15/08/2025  11:02             4ÿ561 liasse_fiscale.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+16/07/2025  09:49            13ÿ784 profit_loss.php
+              11 fichier(s)          156ÿ084 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\reporting\fpdf186
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+02/07/2023  11:00            11ÿ692 changelog.htm
+19/08/2025  08:11    <DIR>          doc
+09/04/2023  10:29            12ÿ011 FAQ.htm
+19/08/2025  08:11    <DIR>          font
+19/07/2008  15:04             1ÿ339 fpdf.css
+25/06/2023  15:19            50ÿ772 fpdf.php
+18/06/2011  14:49               583 install.txt
+03/08/2008  10:52               331 license.txt
+19/08/2025  08:11    <DIR>          makefont
+19/08/2025  08:11    <DIR>          tutorial
+               6 fichier(s)           76ÿ728 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\reporting\fpdf186\doc
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+02/07/2023  10:42             1ÿ931 acceptpagebreak.htm
+02/07/2023  10:42             2ÿ469 addfont.htm
+02/07/2023  10:42               911 addlink.htm
+02/07/2023  10:42             2ÿ362 addpage.htm
+02/07/2023  10:42             1ÿ265 aliasnbpages.htm
+02/07/2023  10:42             3ÿ789 cell.htm
+02/07/2023  10:42               721 close.htm
+02/07/2023  10:42               915 error.htm
+02/07/2023  10:42             1ÿ243 footer.htm
+02/07/2023  10:42               564 getpageheight.htm
+02/07/2023  10:42               563 getpagewidth.htm
+02/07/2023  10:42               714 getstringwidth.htm
+02/07/2023  10:42               585 getx.htm
+02/07/2023  10:42               586 gety.htm
+02/07/2023  10:42             1ÿ232 header.htm
+02/07/2023  10:42             4ÿ007 image.htm
+02/07/2023  10:42             3ÿ721 index.htm
+02/07/2023  10:42               948 line.htm
+02/07/2023  10:42             1ÿ331 link.htm
+02/07/2023  10:42               841 ln.htm
+02/07/2023  10:42             2ÿ662 multicell.htm
+02/07/2023  10:42             2ÿ290 output.htm
+02/07/2023  10:42               537 pageno.htm
+02/07/2023  10:42             1ÿ381 rect.htm
+02/07/2023  10:42             1ÿ002 setauthor.htm
+02/07/2023  10:42             1ÿ097 setautopagebreak.htm
+02/07/2023  10:42             1ÿ067 setcompression.htm
+02/07/2023  10:42             1ÿ077 setcreator.htm
+02/07/2023  10:42             2ÿ018 setdisplaymode.htm
+02/07/2023  10:42             1ÿ400 setdrawcolor.htm
+02/07/2023  10:42             1ÿ371 setfillcolor.htm
+02/07/2023  10:42             2ÿ926 setfont.htm
+02/07/2023  10:42               664 setfontsize.htm
+02/07/2023  10:42             1ÿ072 setkeywords.htm
+02/07/2023  10:42               952 setleftmargin.htm
+02/07/2023  10:42               913 setlinewidth.htm
+02/07/2023  10:42             1ÿ049 setlink.htm
+02/07/2023  10:42             1ÿ093 setmargins.htm
+02/07/2023  10:42               869 setrightmargin.htm
+02/07/2023  10:42             1ÿ007 setsubject.htm
+02/07/2023  10:42             1ÿ300 settextcolor.htm
+02/07/2023  10:42               989 settitle.htm
+02/07/2023  10:42               866 settopmargin.htm
+02/07/2023  10:42               821 setx.htm
+02/07/2023  10:42               890 setxy.htm
+02/07/2023  10:42               998 sety.htm
+02/07/2023  10:42             1ÿ230 text.htm
+02/07/2023  10:42             1ÿ658 write.htm
+02/07/2023  10:42             2ÿ272 __construct.htm
+              49 fichier(s)           68ÿ169 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\reporting\fpdf186\font
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+19/09/2015  12:15               442 courier.php
+19/09/2015  12:15               447 courierb.php
+19/09/2015  12:15               454 courierbi.php
+19/09/2015  12:15               450 courieri.php
+19/09/2015  12:15             3ÿ525 helvetica.php
+19/09/2015  12:15             3ÿ529 helveticab.php
+19/09/2015  12:15             3ÿ536 helveticabi.php
+19/09/2015  12:15             3ÿ533 helveticai.php
+19/09/2015  12:15             4ÿ484 symbol.php
+19/09/2015  12:15             3ÿ523 times.php
+19/09/2015  12:15             3ÿ527 timesb.php
+19/09/2015  12:15             3ÿ529 timesbi.php
+19/09/2015  12:15             3ÿ522 timesi.php
+19/09/2015  12:15             3ÿ538 zapfdingbats.php
+              14 fichier(s)           38ÿ039 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\reporting\fpdf186\makefont
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+11/05/2002  17:44             4ÿ546 cp1250.map
+29/04/2002  15:33             4ÿ776 cp1251.map
+29/04/2002  15:33             4ÿ541 cp1252.map
+05/05/2002  15:15             4ÿ255 cp1253.map
+01/11/2002  23:36             4ÿ523 cp1254.map
+15/06/2003  19:29             4ÿ298 cp1255.map
+31/07/2002  16:17             4ÿ434 cp1257.map
+30/12/2003  23:51             4ÿ493 cp1258.map
+15/02/2003  19:04             4ÿ263 cp874.map
+08/05/2002  12:26             4ÿ605 iso-8859-1.map
+15/02/2003  19:02             4ÿ689 iso-8859-11.map
+08/05/2002  12:24             4ÿ579 iso-8859-15.map
+08/05/2002  12:49             4ÿ625 iso-8859-16.map
+08/05/2002  12:27             4ÿ569 iso-8859-2.map
+31/07/2002  16:12             4ÿ588 iso-8859-4.map
+08/05/2002  14:38             4ÿ719 iso-8859-5.map
+08/05/2002  15:44             4ÿ430 iso-8859-7.map
+02/11/2002  19:07             4ÿ623 iso-8859-9.map
+08/05/2002  15:22             4ÿ739 koi8-r.map
+28/12/2003  19:50             4ÿ739 koi8-u.map
+07/12/2019  11:28            10ÿ873 makefont.php
+18/04/2021  10:09            17ÿ951 ttfparser.php
+              22 fichier(s)          119ÿ858 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\reporting\fpdf186\tutorial
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+01/12/2001  21:09             5ÿ633 20k_c1.txt
+01/12/2001  21:11             7ÿ281 20k_c2.txt
+07/12/2011  00:00             4ÿ519 CevicheOne-Regular-Licence.txt
+28/08/2021  10:02             3ÿ767 CevicheOne-Regular.php
+07/12/2011  00:00            35ÿ576 CevicheOne-Regular.ttf
+28/08/2021  10:02            15ÿ498 CevicheOne-Regular.z
+02/07/2023  10:52               877 index.htm
+11/04/2002  19:57             2ÿ373 logo.png
+02/07/2023  11:11               155 makefont.php
+28/02/2002  23:47               448 pays.txt
+02/07/2023  10:52             5ÿ238 tuto1.htm
+02/07/2023  10:52               161 tuto1.php
+02/07/2023  10:52             5ÿ884 tuto2.htm
+02/07/2023  10:52               813 tuto2.php
+02/07/2023  10:52             9ÿ287 tuto3.htm
+02/07/2023  10:52             1ÿ858 tuto3.php
+02/07/2023  10:52            10ÿ053 tuto4.htm
+02/07/2023  10:52             2ÿ362 tuto4.php
+02/07/2023  10:52            13ÿ289 tuto5.htm
+02/07/2023  10:52             2ÿ469 tuto5.php
+02/07/2023  10:52            12ÿ313 tuto6.htm
+02/07/2023  10:52             2ÿ570 tuto6.php
+02/07/2023  10:52             9ÿ076 tuto7.htm
+02/07/2023  10:52               241 tuto7.php
+              24 fichier(s)          151ÿ741 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\scripts
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+18/08/2025  17:46             2ÿ214 generer_primes.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+16/07/2025  09:49             1ÿ121 process_recurring_entries.php
+16/07/2025  09:49               171 run_recurring_entries.bat
+16/07/2025  09:49                 0 run_recurring_entries.txt
+               5 fichier(s)            3ÿ506 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\securite
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+15/08/2025  14:32             4ÿ991 audit.php
+15/08/2025  13:09                 0 Nouveau document texte.txt
+               2 fichier(s)            4ÿ991 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\sinistres
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+18/08/2025  17:58             4ÿ520 index.php
+               1 fichier(s)            4ÿ520 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\pages\utilisateurs
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:49            10ÿ352 index.html
+16/07/2025  09:49             4ÿ433 index.php
+16/07/2025  09:49             9ÿ702 modifier.php
+16/07/2025  09:49             7ÿ416 modifier_mot_de_passe.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+               5 fichier(s)           31ÿ903 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\scripts
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:49                 0 Nouveau document texte.txt
+               1 fichier(s)                0 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\securite
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+16/07/2025  09:49             2ÿ454 .htaccess
+16/07/2025  09:49                 0 Nouveau document texte.txt
+               2 fichier(s)            2ÿ454 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\templates
+
+03/09/2025  08:39    <DIR>          .
+03/09/2025  08:39    <DIR>          ..
+16/07/2025  09:49           121ÿ205 bootstrap.min.css
+16/07/2025  09:49               748 footer.html
+16/07/2025  09:49               400 footer.php
+16/07/2025  09:49             4ÿ005 header.html
+27/08/2025  10:29             6ÿ967 header.php
+03/09/2025  08:39             1ÿ843 hors_bilan_template.html
+15/08/2025  13:22             8ÿ457 liste_clients.php
+16/07/2025  09:49            11ÿ424 navigation.html
+03/09/2025  09:22            42ÿ902 navigation.php
+16/07/2025  09:49            17ÿ913 navigation_invite.php
+16/07/2025  09:49                 0 Nouveau document texte.txt
+              11 fichier(s)          215ÿ864 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\uploads
+
+19/08/2025  08:11    <DIR>          .
+19/08/2025  08:11    <DIR>          ..
+04/07/2025  08:19    <DIR>          factures
+               0 fichier(s)                0 octets
+
+ R‚pertoire de C:\xampp\htdocs\bailcompta360\uploads\factures
+
+04/07/2025  08:19    <DIR>          .
+04/07/2025  08:19    <DIR>          ..
+               0 fichier(s)                0 octets
+
+     Total des fichiers list‚sÿ:
+            1202 fichier(s)        9ÿ544ÿ444 octets
+             956 R‚p(s)  215ÿ911ÿ337ÿ984 octets libres

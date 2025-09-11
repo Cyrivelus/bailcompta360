@@ -111,10 +111,9 @@ $errorMessage = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : null;
                     <tr>
                         <th><input type="checkbox" id="selectAllEcritures"></th>
                         <th data-sort="ID_Ecriture">ID</th>
+						 <th data-sort="Cde">Code Journal</th>
+						  <th data-sort="Description">Description</th>
                         <th data-sort="Date_Saisie">Date de Saisie</th>
-                        <th data-sort="Description">Description</th>
-                        <th data-sort="Montant_Total">Montant Total</th>
-                        <th data-sort="Cde">Code Journal</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -204,10 +203,10 @@ $(document).ready(function() {
                 <tr>
                     <td><input type="checkbox" name="selected_ecritures[]" value="${ecriture.ID_Ecriture}" class="ecriture-checkbox"></td>
                     <td>${ecriture.ID_Ecriture}</td>
-                    <td>${formatDate(ecriture.Date_Saisie)}</td>
+					<td>${escapeHtml(ecriture.Cde)}</td>
                     <td>${escapeHtml(ecriture.Description)}</td>
-                    <td>${formatNumber(ecriture.Montant_Total)}</td>
-                    <td>${escapeHtml(ecriture.Cde)}</td>
+					
+                    <td>${formatDate(ecriture.Date_Saisie)}</td>
                     <td>
                         <a href="modifier.php?id=${ecriture.ID_Ecriture}" class="btn btn-sm btn-warning" title="Consulter/Modifier">
                             <span class="glyphicon glyphicon-folder-open"></span> Consulter

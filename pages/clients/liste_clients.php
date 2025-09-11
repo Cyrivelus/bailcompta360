@@ -1,8 +1,6 @@
 <?php
 // pages/clients/liste_clients.php
 
-// Démarrer la session en tout premier lieu
-// Ajoutez cette ligne ici si elle n'est pas déjà dans les fichiers inclus en haut
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -17,16 +15,17 @@ $client = null;
 $contrats_assurance = [];
 $liste_clients = [];
 
-
 try {
-    // Récupérer la liste complète des clients
-    $liste_clients = getAllClients($pdo);
+    // Correct the function call to use the new listerClients() function.
+    $liste_clients = listerClients($pdo);
 
-    // Si un ID est passé, essayer de récupérer le client
     if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         $id_client = intval($_GET['id']);
-        $client = getClientById($pdo, $id_client);
+        // Use the trouverClientParId function that handles the new table structure.
+        $client = trouverClientParId($pdo, $id_client);
+        
         if ($client) {
+            // Note: Make sure getContratsAssuranceByClientId is compatible with the new structure if necessary.
             $contrats_assurance = getContratsAssuranceByClientId($pdo, $id_client);
         } else {
             $message = "Client introuvable pour l'ID $id_client.";
@@ -38,7 +37,6 @@ try {
     $message_type = 'danger';
 }
 
-// Les fichiers contenant du HTML et les appels à session_start() doivent être inclus APRES la logique PHP
 include '../../templates/navigation.php';
 include '../../templates/header.php';
 ?>
@@ -54,13 +52,30 @@ include '../../templates/header.php';
     <?php if ($client): ?>
         <div class="card mb-4 shadow-sm">
             <div class="card-header bg-info text-white">
-                Détails du Client : <?= htmlspecialchars($client['nom'] . ' ' . $client['prenoms']) ?>
+                Détails du Client : 
+                <?= htmlspecialchars($client['type_client'] === 'particulier' ? $client['nom_ou_raison_sociale'] . ' ' . $client['nom_abrege'] : $client['nom_ou_raison_sociale']) ?>
             </div>
             <div class="card-body">
-                <p><strong>Téléphone :</strong> <?= htmlspecialchars($client['telephone']) ?></p>
-                <p><strong>Email :</strong> <?= htmlspecialchars($client['email']) ?></p>
-                <p><strong>Adresse :</strong> <?= htmlspecialchars($client['adresse']) ?></p>
-                <p><strong>Date d'adhésion :</strong> <?= htmlspecialchars($client['date_adhesion']) ?></p>
+                <?php if ($client['type_client'] === 'particulier'): ?>
+                    <p><strong>Nom :</strong> <?= htmlspecialchars($client['nom_ou_raison_sociale'] ?? '') ?></p>
+                    <p><strong>Prénoms :</strong> <?= htmlspecialchars($client['nom_abrege'] ?? '') ?></p>
+                    <p><strong>Date de naissance :</strong> <?= htmlspecialchars($client['date_naissance'] ?? '') ?></p>
+                    <p><strong>Sexe :</strong> <?= htmlspecialchars($client['sexe'] ?? '') ?></p>
+                    <p><strong>Profession :</strong> <?= htmlspecialchars($client['profession'] ?? '') ?></p>
+                    <p><strong>Revenu mensuel :</strong> <?= number_format($client['revenu_mensuel'] ?? 0, 2, ',', ' ') ?> XAF</p>
+                <?php else: ?>
+                    <p><strong>Raison Sociale :</strong> <?= htmlspecialchars($client['nom_ou_raison_sociale'] ?? '') ?></p>
+                    <p><strong>Matricule :</strong> <?= htmlspecialchars($client['matricule'] ?? '') ?></p>
+                    <p><strong>N° Registre de Commerce :</strong> <?= htmlspecialchars($client['numero_registre_commerce'] ?? '') ?></p>
+                    <p><strong>N° de Contribuable :</strong> <?= htmlspecialchars($client['numero_contribuable'] ?? '') ?></p>
+                    <p><strong>Forme Juridique :</strong> <?= htmlspecialchars($client['forme_juridique'] ?? '') ?></p>
+                    <p><strong>Date de Création :</strong> <?= htmlspecialchars($client['date_creation'] ?? '') ?></p>
+                    <p><strong>Objet Social :</strong> <?= htmlspecialchars($client['objet_social'] ?? '') ?></p>
+                <?php endif; ?>
+                <p><strong>Téléphone :</strong> <?= htmlspecialchars($client['telephone'] ?? '') ?></p>
+                <p><strong>Email :</strong> <?= htmlspecialchars($client['email'] ?? '') ?></p>
+                <p><strong>Adresse :</strong> <?= htmlspecialchars($client['adresse'] ?? '') ?></p>
+                <p><strong>Date d'adhésion :</strong> <?= htmlspecialchars($client['date_adhesion'] ?? '') ?></p>
                 <p><strong>Statut :</strong> 
                     <span class="badge bg-<?= ($client['statut'] == 'actif') ? 'success' : 'danger' ?>">
                         <?= htmlspecialchars(ucfirst($client['statut'])) ?>
@@ -116,8 +131,8 @@ include '../../templates/header.php';
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nom</th>
-                <th>Prénoms</th>
+                <th>Type</th>
+                <th>Nom / Raison Sociale</th>
                 <th>Téléphone</th>
                 <th>Email</th>
                 <th>Actions</th>
@@ -126,14 +141,21 @@ include '../../templates/header.php';
         <tbody>
             <?php foreach ($liste_clients as $c): ?>
                 <tr>
-                    <td><?= $c['id_client'] ?></td>
-                    <td><?= htmlspecialchars($c['nom']) ?></td>
-                    <td><?= htmlspecialchars($c['prenoms']) ?></td>
+                    <td><?= htmlspecialchars($c['id_client']) ?></td>
+                    <td>
+                        <span class="badge bg-secondary">
+                            <?= htmlspecialchars($c['type_client'] === 'particulier' ? 'Particulier' : 'Entreprise') ?>
+                        </span>
+                    </td>
+                    <td>
+                        <?= htmlspecialchars($c['type_client'] === 'particulier' ? $c['nom'] . ' ' . $c['prenoms'] : $c['nom']) ?>
+                    </td>
                     <td><?= htmlspecialchars($c['telephone']) ?></td>
                     <td><?= htmlspecialchars($c['email']) ?></td>
                     <td>
-                        <a href="?id=<?= $c['id_client'] ?>" class="btn btn-sm btn-info">Voir Détails</a>
-                        <a href="modifier_client.php?id=<?= $c['id_client'] ?>" class="btn btn-sm btn-warning">Modifier</a>
+                        <a href="?id=<?= urlencode($c['id_client']) ?>" class="btn btn-sm btn-info">Voir Détails</a>
+                        <a href="modifier_client.php?id=<?= urlencode($c['id_client']) ?>" class="btn btn-sm btn-warning">Modifier</a>
+                        <a href="supprimer_client.php?id=<?= urlencode($c['id_client']) ?>" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce client ?');">Supprimer</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

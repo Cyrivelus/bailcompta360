@@ -1,198 +1,230 @@
 <?php
 // fonctions/gestion_clients.php
 
-require_once("database.php"); // Inclure le fichier de connexion à la base de données
+require_once("database.php");
 
 /**
- * Récupère la liste des clients avec pagination.
+ * Récupère la liste de tous les clients, en utilisant les nouveaux noms de colonnes.
  *
- * @param PDO   $db         L'objet de connexion à la base de données.
- * @param int   $page       Le numéro de la page à afficher (par défaut 1).
- * @param int   $perPage    Le nombre de clients à afficher par page (par défaut 10).
- * @param string|null $searchTerm Terme de recherche optionnel pour filtrer les clients.
- * @return array Un tableau associatif contenant :
- * - 'clients'    : Un tableau des informations des clients (tableaux associatifs).
- * - 'total'      : Le nombre total de clients (après filtrage si un terme est fourni).
- * - 'totalPages' : Le nombre total de pages.
+ * @param PDO $pdo L'objet de connexion à la base de données.
+ * @return array Un tableau de clients.
  */
-function listerClients(PDO $pdo): array
-{
+function listerClients(PDO $pdo): array {
     try {
-        // Préparation de la requête pour sélectionner tous les clients
-        $stmt = $pdo->query("SELECT * FROM Clients ORDER BY nom, prenoms");
-        
-        // Exécution de la requête et récupération des résultats sous forme de tableau associatif
-        $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $clients;
-
+        $sql = "SELECT id_client, nom_ou_raison_sociale, nom_abrege, email, telephone FROM clients ORDER BY nom_ou_raison_sociale ASC";
+        $stmt = $pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        // En cas d'erreur de base de données, on logue l'erreur pour le débogage
-        error_log("Erreur de base de données dans listerClients: " . $e->getMessage());
+        error_log("Erreur PDO lors de la récupération de la liste des clients: " . $e->getMessage());
         return [];
     }
 }
 
-function getAllClients(PDO $pdo): array {
+/**
+ * Crée un nouveau client (particulier ou entreprise) dans la base de données.
+ *
+ * @param PDO $pdo L'objet de connexion à la base de données.
+ * @param array $data Un tableau associatif des données du client.
+ * @return bool Vrai si l'insertion a réussi, faux sinon.
+ */
+function creerClient(PDO $pdo, array $data): bool {
+    // Déterminer le type de client pour choisir les champs à insérer
+    if (($data['type_client'] ?? 'particulier') === 'particulier') {
+        $sql = "INSERT INTO clients (
+            nom_ou_raison_sociale, nom_abrege, email, telephone, adresse, 
+            date_naissance, profession, revenu_mensuel, type_client, date_adhesion
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $params = [
+            $data['nom_ou_raison_sociale'] ?? null,
+            $data['nom_abrege'] ?? null,
+            $data['email'] ?? null,
+            $data['telephone'] ?? null,
+            $data['adresse'] ?? null,
+            $data['date_naissance'] ?? null,
+            $data['profession'] ?? null,
+            $data['revenu_mensuel'] ?? null,
+            'particulier',
+            date('Y-m-d')
+        ];
+    } else { // 'entreprise'
+        $sql = "INSERT INTO clients (
+            nom_ou_raison_sociale, nom_abrege, type_client, matricule, numero_registre_commerce, 
+            date_creation, siege_social, forme_juridique, numero_contribuable, code_nature_clientele, 
+            groupe_activite, secteur_institutionnel, code_ville, objet_social, site_web, 
+            adresse_email_contact, boite_postale, telephone, email
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $params = [
+            $data['nom_ou_raison_sociale'] ?? null,
+            $data['nom_abrege'] ?? null,
+            'entreprise',
+            $data['matricule'] ?? null,
+            $data['numero_registre_commerce'] ?? null,
+            $data['date_creation'] ?? null,
+            $data['siege_social'] ?? null,
+            $data['forme_juridique'] ?? null,
+            $data['numero_contribuable'] ?? null,
+            $data['code_nature_clientele'] ?? null,
+            $data['groupe_activite'] ?? null,
+            $data['secteur_institutionnel'] ?? null,
+            $data['code_ville'] ?? null,
+            $data['objet_social'] ?? null,
+            $data['site_web'] ?? null,
+            $data['adresse_email_contact'] ?? null,
+            $data['boite_postale'] ?? null,
+            $data['telephone'] ?? null, // Le téléphone/email peut être null pour une entreprise si les champs ne sont pas présents sur le formulaire
+            $data['email'] ?? null
+        ];
+    }
+
     try {
-        $stmt = $pdo->prepare("SELECT id_client, nom, prenoms, telephone, email, statut FROM clients ORDER BY nom ASC, prenoms ASC");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute($params);
     } catch (PDOException $e) {
-        // Vous pouvez logger l'erreur avant de relancer
-        throw new Exception("Erreur lors de la récupération des clients : " . $e->getMessage());
+        error_log("Erreur PDO lors de la création du client: " . $e->getMessage());
+        return false;
     }
-}
-
-function getClients(PDO $pdo, int $page = 1, int $perPage = 10, ?string $searchTerm = null): array
-{
-    $offset = ($page - 1) * $perPage;
-    $conditions = [];
-    $params = [
-        ':limit' => $perPage,
-        ':offset' => $offset,
-    ];
-    $whereClause = "";
-
-    if ($searchTerm) {
-        $conditions[] = "(nom_commercial LIKE :term OR nom_legal LIKE :term OR adresse LIKE :term OR code_postal LIKE :term OR ville LIKE :term OR pays LIKE :term OR numero_telephone LIKE :term OR adresse_email LIKE :term OR numero_identification_fiscale LIKE :term OR code_comptable LIKE :term)";
-        $params[':term'] = '%' . $searchTerm . '%';
-        $whereClause = "WHERE " . implode(" AND ", $conditions);
-    }
-
-    $sql = "SELECT ID_Tiers, type_tiers, nom_commercial, nom_legal, adresse, code_postal, ville, pays, numero_telephone, adresse_email, numero_identification_fiscale, code_comptable
-            FROM Tiers
-            WHERE type_tiers = 'Client'
-            $whereClause
-            ORDER BY nom_commercial
-            LIMIT :limit OFFSET :offset";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    $sqlTotal = "SELECT COUNT(*)
-                 FROM Tiers
-                 WHERE type_tiers = 'Client'
-                 $whereClause";
-
-    $stmtTotal = $pdo->prepare($sqlTotal);
-    $stmtTotal->execute(array_slice($params, 0, -2, true)); // Exclude limit and offset for total count
-    $total = $stmtTotal->fetchColumn();
-    $totalPages = ceil($total / $perPage);
-
-    return [
-        'clients' => $clients,
-        'total' => $total,
-        'totalPages' => $totalPages,
-    ];
 }
 
 /**
- * Récupère les détails d'un client spécifique.
+ * Récupère les détails d'un client par son ID, en utilisant les nouvelles colonnes.
  *
- * @param PDO $db L'objet de connexion à la base de données.
+ * @param PDO $pdo L'objet de connexion à la base de données.
  * @param int $id L'ID du client à récupérer.
- * @return array|bool Un tableau associatif contenant les détails du client,
- * ou false si le client n'est pas trouvé.
+ * @return array|bool Un tableau associatif des détails du client, ou false si non trouvé.
  */
-function getDetailsClient(PDO $pdo, int $id): array|bool
-{
-    $sql = "SELECT ID_Tiers, type_tiers, nom_commercial, nom_legal, adresse, code_postal, ville, pays, numero_telephone, adresse_email, numero_identification_fiscale, code_comptable
-            FROM Tiers
-            WHERE ID_Tiers = :id AND type_tiers = 'Client'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    $stmt->execute();
-    return $stmt->fetch(PDO::FETCH_ASSOC) ?: false;
+function trouverClientParId(PDO $pdo, int $id): array|bool {
+    $sql = "SELECT * FROM clients WHERE id_client = ?";
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: false;
+    } catch (PDOException $e) {
+        error_log("Erreur de récupération d'un client : " . $e->getMessage());
+        return false;
+    }
 }
 
 /**
- * Ajoute un nouveau client.
+ * Supprime un client de la base de données par son ID.
  *
- * @param PDO   $db          L'objet de connexion à la base de données.
- * @param array $data        Un tableau associatif contenant les informations du client :
- * - 'nom_commercial' : Le nom commercial du client (obligatoire).
- * - 'nom_legal'    : Le nom légal du client.
- * - 'adresse'       : L'adresse du client.
- * - 'code_postal'   : Le code postal du client.
- * - 'ville'         : La ville du client.
- * - 'pays'          : Le pays du client.
- * - 'numero_telephone': Le numéro de téléphone du client.
- * - 'adresse_email' : L'adresse email du client.
- * - 'numero_identification_fiscale': Le numéro d'identification fiscale du client.
- * - 'code_comptable'  : Le code comptable du client.
- * @return bool True en cas de succès, false en cas d'erreur.
+ * @param PDO $pdo L'objet de connexion à la base de données.
+ * @param int $id_client L'ID du client à supprimer.
+ * @return bool Vrai si la suppression a réussi, faux sinon.
  */
-function ajouterClient(PDO $pdo, array $data): bool
-{
-    $sql = "INSERT INTO Tiers (type_tiers, nom_commercial, nom_legal, adresse, code_postal, ville, pays, numero_telephone, adresse_email, numero_identification_fiscale, code_comptable)
-            VALUES ('Client', :nom_commercial, :nom_legal, :adresse, :code_postal, :ville, :pays, :numero_telephone, :adresse_email, :numero_identification_fiscale, :code_comptable)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':nom_commercial', $data['nom_commercial']);
-    $stmt->bindParam(':nom_legal', $data['nom_legal']);
-    $stmt->bindParam(':adresse', $data['adresse']);
-    $stmt->bindParam(':code_postal', $data['code_postal']);
-    $stmt->bindParam(':ville', $data['ville']);
-    $stmt->bindParam(':pays', $data['pays']);
-    $stmt->bindParam(':numero_telephone', $data['numero_telephone']);
-    $stmt->bindParam(':adresse_email', $data['adresse_email']);
-    $stmt->bindParam(':numero_identification_fiscale', $data['numero_identification_fiscale']);
-    $stmt->bindParam(':code_comptable', $data['code_comptable']);
-    return $stmt->execute();
+function supprimerClient(PDO $pdo, int $id_client): bool {
+    try {
+        $pdo->beginTransaction();
+
+        // Vérifier si le client a des enregistrements associés
+        $stmt_check = $pdo->prepare("SELECT COUNT(*) FROM prets WHERE id_client = ?");
+        $stmt_check->execute([$id_client]);
+        if ($stmt_check->fetchColumn() > 0) {
+            $pdo->rollBack();
+            return false;
+        }
+
+        $stmt = $pdo->prepare("DELETE FROM clients WHERE id_client = ?");
+        $stmt->execute([$id_client]);
+
+        $pdo->commit();
+        return true;
+    } catch (PDOException $e) {
+        $pdo->rollBack();
+        error_log("Erreur PDO lors de la suppression du client (ID: $id_client): " . $e->getMessage());
+        return false;
+    }
 }
 
 /**
- * Modifie les informations d'un client existant.
+ * Récupère les détails d'un client par son nom ou sa raison sociale.
  *
- * @param PDO   $db          L'objet de connexion à la base de données.
- * @param int   $id          L'ID du client à modifier.
- * @param array $data        Un tableau associatif contenant les nouvelles informations du client.
- * (Les clés sont les mêmes que pour la fonction ajouterClient).
- * @return bool True en cas de succès, false en cas d'erreur.
+ * @param PDO $pdo L'objet de connexion à la base de données.
+ * @param string $searchTerm Le nom ou la raison sociale à rechercher.
+ * @return array|bool Un tableau associatif des détails du client, ou false si non trouvé.
  */
-function modifierClient(PDO $pdo, int $id, array $data): bool
-{
-    $sql = "UPDATE Tiers
-            SET nom_commercial = :nom_commercial,
-                nom_legal = :nom_legal,
-                adresse = :adresse,
-                code_postal = :code_postal,
-                ville = :ville,
-                pays = :pays,
-                numero_telephone = :numero_telephone,
-                adresse_email = :adresse_email,
-                numero_identification_fiscale = :numero_identification_fiscale,
-                code_comptable = :code_comptable
-            WHERE ID_Tiers = :id AND type_tiers = 'Client'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    $stmt->bindParam(':nom_commercial', $data['nom_commercial']);
-    $stmt->bindParam(':nom_legal', $data['nom_legal']);
-    $stmt->bindParam(':adresse', $data['adresse']);
-    $stmt->bindParam(':code_postal', $data['code_postal']);
-    $stmt->bindParam(':ville', $data['ville']);
-    $stmt->bindParam(':pays', $data['pays']);
-    $stmt->bindParam(':numero_telephone', $data['numero_telephone']);
-    $stmt->bindParam(':adresse_email', $data['adresse_email']);
-    $stmt->bindParam(':numero_identification_fiscale', $data['numero_identification_fiscale']);
-    $stmt->bindParam(':code_comptable', $data['code_comptable']);
-    return $stmt->execute();
+function trouverClientParNomOuRaison(PDO $pdo, string $searchTerm): array|bool {
+    $sql = "SELECT id_client, nom_ou_raison_sociale, nom_abrege, email, telephone FROM clients WHERE nom_ou_raison_sociale LIKE ? OR nom_abrege LIKE ?";
+    try {
+        $stmt = $pdo->prepare($sql);
+        $searchPattern = '%' . $searchTerm . '%';
+        $stmt->execute([$searchPattern, $searchPattern]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: false;
+    } catch (PDOException $e) {
+        error_log("Erreur de recherche d'un client : " . $e->getMessage());
+        return false;
+    }
 }
 
 /**
- * Supprime un client.
+ * Met à jour les informations d'un client dans la base de données.
  *
- * @param PDO $db L'objet de connexion à la base de données.
- * @param int $id L'ID du client à supprimer.
- * @return bool True en cas de succès, false en cas d'erreur.
+ * @param PDO $pdo L'objet de connexion à la base de données.
+ * @param int $id_client L'ID du client à mettre à jour.
+ * @param array $donnees Un tableau associatif des nouvelles données.
+ * @return bool Vrai si la mise à jour a réussi, faux sinon.
  */
-function supprimerClient(PDO $pdo, int $id): bool
-{
-    $sql = "DELETE FROM Tiers WHERE ID_Tiers = :id AND type_tiers = 'Client'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    return $stmt->execute();
+function mettreAJourClient(PDO $pdo, int $id_client, array $donnees): bool {
+    // Récupérer le type de client actuel
+    $client_existant = trouverClientParId($pdo, $id_client);
+    if (!$client_existant) {
+        return false;
+    }
+    $type_client = $client_existant['type_client'];
+
+    if ($type_client === 'particulier') {
+        $sql = "UPDATE clients SET 
+            nom_ou_raison_sociale = ?, nom_abrege = ?, date_naissance = ?, sexe = ?,
+            telephone = ?, adresse = ?, email = ?
+            WHERE id_client = ?";
+        $params = [
+            $donnees['nom_ou_raison_sociale'] ?? null,
+            $donnees['nom_abrege'] ?? null,
+            $donnees['date_naissance'] ?? null,
+            $donnees['sexe'] ?? null,
+            $donnees['telephone'] ?? null,
+            $donnees['adresse'] ?? null,
+            $donnees['email'] ?? null,
+            $id_client
+        ];
+    } else { // Entreprise
+        $sql = "UPDATE clients SET 
+            nom_ou_raison_sociale = ?, nom_abrege = ?, matricule = ?, numero_registre_commerce = ?, 
+            date_creation = ?, siege_social = ?, forme_juridique = ?, numero_contribuable = ?,
+            code_nature_clientele = ?, groupe_activite = ?, secteur_institutionnel = ?,
+            code_ville = ?, objet_social = ?, site_web = ?, adresse_email_contact = ?,
+            boite_postale = ?, telephone = ?, email = ?
+            WHERE id_client = ?";
+        $params = [
+            $donnees['nom_ou_raison_sociale'] ?? null,
+            $donnees['nom_abrege'] ?? null,
+            $donnees['matricule'] ?? null,
+            $donnees['numero_registre_commerce'] ?? null,
+            $donnees['date_creation'] ?? null,
+            $donnees['siege_social'] ?? null,
+            $donnees['forme_juridique'] ?? null,
+            $donnees['numero_contribuable'] ?? null,
+            $donnees['code_nature_clientele'] ?? null,
+            $donnees['groupe_activite'] ?? null,
+            $donnees['secteur_institutionnel'] ?? null,
+            $donnees['code_ville'] ?? null,
+            $donnees['objet_social'] ?? null,
+            $donnees['site_web'] ?? null,
+            $donnees['adresse_email_contact'] ?? null,
+            $donnees['boite_postale'] ?? null,
+            $donnees['telephone'] ?? null,
+            $donnees['email'] ?? null,
+            $id_client
+        ];
+    }
+
+    try {
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute($params);
+    } catch (PDOException $e) {
+        error_log("Erreur PDO lors de la mise à jour du client (ID: $id_client): " . $e->getMessage());
+        return false;
+    }
 }
 
-// Vous pouvez ajouter d'autres fonctions spécifiques à la gestion des clients ici
+
+?>

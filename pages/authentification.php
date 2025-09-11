@@ -211,6 +211,19 @@ if (isset($_COOKIE['remember_token']) && isset($_COOKIE['remember_id']) && !isse
 
     if (isset($_SESSION['utilisateur_id'])) {
         // Redirection après connexion via cookie
+
+        // --- Appel de la procédure stockée MySQL ici ---
+        try {
+            // Appel de la procédure stockée MySQL
+            $pdo->exec("CALL SP_TransfereEcrituresVersDef()");
+            error_log("Procédure SP_TransfereEcrituresVersDef appelée avec succès via cookie.");
+        } catch (PDOException $e) {
+            error_log("Erreur lors de l'appel de la procédure stockée MySQL via cookie : " . $e->getMessage());
+            // Vous pouvez choisir de ne pas bloquer la connexion mais de logguer l'erreur
+            // Ou de rediriger avec un message d'erreur si l'appel est critique.
+        }
+        // --- Fin de l'appel de la procédure stockée ---
+
         switch ($_SESSION['role']) {
             case 'Admin':
                 header("Location: ../pages/utilisateurs/index.php");
@@ -263,6 +276,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($login) && !empty($password)
             header("Location: ../pages/changement_mot_de_passe.php");
             exit();
         }
+
+        // --- Appel de la procédure stockée MySQL ici ---
+        try {
+            // Appel de la procédure stockée MySQL
+            $pdo->exec("CALL SP_TransfereEcrituresVersDef()");
+            error_log("Procédure SP_TransfereEcrituresVersDef appelée avec succès après authentification.");
+        } catch (PDOException $e) {
+            error_log("Erreur lors de l'appel de la procédure stockée MySQL après authentification : " . $e->getMessage());
+            // Loggez l'erreur, mais ne bloquez pas nécessairement la connexion de l'utilisateur ici
+            // si la procédure stockée n'est pas critique pour la fonctionnalité immédiate.
+        }
+        // --- Fin de l'appel de la procédure stockée ---
 
         // --- Gestion du "Se souvenir de moi" ---
         if ($rememberMe) {

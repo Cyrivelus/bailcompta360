@@ -1,3 +1,84 @@
+<?php
+// templates/navigation.php
+
+// 1. Start output buffering to prevent "headers already sent" errors
+ob_start();
+
+// 2. Custom error handler to catch and manage the "headers already sent" warning
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    if (strpos($errstr, 'headers already sent') !== false) {
+        // Clean the output buffer to prevent the original error from being displayed
+        ob_clean();
+        // Display a user-friendly message
+        echo "<p style='color:red; text-align:center;'>Erreur : Une erreur de session est survenue. Veuillez cliquer sur Déconnecter et vous reconnecter.</p>";
+        // Stop script execution
+        exit();
+    }
+    // For all other errors, use the default PHP error handler
+    return false;
+});
+
+// 3. Session management and inactivity check
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > 1800) { // 30 minutes
+    session_unset();
+    session_destroy();
+    header('Location: ' . generateUrl('index.php'));
+    exit();
+}
+$_SESSION['LAST_ACTIVITY'] = time();
+
+// 4. Core navigation logic
+$estConnecte = isset($_SESSION['utilisateur_id']);
+
+function generateUrl($path) {
+    return '/bailcompta360/' . ltrim($path, '/');
+}
+
+$current_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$base_path = '/bailcompta360/';
+$relative_uri = str_replace($base_path, '', $current_uri);
+$current_page_basename = basename($_SERVER['PHP_SELF']);
+
+function isActive($link_path, $current_uri_relative) {
+    $link_uri = parse_url(generateUrl($link_path), PHP_URL_PATH);
+    $link_uri_relative = str_replace('/bailcompta360/', '', $link_uri);
+
+    if ($current_uri_relative === $link_uri_relative) {
+        return true;
+    }
+
+    $parent_folder = dirname($link_path);
+    if (strpos($current_uri_relative, $parent_folder . '/') === 0 && !empty($parent_folder) && $parent_folder !== '.') {
+        return true;
+    }
+
+    return false;
+}
+
+// 5. Database and permissions setup
+require_once(__DIR__ . '/../fonctions/database.php');
+require_once(__DIR__ . '/../fonctions/gestion_habilitations.php');
+require_once(__DIR__ . '/../fonctions/gestion_reports.php');
+require_once(__DIR__ . '/../fonctions/gestion_import_statements.php');
+require_once(__DIR__ . '/../fonctions/gestion_reconciliation.php');
+require_once(__DIR__ . '/../fonctions/gestion_recurring_entries.php');
+require_once(__DIR__ . '/../fonctions/gestion_budgets.php');
+require_once(__DIR__ . '/../fonctions/gestion_notification.php');
+
+function hasPermission($pdo, $userId, $permission) {
+    return true;
+}
+
+$version = "1.0.0";
+
+if ($estConnecte):
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -199,74 +280,45 @@
     </style>
 </head>
 <body>
-<?php
-// templates/navigation.php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
-if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > 1800) {
-    session_unset();
-    session_destroy();
-    header('Location: ' . generateUrl('index.php'));
-    exit();
-}
-$_SESSION['LAST_ACTIVITY'] = time();
-
-$estConnecte = isset($_SESSION['utilisateur_id']);
-
-function generateUrl($path) {
-    return '/bailcompta360/' . ltrim($path, '/');
-}
-
-$current_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$base_path = '/bailcompta360/';
-$relative_uri = str_replace($base_path, '', $current_uri);
-$current_page_basename = basename($_SERVER['PHP_SELF']);
-
-function isActive($link_path, $current_uri_relative) {
-    $link_uri = parse_url(generateUrl($link_path), PHP_URL_PATH);
-    $link_uri_relative = str_replace('/bailcompta360/', '', $link_uri);
-
-    if ($current_uri_relative === $link_uri_relative) {
-        return true;
-    }
-
-    $parent_folder = dirname($link_path);
-    if (strpos($current_uri_relative, $parent_folder . '/') === 0 && !empty($parent_folder) && $parent_folder !== '.') {
-        return true;
-    }
-
-    return false;
-}
-
-require_once(__DIR__ . '/../fonctions/database.php');
-require_once(__DIR__ . '/../fonctions/gestion_habilitations.php');
-require_once(__DIR__ . '/../fonctions/gestion_reports.php');
-require_once(__DIR__ . '/../fonctions/gestion_import_statements.php');
-require_once(__DIR__ . '/../fonctions/gestion_reconciliation.php');
-require_once(__DIR__ . '/../fonctions/gestion_recurring_entries.php');
-require_once(__DIR__ . '/../fonctions/gestion_budgets.php');
-require_once(__DIR__ . '/../fonctions/gestion_notification.php');
-
-function hasPermission($pdo, $userId, $permission) {
-    return true;
-}
-
-$version = "1.0.0";
-
-if ($estConnecte):
-?>
 <div class="vertical-nav" id="sidebar">
     <button id="toggle-btn" class="btn btn-default" style="position: absolute; top: 10px; right: -40px; z-index: 1000;">
         <span class="glyphicon glyphicon-chevron-left"></span>
         <span class="glyphicon glyphicon-chevron-right"></span>
     </button>
     <nav class="nav flex-column">
+
         <a class="nav-link <?= isActive('pages/tableau_bord.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/tableau_bord.php') ?>">
             <span class="glyphicon glyphicon-dashboard"></span><span>Tableau de Bord</span>
         </a>
 
+        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/operations/') === 0 || strpos($relative_uri, 'pages/releves/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownOperations" role="button" data-toggle="collapse" data-target="#collapseOperations" aria-expanded="<?= strpos($relative_uri, 'pages/operations/') === 0 || strpos($relative_uri, 'pages/releves/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseOperations">
+            <span class="glyphicon glyphicon-transfer"></span><span>Opérations Financières</span>
+        </a>
+        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/operations/') === 0 || strpos($relative_uri, 'pages/releves/') === 0 ? 'in' : '' ?>" id="collapseOperations">
+            <ul class="nav flex-column" style="padding-left: 1.5rem;">
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/operations/depot.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/operations/depot.php') ?>">
+                        <span class="glyphicon glyphicon-plus-sign"></span><span>Dépôt</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/operations/retrait.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/operations/retrait.php') ?>">
+                        <span class="glyphicon glyphicon-minus-sign"></span><span>Retrait</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/operations/virement.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/operations/virement.php') ?>">
+                        <span class="glyphicon glyphicon-transfer"></span><span>Virement</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/releves/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/releves/index.php') ?>">
+                        <span class="glyphicon glyphicon-list-alt"></span><span>Relevés Bancaires</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
         <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/ecritures/') === 0 || strpos($relative_uri, 'pages/comptes/') === 0 || strpos($relative_uri, 'pages/journaux/') === 0 || strpos($relative_uri, 'pages/lettrage/') === 0 || strpos($relative_uri, 'pages/reconciliation/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownCompta" role="button" data-toggle="collapse" data-target="#collapseCompta" aria-expanded="<?= strpos($relative_uri, 'pages/ecritures/') === 0 || strpos($relative_uri, 'pages/comptes/') === 0 || strpos($relative_uri, 'pages/journaux/') === 0 || strpos($relative_uri, 'pages/lettrage/') === 0 || strpos($relative_uri, 'pages/reconciliation/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseCompta">
             <span class="glyphicon glyphicon-book"></span><span>Comptabilité</span>
         </a>
@@ -284,7 +336,7 @@ if ($estConnecte):
                 </li>
                 <li class="nav-item">
                     <a class="dropdown-item <?= isActive('pages/comptes/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/comptes/index.php') ?>">
-                        <span class="glyphicon glyphicon-list-alt"></span><span>Consul Comptes</span>
+                        <span class="glyphicon glyphicon-list-alt"></span><span>Consulter Comptes</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -294,21 +346,21 @@ if ($estConnecte):
                 </li>
                 <li class="nav-item">
                     <a class="dropdown-item <?= isActive('pages/lettrage/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/lettrage/index.php') ?>">
-                        <span class="glyphicon glyphicon-ok"></span><span>Lettrage</span>
+                        <span class="glyphicon glyphicon-tags"></span><span>Lettrage</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="dropdown-item <?= isActive('pages/reconciliation/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/reconciliation/index.php') ?>">
-                        <span class="glyphicon glyphicon-retweet"></span><span>Réconciliation</span>
+                        <span class="glyphicon glyphicon-random"></span><span>Rapprochement Bancaire</span>
                     </a>
                 </li>
             </ul>
         </div>
-
-        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/clients/') === 0 || strpos($relative_uri, 'pages/fournisseurs/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownTiers" role="button" data-toggle="collapse" data-target="#collapseTiers" aria-expanded="<?= strpos($relative_uri, 'pages/clients/') === 0 || strpos($relative_uri, 'pages/fournisseurs/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseTiers">
-            <span class="glyphicon glyphicon-user"></span><span>Tiers</span>
+        
+        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/clients/') === 0 || strpos($relative_uri, 'pages/fournisseurs/') === 0 || strpos($relative_uri, 'pages/agences/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownTiers" role="button" data-toggle="collapse" data-target="#collapseTiers" aria-expanded="<?= strpos($relative_uri, 'pages/clients/') === 0 || strpos($relative_uri, 'pages/fournisseurs/') === 0 || strpos($relative_uri, 'pages/agences/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseTiers">
+            <span class="glyphicon glyphicon-user"></span><span>Tiers & Partenaires</span>
         </a>
-        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/clients/') === 0 || strpos($relative_uri, 'pages/fournisseurs/') === 0 ? 'in' : '' ?>" id="collapseTiers">
+        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/clients/') === 0 || strpos($relative_uri, 'pages/fournisseurs/') === 0 || strpos($relative_uri, 'pages/agences/') === 0 ? 'in' : '' ?>" id="collapseTiers">
             <ul class="nav flex-column" style="padding-left: 1.5rem;">
                 <li class="nav-item">
                     <a class="dropdown-item <?= isActive('pages/clients/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/clients/index.php') ?>">
@@ -320,93 +372,87 @@ if ($estConnecte):
                         <span class="glyphicon glyphicon-briefcase"></span><span>Gestion Fournisseurs</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/agences/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/agences/index.php') ?>">
+                        <span class="glyphicon glyphicon-map-marker"></span><span>Gestion Agences</span>
+                    </a>
+                </li>
             </ul>
         </div>
-       <a class="nav-link <?= isActive('pages/analyse/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/analyse/index.php') ?>">
+          <a class="nav-link <?= isActive('pages/analyse/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/analyse/index.php') ?>">
     <span class="glyphicon glyphicon-equalizer"></span><span>Analyse</span>
 </a>
-        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/operations/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownOperations" role="button" data-toggle="collapse" data-target="#collapseOperations" aria-expanded="<?= strpos($relative_uri, 'pages/operations/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseOperations">
-            <span class="glyphicon glyphicon-usd"></span><span>Opérations Caisse</span>
+        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/analyse/') === 0 || strpos($relative_uri, 'pages/reporting/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownAnalyse" role="button" data-toggle="collapse" data-target="#collapseAnalyse" aria-expanded="<?= strpos($relative_uri, 'pages/analyse/') === 0 || strpos($relative_uri, 'pages/reporting/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseAnalyse">
+  <span class="glyphicon glyphicon-tasks"></span><span>Rapports Financiers</span>
+
         </a>
-        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/operations/') === 0 ? 'in' : '' ?>" id="collapseOperations">
+        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/analyse/') === 0 || strpos($relative_uri, 'pages/reporting/') === 0 ? 'in' : '' ?>" id="collapseAnalyse">
             <ul class="nav flex-column" style="padding-left: 1.5rem;">
                 <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/operations/depot.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/operations/depot.php') ?>">
-                        <span class="glyphicon glyphicon-plus"></span><span>Dépôt</span>
+                    <a class="dropdown-item <?= isActive('pages/reporting/balance_generale.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/balance_generale.php') ?>">
+                        <span class="glyphicon glyphicon-stats"></span><span>Balance Générale</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/operations/retrait.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/operations/retrait.php') ?>">
-                        <span class="glyphicon glyphicon-minus"></span><span>Retrait</span>
+                    <a class="dropdown-item <?= isActive('pages/reporting/balance.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/balance.php') ?>">
+                        <span class="glyphicon glyphicon-align-left"></span><span>Bilan</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/operations/virement.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/operations/virement.php') ?>">
-                        <span class="glyphicon glyphicon-transfer"></span><span>Virement</span>
+                    <a class="dropdown-item <?= isActive('pages/reporting/profit_loss.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/profit_loss.php') ?>">
+                        <span class="glyphicon glyphicon-fire"></span><span>Compte de Résultat</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/reporting/journal_general.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/journal_general.php') ?>">
+                        <span class="glyphicon glyphicon-book"></span><span>Journal Général</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/reporting/ledger_accounts.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/ledger_accounts.php') ?>">
+                        <span class="glyphicon glyphicon-book"></span><span>Grand Livre</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/reporting/cash_flow_statements.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/cash_flow_statements.php') ?>">
+                        <span class="glyphicon glyphicon-transfer"></span><span>Flux de Trésorerie</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/analyse/performance.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/analyse/performance.php') ?>">
+                        <span class="glyphicon glyphicon-stats"></span><span>Analyse de Performance</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/analyse/budgets.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/analyse/budgets.php') ?>">
+                        <span class="glyphicon glyphicon-credit-card"></span><span>Suivi Budgétaire</span>
                     </a>
                 </li>
             </ul>
         </div>
 
-        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/produits/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownProduits" role="button" data-toggle="collapse" data-target="#collapseProduits" aria-expanded="<?= strpos($relative_uri, 'pages/produits/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseProduits">
-            <span class="glyphicon glyphicon-tags"></span><span>Produits Bancaires</span>
+        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/produits/') === 0 || strpos($relative_uri, 'pages/emprunts/') === 0 || strpos($relative_uri, 'pages/credits/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownProduits" role="button" data-toggle="collapse" data-target="#collapseProduits" aria-expanded="<?= strpos($relative_uri, 'pages/produits/') === 0 || strpos($relative_uri, 'pages/emprunts/') === 0 || strpos($relative_uri, 'pages/credits/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseProduits">
+            <span class="glyphicon glyphicon-usd"></span><span>Crédits & Produits Bancaires</span>
         </a>
-        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/produits/') === 0 ? 'in' : '' ?>" id="collapseProduits">
+        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/produits/') === 0 || strpos($relative_uri, 'pages/emprunts/') === 0 || strpos($relative_uri, 'pages/credits/') === 0 ? 'in' : '' ?>" id="collapseProduits">
             <ul class="nav flex-column" style="padding-left: 1.5rem;">
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/produits/produits_epargne.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/produits/produits_epargne.php') ?>">
-                        <span class="glyphicon glyphicon-piggy-bank"></span><span>Produits Épargne</span>
-                    </a>
-                </li>
                 <li class="nav-item">
                     <a class="dropdown-item <?= isActive('pages/produits/produits_credits.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/produits/produits_credits.php') ?>">
-                        <span class="glyphicon glyphicon-euro"></span><span>Produits Crédits</span>
+                        <span class="glyphicon glyphicon-th-list"></span><span>Produits Crédits</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/produits/produits_epargne.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/produits/produits_epargne.php') ?>">
+                        <span class="glyphicon glyphicon-th-list"></span><span>Produits Épargne</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/emprunts/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/emprunts/index.php') ?>">
+                        <span class="glyphicon glyphicon-usd"></span><span>Gestion des Emprunts</span>
                     </a>
                 </li>
             </ul>
         </div>
-
-        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/emprunts/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownEmprunts" role="button" data-toggle="collapse" data-target="#collapseEmprunts" aria-expanded="<?= strpos($relative_uri, 'pages/emprunts/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseEmprunts">
-            <span class="glyphicon glyphicon-usd"></span><span>Emprunts</span>
-        </a>
-        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/emprunts/') === 0 ? 'in' : '' ?>" id="collapseEmprunts">
-            <ul class="nav flex-column" style="padding-left: 1.5rem;">
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/emprunts/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/emprunts/index.php') ?>">
-                        <span class="glyphicon glyphicon-th-list"></span><span>Liste Emprunts</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/emprunts/ajouter.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/emprunts/ajouter.php') ?>">
-                        <span class="glyphicon glyphicon-plus-sign"></span><span>Ajouter Emprunt</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        
-        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/immobilisations/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownImmobilisations" role="button" data-toggle="collapse" data-target="#collapseImmobilisations" aria-expanded="<?= strpos($relative_uri, 'pages/immobilisations/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseImmobilisations">
-            <span class="glyphicon glyphicon-home"></span><span>Immobilisations</span>
-        </a>
-        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/immobilisations/') === 0 ? 'in' : '' ?>" id="collapseImmobilisations">
-            <ul class="nav flex-column" style="padding-left: 1.5rem;">
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/immobilisations/liste.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/immobilisations/liste.php') ?>">
-                        <span class="glyphicon glyphicon-list-alt"></span><span>Liste Immobilisations</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/immobilisations/ajouter.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/immobilisations/ajouter.php') ?>">
-                        <span class="glyphicon glyphicon-plus"></span><span>Ajouter une Immobilisation</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/immobilisations/calcul_amortissement.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/immobilisations/calcul_amortissement.php') ?>">
-                        <span class="glyphicon glyphicon-fire"></span><span>Calcul Amortissement</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-
         <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/factures/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownFactures" role="button" data-toggle="collapse" data-target="#collapseFactures" aria-expanded="<?= strpos($relative_uri, 'pages/factures/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseFactures">
             <span class="glyphicon glyphicon-duplicate"></span><span>Factures</span>
         </a>
@@ -437,210 +483,155 @@ if ($estConnecte):
                 </li>
             </ul>
         </div>
-
-        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/budgets/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownBudgets" role="button" data-toggle="collapse" data-target="#collapseBudgets" aria-expanded="<?= strpos($relative_uri, 'pages/budgets/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseBudgets">
-            <span class="glyphicon glyphicon-piggy-bank"></span><span>Budgets</span>
+        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/credits/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownCredits" role="button" data-toggle="collapse" data-target="#collapseCredits" aria-expanded="<?= strpos($relative_uri, 'pages/credits/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseCredits">
+            <span class="glyphicon glyphicon-usd"></span><span>Gestion des Crédits</span>
         </a>
-        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/budgets/') === 0 ? 'in' : '' ?>" id="collapseBudgets">
+        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/credits/') === 0 ? 'in' : '' ?>" id="collapseCredits">
             <ul class="nav flex-column" style="padding-left: 1.5rem;">
                 <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/budgets/create_budget.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/budgets/create_budget.php') ?>">
-                        <span class="glyphicon glyphicon-plus-sign"></span><span>Créer Budget</span>
+                    <a class="dropdown-item <?= isActive('pages/credits/demande_credit.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/credits/demande_credit.php') ?>">
+                        <span class="glyphicon glyphicon-file"></span><span>Demande de Crédit</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/budgets/view_budget_performance.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/budgets/view_budget_performance.php') ?>">
-                        <span class="glyphicon glyphicon-stats"></span><span>Performance Budget</span>
+                    <a class="dropdown-item <?= isActive('pages/credits/generer_fichier.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/credits/generer_fichier.php') ?>">
+                        <span class="glyphicon glyphicon-folder-open"></span><span>Générer Fichier</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/budgets/forecasts.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/budgets/forecasts.php') ?>">
-                        <span class="glyphicon glyphicon-calendar"></span><span>Prévisions</span>
+                    <a class="dropdown-item <?= isActive('pages/credits/gestion_hypotheques.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/credits/gestion_hypotheques.php') ?>">
+                        <span class="glyphicon glyphicon-home"></span><span>Gestion Hypothèques</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/credits/suivi_credit.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/credits/suivi_credit.php') ?>">
+                        <span class="glyphicon glyphicon-stats"></span><span>Suivi de Crédit</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="dropdown-item <?= isActive('pages/credits/tableau_amortissement.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/credits/tableau_amortissement.php') ?>">
+                        <span class="glyphicon glyphicon-list-alt"></span><span>Tableau d'Amortissement</span>
                     </a>
                 </li>
             </ul>
         </div>
+        <?php if (hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_habilitations_menu') || hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_utilisateurs_menu') || hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_profils_menu') || strpos($relative_uri, 'pages/agences/') === 0 || strpos($relative_uri, 'pages/import/') === 0 || strpos($relative_uri, 'pages/admin/') === 0): ?>
+            <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/') === 0 || strpos($relative_uri, 'pages/agences/') === 0 || strpos($relative_uri, 'pages/import/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownAdmin" role="button" data-toggle="collapse" data-target="#collapseAdmin" aria-expanded="<?= strpos($relative_uri, 'pages/admin/') === 0 || strpos($relative_uri, 'pages/agences/') === 0 || strpos($relative_uri, 'pages/import/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseAdmin">
+                <span class="glyphicon glyphicon-cog"></span><span>Administration & Sécurité</span>
+            </a>
+            <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/admin/') === 0 || strpos($relative_uri, 'pages/agences/') === 0 || strpos($relative_uri, 'pages/import/') === 0 ? 'in' : '' ?>" id="collapseAdmin">
+                <ul class="nav flex-column" style="padding-left: 1.5rem;">
+                    <?php if (hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_habilitations_menu') || hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_profils_menu') || hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_utilisateurs_menu')): ?>
+                        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/profils/') === 0 || strpos($relative_uri, 'pages/admin/utilisateurs/') === 0 || strpos($relative_uri, 'pages/admin/habilitations/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownHabilitations" role="button" data-toggle="collapse" data-target="#collapseHabilitations" aria-expanded="<?= strpos($relative_uri, 'pages/admin/profils/') === 0 || strpos($relative_uri, 'pages/admin/utilisateurs/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseHabilitations">
+                            <span class="glyphicon glyphicon-lock"></span><span>Gestion des Accès</span>
+                        </a>
+                        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/admin/profils/') === 0 || strpos($relative_uri, 'pages/admin/utilisateurs/') === 0 || strpos($relative_uri, 'pages/admin/habilitations/') === 0 ? 'in' : '' ?>" id="collapseHabilitations">
+                            <ul class="nav flex-column" style="padding-left: 1.5rem;">
+                                <li class="nav-item">
+                                    <a class="dropdown-item <?= isActive('pages/admin/profils/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/profils/index.php') ?>">
+                                        <span class="glyphicon glyphicon-briefcase"></span><span>Gestion des Profils</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="dropdown-item <?= isActive('pages/admin/habilitations/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/habilitations/index.php') ?>">
+                                        <span class="glyphicon glyphicon-lock"></span><span>Gestion des Habilitations</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="dropdown-item <?= isActive('pages/admin/utilisateurs/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/utilisateurs/index.php') ?>">
+                                        <span class="glyphicon glyphicon-user"></span><span>Gestion des Utilisateurs</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/plan_comptable/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownPCG" role="button" data-toggle="collapse" data-target="#collapsePCG" aria-expanded="<?= strpos($relative_uri, 'pages/admin/plan_comptable/') === 0 ? 'true' : 'false' ?>" aria-controls="collapsePCG">
+                        <span class="glyphicon glyphicon-book"></span><span>Plan Comptable</span>
+                    </a>
+                    <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/admin/plan_comptable/') === 0 ? 'in' : '' ?>" id="collapsePCG">
+                        <ul class="nav flex-column" style="padding-left: 1.5rem;">
+                            <li class="nav-item">
+                                <a class="dropdown-item <?= isActive('pages/admin/plan_comptable/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/plan_comptable/index.php') ?>">
+                                    <span class="glyphicon glyphicon-list-alt"></span><span>Liste des Comptes</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="dropdown-item <?= isActive('pages/admin/plan_comptable/importer_pcg.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/plan_comptable/importer_pcg.php') ?>">
+                                    <span class="glyphicon glyphicon-upload"></span><span>Importer PCG</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
 
-        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/reporting/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownReporting" role="button" data-toggle="collapse" data-target="#collapseReporting" aria-expanded="<?= strpos($relative_uri, 'pages/reporting/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseReporting">
-            <span class="glyphicon glyphicon-usd"></span><span>Reporting</span>
+                    <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/data_management/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownData" role="button" data-toggle="collapse" data-target="#collapseData" aria-expanded="<?= strpos($relative_uri, 'pages/admin/data_management/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseData">
+                        <span class="glyphicon glyphicon-hdd"></span><span>Gestion de Données</span>
+                    </a>
+                    <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/admin/data_management/') === 0 ? 'in' : '' ?>" id="collapseData">
+                        <ul class="nav flex-column" style="padding-left: 1.5rem;">
+                            <li class="nav-item">
+                                <a class="dropdown-item <?= isActive('pages/admin/data_management/backup_restore.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/data_management/backup_restore.php') ?>">
+                                    <span class="glyphicon glyphicon-floppy-disk"></span><span>Sauvegarde & Restauration</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="dropdown-item <?= isActive('pages/admin/data_management/data_integrity_check.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/data_management/data_integrity_check.php') ?>">
+                                    <span class="glyphicon glyphicon-ok-circle"></span><span>Vérification d'Intégrité</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="dropdown-item <?= isActive('pages/admin/data_management/purge_old_data.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/data_management/purge_old_data.php') ?>">
+                                    <span class="glyphicon glyphicon-trash"></span><span>Purge des Données</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/audit/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownAudit" role="button" data-toggle="collapse" data-target="#collapseAudit" aria-expanded="<?= strpos($relative_uri, 'pages/admin/audit/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseAudit">
+                        <span class="glyphicon glyphicon-check"></span><span>Audit</span>
+                    </a>
+                    <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/admin/audit/') === 0 ? 'in' : '' ?>" id="collapseAudit">
+                        <ul class="nav flex-column" style="padding-left: 1.5rem;">
+                            <li class="nav-item">
+                                <a class="dropdown-item <?= isActive('pages/admin/audit/view_activity_log.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/audit/view_activity_log.php') ?>">
+                                    <span class="glyphicon glyphicon-list"></span><span>Journal d'Activités</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="dropdown-item <?= isActive('pages/admin/audit/view_login_history.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/audit/view_login_history.php') ?>">
+                                    <span class="glyphicon glyphicon-time"></span><span>Historique des Connexions</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <li class="nav-item">
+                        <a class="nav-link <?= isActive('pages/import/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/import/index.php') ?>">
+                            <span class="glyphicon glyphicon-upload"></span><span>Importation des Données</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        <?php endif; ?>
+        
+        <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/aide/') === 0 || strpos($relative_uri, 'pages/configuration/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownAideConfig" role="button" data-toggle="collapse" data-target="#collapseAideConfig" aria-expanded="<?= strpos($relative_uri, 'pages/aide/') === 0 || strpos($relative_uri, 'pages/configuration/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseAideConfig">
+            <span class="glyphicon glyphicon-cog"></span><span>Aide & Configuration</span>
         </a>
-        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/reporting/') === 0 ? 'in' : '' ?>" id="collapseReporting">
+        <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/aide/') === 0 || strpos($relative_uri, 'pages/configuration/') === 0 ? 'in' : '' ?>" id="collapseAideConfig">
             <ul class="nav flex-column" style="padding-left: 1.5rem;">
                 <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/reporting/balance.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/balance.php') ?>">
-                        <span class="glyphicon glyphicon-align-left"></span><span>Bilan</span>
+                    <a class="dropdown-item <?= isActive('pages/aide/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/aide/index.php') ?>">
+                        <span class="glyphicon glyphicon-question-sign"></span><span>Aide & Support</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/reporting/profit_loss.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/profit_loss.php') ?>">
-                        <span class="glyphicon glyphicon-fire"></span><span>Compte de Résultat</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/reporting/journal_general.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/journal_general.php') ?>">
-                        <span class="glyphicon glyphicon-book"></span><span>Journal Général</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/reporting/balance_generale.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/balance_generale.php') ?>">
-                        <span class="glyphicon glyphicon-stats"></span><span>Balance Générale</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-    <a class="dropdown-item <?= isActive('pages/reporting/ledger_accounts.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/ledger_accounts.php') ?>">
-        <span class="glyphicon glyphicon-book"></span><span>Grand Livre</span>
-    </a>
-</li>
-<li class="nav-item">
-    <a class="dropdown-item <?= isActive('pages/reporting/cash_flow_statements.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/cash_flow_statement.php') ?>">
-        <span class="glyphicon glyphicon-transfer"></span><span>Flux de trésorerie</span>
-    </a>
-</li>
-                <li class="nav-item">
-                    <a class="dropdown-item <?= isActive('pages/reporting/liasse_fiscale.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/reporting/liasse_fiscale.php') ?>">
-                        <span class="glyphicon glyphicon-list-alt"></span><span>Liasse Fiscale</span>
+                    <a class="dropdown-item <?= isActive('pages/configuration/parametres.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/configuration/parametres.php') ?>">
+                        <span class="glyphicon glyphicon-cog"></span><span>Paramètres Généraux</span>
                     </a>
                 </li>
             </ul>
         </div>
         
-       <?php if (hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_habilitations_menu') || hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_utilisateurs_menu') || hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_profils_menu') || strpos($relative_uri, 'pages/agences/') === 0 || strpos($relative_uri, 'pages/import/') === 0 || strpos($relative_uri, 'pages/admin/') === 0): ?>
-    <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/') === 0 || strpos($relative_uri, 'pages/agences/') === 0 || strpos($relative_uri, 'pages/import/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownAdmin" role="button" data-toggle="collapse" data-target="#collapseAdmin" aria-expanded="<?= strpos($relative_uri, 'pages/admin/') === 0 || strpos($relative_uri, 'pages/agences/') === 0 || strpos($relative_uri, 'pages/import/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseAdmin">
-        <span class="glyphicon glyphicon-cog"></span><span>Administration & Sécurité</span>
-    </a>
-    <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/admin/') === 0 || strpos($relative_uri, 'pages/agences/') === 0 || strpos($relative_uri, 'pages/import/') === 0 ? 'in' : '' ?>" id="collapseAdmin">
-        <ul class="nav flex-column" style="padding-left: 1.5rem;">
-            
-            <?php if (hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_habilitations_menu') || hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_profils_menu') || hasPermission($pdo, isset($_SESSION['utilisateur_id']) ? $_SESSION['utilisateur_id'] : 0, 'gestion_utilisateurs_menu')): ?>
-           <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/profils/') === 0 || strpos($relative_uri, 'pages/admin/utilisateurs/') === 0 || strpos($relative_uri, 'pages/admin/habilitations/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownHabilitations" role="button" data-toggle="collapse" data-target="#collapseHabilitations" aria-expanded="<?= strpos($relative_uri, 'pages/admin/profils/') === 0 || strpos($relative_uri, 'pages/admin/utilisateurs/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseHabilitations">
-                <span class="glyphicon glyphicon-lock"></span><span>Gestion des accès</span>
-            </a>
-            <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/admin/profils/') === 0 || strpos($relative_uri, 'pages/admin/utilisateurs/') === 0 || strpos($relative_uri, 'pages/admin/habilitations/') === 0 ? 'in' : '' ?>" id="collapseHabilitations">
-                <ul class="nav flex-column" style="padding-left: 1.5rem;">
-                    <li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/admin/profils/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/profils/index.php') ?>">
-                            <span class="glyphicon glyphicon-briefcase"></span><span>Gestion des Profils</span>
-                        </a>
-                    </li>
-					<li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/admin/habilitations/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/habilitations/index.php') ?>">
-                           <span class="glyphicon glyphicon-lock"></span><span>Gestion des habilitations</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/admin/utilisateurs/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/utilisateurs/index.php') ?>">
-                            <span class="glyphicon glyphicon-user"></span><span>Gestion des Utilisateurs</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <?php endif; ?>
-            
-            <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/plan_comptable/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownPCG" role="button" data-toggle="collapse" data-target="#collapsePCG" aria-expanded="<?= strpos($relative_uri, 'pages/admin/plan_comptable/') === 0 ? 'true' : 'false' ?>" aria-controls="collapsePCG">
-                <span class="glyphicon glyphicon-book"></span><span>Plan Comptable</span>
-            </a>
-            <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/admin/plan_comptable/') === 0 ? 'in' : '' ?>" id="collapsePCG">
-                <ul class="nav flex-column" style="padding-left: 1.5rem;">
-                    <li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/admin/plan_comptable/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/plan_comptable/index.php') ?>">
-                            <span class="glyphicon glyphicon-list-alt"></span><span>Liste des Comptes</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/admin/plan_comptable/importer_pcg.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/plan_comptable/importer_pcg.php') ?>">
-                            <span class="glyphicon glyphicon-upload"></span><span>Importer PCG</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/admin/plan_comptable/modifier_compte.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/plan_comptable/modifier_compte.php') ?>">
-                            <span class="glyphicon glyphicon-edit"></span><span>Modifier un Compte</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/data_management/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownData" role="button" data-toggle="collapse" data-target="#collapseData" aria-expanded="<?= strpos($relative_uri, 'pages/admin/data_management/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseData">
-                <span class="glyphicon glyphicon-hdd"></span><span>Gestion de Données</span>
-            </a>
-            <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/admin/data_management/') === 0 ? 'in' : '' ?>" id="collapseData">
-                <ul class="nav flex-column" style="padding-left: 1.5rem;">
-                    <li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/admin/data_management/backup_restore.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/data_management/backup_restore.php') ?>">
-                            <span class="glyphicon glyphicon-floppy-disk"></span><span>Sauvegarde & Restauration</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/admin/data_management/data_integrity_check.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/data_management/data_integrity_check.php') ?>">
-                            <span class="glyphicon glyphicon-ok-circle"></span><span>Vérification d'Intégrité</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/admin/data_management/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/data_management/index.php') ?>">
-                            <span class="glyphicon glyphicon-cog"></span><span>Outils de Gestion</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/admin/data_management/purge_old_data.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/data_management/purge_old_data.php') ?>">
-                            <span class="glyphicon glyphicon-trash"></span><span>Purge des Données</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/admin/audit/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownAudit" role="button" data-toggle="collapse" data-target="#collapseAudit" aria-expanded="<?= strpos($relative_uri, 'pages/admin/audit/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseAudit">
-                <span class="glyphicon glyphicon-check"></span><span>Audit</span>
-            </a>
-            <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/admin/audit/') === 0 ? 'in' : '' ?>" id="collapseAudit">
-                <ul class="nav flex-column" style="padding-left: 1.5rem;">
-                    <li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/admin/audit/view_activity_log.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/audit/view_activity_log.php') ?>">
-                            <span class="glyphicon glyphicon-list"></span><span>Journal d'Activités</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/admin/audit/view_login_history.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/admin/audit/view_login_history.php') ?>">
-                            <span class="glyphicon glyphicon-time"></span><span>Historique des Connexions</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            
-            <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/import/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownImport" role="button" data-toggle="collapse" data-target="#collapseImport" aria-expanded="<?= strpos($relative_uri, 'pages/import/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseImport">
-                <span class="glyphicon glyphicon-import"></span><span>Import de Données</span>
-            </a>
-            <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/import/') === 0 ? 'in' : '' ?>" id="collapseImport">
-                <ul class="nav flex-column" style="padding-left: 1.5rem;">
-                    <li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/import/releves.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/import/releves.php') ?>">
-                            <span class="glyphicon glyphicon-file"></span><span>Relevés Bancaires</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <a class="nav-link dropdown-toggle <?= strpos($relative_uri, 'pages/agences/') === 0 ? 'active' : '' ?>" href="#" id="navbarDropdownAgences" role="button" data-toggle="collapse" data-target="#collapseAgences" aria-expanded="<?= strpos($relative_uri, 'pages/agences/') === 0 ? 'true' : 'false' ?>" aria-controls="collapseAgences">
-                <span class="glyphicon glyphicon-map-marker"></span><span>Agences</span>
-            </a>
-            <div class="panel-collapse collapse <?= strpos($relative_uri, 'pages/agences/') === 0 ? 'in' : '' ?>" id="collapseAgences">
-                <ul class="nav flex-column" style="padding-left: 1.5rem;">
-                    <li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/agences/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/agences/index.php') ?>">
-                            <span class="glyphicon glyphicon-list"></span><span>Liste Agences</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="dropdown-item <?= isActive('pages/agences/gestion_caisses.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/agences/gestion_caisses.php') ?>">
-                            <span class="glyphicon glyphicon-piggy-bank"></span><span>Gestion Caisse</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </ul>
-    </div>
-<?php endif; ?>
-<a class="nav-link" href="#" style="font-size: 0.9em; color: #6c757d; padding-top: 20px;">
-        <span class="glyphicon glyphicon-tag"></span><span>Version 1.0</span>
-    </a>
     </nav>
 </div>
 
@@ -649,23 +640,29 @@ if ($estConnecte):
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
 <script>
-$(document).ready(function () {
-    $("#toggle-btn").on("click", function () {
-        $("#sidebar").toggleClass("collapsed");
-        $("body").toggleClass("collapsed-sidebar");
+    $(document).ready(function () {
+        $("#toggle-btn").on("click", function () {
+            $("#sidebar").toggleClass("collapsed");
+            $("body").toggleClass("collapsed-sidebar");
+        });
     });
-});
 </script>
 
 <?php else: ?>
-<div class="vertical-nav" id="sidebar">
-    <nav class="nav flex-column">
-        <a class="nav-link" href="<?= generateUrl('index.php') ?>">
-            <span class="glyphicon glyphicon-home"></span><span>Accueil</span>
-        </a>
-    </nav>
-</div>
-<?php endif; ?>
+    <div class="vertical-nav" id="sidebar">
+        <nav class="nav flex-column">
+            <a class="nav-link" href="<?= generateUrl('index.php') ?>">
+                <span class="glyphicon glyphicon-home"></span><span>Accueil</span>
+            </a>
+        </nav>
+    </div>
+<?php
+endif;
+
+// 6. Restore the default error handler and flush the output buffer
+restore_error_handler();
+ob_end_flush();
+?>
 
 </body>
 </html>

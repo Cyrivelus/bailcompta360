@@ -1102,7 +1102,7 @@ if ($isComptable):
         </div>
 
         <div class="text-right" style="margin-top: 20px; margin-bottom: 50px;">
-            <a href="liste.php" class="btn btn-default">Annuler</a>
+            <button type="button" class="btn btn-default" id="btn-annuler">Annuler</button>
             <button type="submit" id="btn-valider" class="btn btn-primary">
                 <span class="glyphicon glyphicon-floppy-disk"></span> Valider et Enregistrer
             </button>
@@ -1452,5 +1452,28 @@ function generateContrepartie() {
     }).trigger('change'); // Trigger change on load to set the date if period is pre-filled
 
 });
+</script>
+<script>
+    // Wait for the page content to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the cancel button using its ID
+        const btnAnnuler = document.getElementById('btn-annuler');
+
+        // Add a 'click' event listener to the button
+        btnAnnuler.addEventListener('click', function() {
+            // Select all input, select, and textarea elements on the page
+            const fields = document.querySelectorAll('input, select, textarea');
+            
+            // Loop through each field and reset its value
+            fields.forEach(function(field) {
+                // Check the element type to handle it correctly
+                if (field.type === 'checkbox' || field.type === 'radio') {
+                    field.checked = false;
+                } else {
+                    field.value = '';
+                }
+            });
+        });
+    });
 </script>
 <?php require_once('../../templates/footer.php'); ?>
