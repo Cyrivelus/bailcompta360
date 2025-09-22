@@ -8,7 +8,7 @@ require_once('../../templates/header.php');
 require_once('../../templates/navigation.php');
 require_once '../../fonctions/database.php';
 require_once '../../fonctions/gestion_ecritures.php'; // Ce fichier doit contenir la fonction getListeEcritures et supprimerEcriture
-// require_once '../../fonctions/gestion_emprunts.php'; // Gard� pour les autres usages s'il y en a, mais peut-�tre pas n�cessaire ici
+// require_once '../../fonctions/gestion_emprunts.php'; // Gardé pour les autres usages s'il y en a, mais peut-être pas nécessaire ici
 
 // Messages
 $successMessage = isset($_GET['success']) && $_GET['success'] === '1' ? "Ecriture reussie !" : null;
@@ -31,49 +31,150 @@ $errorMessage = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : null;
     <link rel="stylesheet" href="../../css/tableau.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        /* Styles from previous version, unchanged */
-        .highlight {
-            background-color: #fff3cd;
-        }
-        .no-results {
-            display: none;
-            padding: 15px;
-            text-align: center;
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-        }
-        .search-container {
-            margin-bottom: 20px;
-        }
-        .table-hover tbody tr {
-            transition: all 0.3s ease;
-        }
-        #deleteSelectedBtn {
-            margin-top: 15px;
-            margin-bottom: 15px;
-        }
-        /* Styles for sort indicators */
-        .current-sort-asc:after {
-            content: "\25B2"; /* Triangle up */
-            margin-left: 5px;
-            font-size: 0.8em;
-            vertical-align: middle;
-        }
-        .current-sort-desc:after {
-            content: "\25BC"; /* Triangle down */
-            margin-left: 5px;
-            font-size: 0.8em;
-            vertical-align: middle;
-        }
-        /* Add some padding to table headers for better click target */
-        th {
-            padding-right: 20px !important; /* Adjust as needed */
-        }
-    </style>
+    /*
+     * Styles globaux du corps de la page
+     * Ces styles s'appliquent à l'ensemble de la page pour définir une base visuelle.
+     */
+    body {
+        /* Définit une couleur de fond gris très clair pour l'ensemble du document,
+           offrant un aspect plus doux et moderne. */
+        background-color: #f9f9f9;
+    }
+
+    /*
+     * Styles des conteneurs de recherche
+     * Ces styles gèrent l'espacement et la disposition des éléments de recherche.
+     */
+    .search-container {
+        /* Ajoute une marge de 20 pixels en dessous du conteneur de recherche
+           pour le séparer des éléments suivants. */
+        margin-bottom: 20px;
+    }
+
+    .search-bar {
+        /* Centre la barre de recherche horizontalement et limite sa largeur maximale
+           pour une meilleure présentation sur de grands écrans. */
+        margin: 20px auto;
+        max-width: 600px;
+    }
+
+    /*
+     * Styles de la table des écritures
+     * Ces règles CSS définissent l'apparence de la table affichant les écritures comptables,
+     * y compris le surlignage des lignes et les indicateurs de tri.
+     */
+    .highlight {
+        /* Couleur de fond utilisée pour surligner les lignes, par exemple, lors d'une recherche.
+           Une teinte de jaune pâle pour attirer l'attention sans être agressive. */
+        background-color: #fff3cd;
+    }
+
+    .table-hover tbody tr {
+        /* Applique une transition douce de 0.3 secondes à toutes les propriétés CSS
+           qui changent lors du survol des lignes, pour une expérience utilisateur fluide. */
+        transition: all 0.3s ease;
+    }
+
+    /* Styles pour les indicateurs de tri (flèches haut/bas) dans les en-têtes de tableau. */
+    .current-sort-asc:after {
+        /* Insère un caractère unicode de triangle pointant vers le haut (?)
+           pour indiquer un tri ascendant. */
+        content: "\25B2";
+        /* Ajoute un petit espace à gauche de l'icône de tri. */
+        margin-left: 5px;
+        /* Réduit la taille de l'icône par rapport à la taille de la police de base. */
+        font-size: 0.8em;
+        /* Aligne verticalement l'icône avec le texte de l'en-tête. */
+        vertical-align: middle;
+    }
+    .current-sort-desc:after {
+        /* Insère un caractère unicode de triangle pointant vers le bas (?)
+           pour indiquer un tri descendant. */
+        content: "\25BC";
+        /* Ajoute un petit espace à gauche de l'icône de tri. */
+        margin-left: 5px;
+        /* Réduit la taille de l'icône par rapport à la taille de la police de base. */
+        font-size: 0.8em;
+        /* Aligne verticalement l'icône avec le texte de l'en-tête. */
+        vertical-align: middle;
+    }
+
+    th {
+        /* Ajoute un rembourrage supplémentaire à droite des en-têtes de colonne
+           pour augmenter la zone cliquable et améliorer l'expérience de tri.
+           `!important` est utilisé pour s'assurer que cette règle prend le pas
+           sur les styles Bootstrap par défaut si nécessaire. */
+        padding-right: 20px !important;
+    }
+
+    /*
+     * Styles pour l'affichage en mode "carte" (potentiellement pour mobile ou vues alternatives)
+     * Ces styles définissent l'apparence des éléments affichés comme des cartes individuelles.
+     */
+    .card {
+        /* Fond blanc, bords arrondis et une ombre légère pour créer un effet de carte. */
+        background: #fff;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        /* Marge en bas pour espacer les cartes. */
+        margin-bottom: 15px;
+        /* Rembourrage interne pour le contenu de la carte. */
+        padding: 15px;
+    }
+    .card-header {
+        /* Styles pour l'en-tête des cartes. */
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: #333;
+    }
+    .card-date {
+        /* Styles pour la date affichée dans les cartes. */
+        color: #888;
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+    .card-actions .btn {
+        /* Marge à droite pour espacer les boutons d'action dans les cartes. */
+        margin-right: 5px;
+    }
+
+    /*
+     * Styles des messages de feedback et boutons d'action spécifiques
+     * Ces règles gèrent l'apparence des messages d'information ou d'erreur
+     * et du bouton de suppression groupée.
+     */
+    #no-results {
+        /* Cache initialement le message "aucun résultat". Il sera affiché via JavaScript. */
+        display: none;
+        /* Marge verticale pour un bon espacement. */
+        margin: 20px 0;
+        /* Couleur du texte (rouge foncé) et gras pour mettre en évidence le message. */
+        color: #a94442; /* Couleur danger de Bootstrap */
+        font-weight: bold;
+        /* Rembourrage, alignement et fond léger pour le bloc de message. */
+        padding: 15px;
+        text-align: center;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+    }
+
+    #deleteSelectedBtn {
+        /* Cache le bouton de suppression groupée par défaut. Il sera affiché via JavaScript
+           lorsque des éléments sont sélectionnés. */
+        display: none;
+        /* Marge en bas pour le séparer des autres éléments. */
+        margin-bottom: 15px;
+        /* Ajout de la marge supérieure issue du style original pour uniformité */
+        margin-top: 15px;
+    }
+</style>
 </head>
 
 <body>
 <div class="container">
+</BR>
+</BR>
     <h2 class="page-header">Liste des &eacutecritures Comptables</h2>
 
     <?php if ($successMessage): ?>
@@ -98,11 +199,26 @@ $errorMessage = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : null;
         <a href="liste.php" class="btn btn-link">R&eacuteinitialiser</a>
     </div>
 
-    <p>
-        <a href="saisie.php" class="btn btn-primary">
-            <span class="glyphicon glyphicon-plus"></span> Ajouter une nouvelle &eacutecriture
-        </a>
-    </p>
+   <div style="margin-bottom: 20px;">
+    <a href="saisie.php" class="btn btn-primary">
+        <span class="glyphicon glyphicon-plus"></span> Ajouter une nouvelle &eacutecriture
+    </a>
+    <a href="brouillard_ecriture.php" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Affichage des &eacutecritures du brouillard par journal, date, type et compte.">
+        <span class="glyphicon glyphicon-folder-open"></span> Consultation des brouillards d'&eacutecritures
+    </a>
+</div>
+
+<script>
+    // This script is required to initialize the tooltip from Bootstrap
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 
     <form action="supprimer_ecritures_groupe.php" method="POST" id="bulkDeleteForm">
         <div class="table-responsive">
@@ -110,11 +226,7 @@ $errorMessage = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : null;
                 <thead>
                     <tr>
                         <th><input type="checkbox" id="selectAllEcritures"></th>
-                        <th data-sort="ID_Ecriture">ID</th>
-						 <th data-sort="Cde">Code Journal</th>
-						  <th data-sort="Description">Description</th>
-                        <th data-sort="Date_Saisie">Date de Saisie</th>
-                        <th>Actions</th>
+                      
                     </tr>
                 </thead>
                 <tbody id="ecritures-body">
@@ -136,189 +248,108 @@ $errorMessage = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : null;
 	 
 <script>
 $(document).ready(function() {
-    // Initial load of entries
     loadEcritures();
 
-    // Function to load entries
     function loadEcritures(search = '', sort = 'ID_Ecriture', order = 'DESC') {
         $.ajax({
             url: 'ajax_get_ecritures.php',
             method: 'GET',
-            data: {
-                search: search,
-                sort: sort,
-                order: order
-            },
-            dataType: 'json', // Expect JSON response
+            data: { search: search, sort: sort, order: order },
+            dataType: 'json',
             success: function(data) {
-                // Console log for debugging - keep this during development
-                console.log("Donnees recues (succes) :", data);
-                updateTable(data);
-                // After updating the table, reset "Select All" checkbox and button visibility
+                console.log("Donnees recues :", data);
+                updateCards(data);
                 $('#selectAllEcritures').prop('checked', false);
                 toggleDeleteButtonVisibility();
             },
             error: function(xhr, status, error) {
-                // Enhanced error logging for debugging
-                console.error("AJAX Error loading entries:");
-                console.error("Status:", status);
-                console.error("Error message:", error);
-                console.error("responseText:", xhr.responseText);
-                console.error("statusText:", xhr.statusText);
-                console.error("statusCode:", xhr.status);
-
-                // Provide a user-friendly error message
-                let userErrorMessage = "Erreur lors du chargement des �critures. ";
-                if (status === "parsererror") {
-                    userErrorMessage += "Le serveur n'a pas renvoy� du JSON valide. V�rifiez le fichier `ajax_get_ecritures.php` pour des erreurs PHP avant l'output JSON. R�ponse du serveur (d�but) : " + (xhr.responseText ? xhr.responseText.substring(0, 200) + "..." : "Vide");
-                } else if (xhr.status === 404) {
-                    userErrorMessage += "Le fichier `ajax_get_ecritures.php` n'a pas �t� trouv�. V�rifiez le chemin.";
-                } else if (xhr.status === 500) {
-                    userErrorMessage += "Erreur interne du serveur. V�rifiez les logs d'erreurs de votre serveur pour plus de d�tails.";
-                } else {
-                    userErrorMessage += `D�tails techniques : ${status} - ${error}.`;
-                }
-
-                $('#no-results').text(userErrorMessage).show();
-                // Clear the table body in case of error
+                console.error("Erreur AJAX:", error);
+                $('#no-results').text("? Erreur de chargement : " + error).show();
                 $('#ecritures-body').empty();
             }
         });
     }
 
-    // Function to update the table with fetched entries
-    function updateTable(ecritures) {
-        const $tbody = $('#ecritures-body');
-        $tbody.empty(); // Clear existing rows
+    function updateCards(ecritures) {
+        const $body = $('#ecritures-body');
+        $body.empty();
 
-        if (ecritures.length === 0) {
-            $('#no-results').text("Aucune �criture trouv�e pour cette recherche.").show();
+        if (!ecritures || ecritures.length === 0) {
+            $('#no-results').text("?? Aucune ecriture trouvee.").show();
             return;
         }
 
-        $('#no-results').hide(); // Hide "no results" message if there are entries
+        $('#no-results').hide();
 
-        ecritures.forEach(function(ecriture) {
-            const row = `
-                <tr>
-                    <td><input type="checkbox" name="selected_ecritures[]" value="${ecriture.ID_Ecriture}" class="ecriture-checkbox"></td>
-                    <td>${ecriture.ID_Ecriture}</td>
-					<td>${escapeHtml(ecriture.Cde)}</td>
-                    <td>${escapeHtml(ecriture.Description)}</td>
-					
-                    <td>${formatDate(ecriture.Date_Saisie)}</td>
-                    <td>
-                        <a href="modifier.php?id=${ecriture.ID_Ecriture}" class="btn btn-sm btn-warning" title="Consulter/Modifier">
+        ecritures.forEach(function(e) {
+            const cdeDescription = `${escapeHtml(e.Cde)} - ${escapeHtml(e.Description)}`;
+            const dateMonthYear = formatDate(e.Date_Saisie);
+
+            const card = `
+                <div class="card">
+                    <div class="checkbox pull-right">
+                        <label>
+                            <input type="checkbox" name="selected_ecritures[]" value="${e.ID_Ecriture}" class="ecriture-checkbox">
+                        </label>
+                    </div>
+                    <div class="card-header">${cdeDescription}</div>
+                    <div class="card-date">${dateMonthYear}</div>
+                    <div class="card-actions">
+                        <a href="modifier.php?id=${e.ID_Ecriture}" class="btn btn-warning btn-sm">
                             <span class="glyphicon glyphicon-folder-open"></span> Consulter
                         </a>
-						
-                        <a href="supprimer.php?id=${ecriture.ID_Ecriture}" class="btn btn-sm btn-danger" onclick="return confirm('Etes-vous sur de vouloir supprimer cette ecriture ?')">
+                        <a href="supprimer.php?id=${e.ID_Ecriture}" class="btn btn-danger btn-sm" onclick="return confirm('Supprimer cette ecriture ?')">
                             <span class="glyphicon glyphicon-trash"></span> Supprimer
                         </a>
-                        <a href="details.php?id=${ecriture.ID_Ecriture}" class="btn btn-sm btn-info" title="Voir les details">
+                        <a href="details.php?id=${e.ID_Ecriture}" class="btn btn-info btn-sm">
                             <span class="glyphicon glyphicon-eye-open"></span> D&eacutetails
                         </a>
-                    </td>
-                </tr>
+                    </div>
+                </div>
             `;
-            $tbody.append(row);
+            $body.append(card);
         });
     }
 
-    // Helper function to format date
     function formatDate(dateString) {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
-        return new Intl.DateTimeFormat('fr-FR', {
-            year: 'numeric', month: '2-digit', day: '2-digit',
-            hour: '2-digit', minute: '2-digit', second: '2-digit'
-        }).format(date);
+        return new Intl.DateTimeFormat('fr-FR', { year: 'numeric', month: 'long' }).format(date);
     }
 
-    // Helper function to format numbers
-    function formatNumber(number) {
-        return new Intl.NumberFormat('fr-FR', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }).format(parseFloat(number) || 0);
-    }
-
-    // Helper function to escape HTML characters
     function escapeHtml(text) {
-        if (text === null || typeof text === 'undefined') {
-            return '';
-        }
-        return String(text).replace(/&/g, "&amp;")
-                           .replace(/</g, "&lt;")
-                           .replace(/>/g, "&gt;")
-                           .replace(/"/g, "&quot;")
-                           .replace(/'/g, "&#039;");
+        if (!text) return '';
+        return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
     }
 
-    // Real-time search
     $('#search-input').on('input', function() {
-        const searchTerm = $(this).val().trim();
-        loadEcritures(searchTerm);
+        loadEcritures($(this).val().trim());
     });
 
-    // Column sorting logic
-    $('#ecritures-table').on('click', 'th[data-sort]', function() {
-        const sortField = $(this).data('sort');
-        let sortOrder = 'DESC';
-
-        // Toggle sort order and update class
-        if ($(this).hasClass('current-sort-asc')) {
-            sortOrder = 'DESC';
-            $(this).removeClass('current-sort-asc').addClass('current-sort-desc');
-        } else if ($(this).hasClass('current-sort-desc')) {
-            sortOrder = 'ASC';
-            $(this).removeClass('current-sort-desc').addClass('current-sort-asc');
-        } else {
-            // New sort column, default to descending
-            $('#ecritures-table th[data-sort]').removeClass('current-sort-asc current-sort-desc'); // Clear other sorts
-            sortOrder = 'DESC';
-            $(this).addClass('current-sort-desc');
-        }
-
-        loadEcritures($('#search-input').val().trim(), sortField, sortOrder);
-    });
-
-    // Focus on search input on page load
-    $('#search-input').focus();
-
-    // --- Bulk Delete JavaScript Logic ---
-
-    // 1. "Select All" checkbox logic
     $('#selectAllEcritures').on('change', function() {
         $('.ecriture-checkbox:visible').prop('checked', $(this).prop('checked'));
         toggleDeleteButtonVisibility();
     });
 
-    // 2. Individual checkbox logic (event delegation)
     $('#ecritures-body').on('change', '.ecriture-checkbox', function() {
-        const totalVisibleCheckboxes = $('.ecriture-checkbox:visible').length;
-        const checkedVisibleCheckboxes = $('.ecriture-checkbox:visible:checked').length;
-
-        if (totalVisibleCheckboxes > 0 && checkedVisibleCheckboxes === totalVisibleCheckboxes) {
-            $('#selectAllEcritures').prop('checked', true);
-        } else {
-            $('#selectAllEcritures').prop('checked', false);
-        }
+        const all = $('.ecriture-checkbox:visible').length;
+        const checked = $('.ecriture-checkbox:visible:checked').length;
+        $('#selectAllEcritures').prop('checked', all > 0 && checked === all);
         toggleDeleteButtonVisibility();
     });
 
-    // 3. Function to show/hide bulk delete button
     function toggleDeleteButtonVisibility() {
-        if ($('.ecriture-checkbox:checked').length > 0) {
-            $('#deleteSelectedBtn').show();
-        } else {
-            $('#deleteSelectedBtn').hide();
-        }
+        $('#deleteSelectedBtn').toggle($('.ecriture-checkbox:checked').length > 0);
     }
 
-    // Initialize button state on page load
     toggleDeleteButtonVisibility();
 });
+</script>
 </script>
 
 <?php require_once('../../templates/footer.php'); ?>

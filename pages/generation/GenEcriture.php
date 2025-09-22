@@ -12,22 +12,20 @@ error_reporting(E_ALL);
 ini_set('default_charset', 'UTF-8');
 mb_internal_encoding('UTF-8');
 
-$titre = 'Exporter et Lister les Écritures Comptables';
+$titre = 'Exportation Des Écritures Comptables';
 $current_page = basename(__FILE__);
 
 $messageSucces = null;
 $messageInfo = null;
 $messageErreur = null;
 
-// Assurez-vous que le fichier database.php est configuré pour se connecter à MySQL.
-// Par exemple, en utilisant un DSN comme 'mysql:host=localhost;dbname=ma_base'
 require_once('../../fonctions/database.php');
 
 try {
     // --- Déclaration des fonctions utilitaires ---
     function getEcrituresData($pdo) {
         // Remplacement de TOP 1000 par LIMIT 1000 pour MySQL
-        $sql = "SELECT 
+        $sql = "SELECT
                     Pce, DateDeSaisie, Lib, Deb, Cre, Jal, Cpt, ctr,
                     NumeroAgenceSCE, NomUtilisateur, EstValide,
                     is_exported, exported_at
@@ -50,6 +48,17 @@ try {
         $countToExport = $stmt_export->fetchColumn();
 
         return ['to_validate' => $countToValidate, 'to_export' => $countToExport];
+    }
+
+    // NOUVELLE FONCTION pour récupérer les dates comptables uniques des écritures éligibles
+    function getUniqueEligibleDates($pdo) {
+        // Remplacement de CONVERT(DATE, ...) par DATE(...) pour MySQL
+        $sql = "SELECT DISTINCT DATE(DateDeSaisie) AS DateComptable
+                FROM ECR_DEF
+                WHERE EstValide = 1 AND (is_exported = 0 OR is_exported IS NULL)
+                ORDER BY DateComptable ASC";
+        $stmt = $pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
     function formatEcritureLine($row) {
@@ -90,7 +99,7 @@ try {
         }
         
         $libelle_upper = mb_strtoupper(trim((string)$libelle_val));
-        $libelle_padded = str_pad(mb_substr($libelle_upper, 0, 30, 'UTF-8'), 30, ' ', STR_PAD_RIGHT);
+        $libelle_padded = str_pad(mb_substr($libelle_upper, 0, 31, 'UTF-8'), 31, ' ', STR_PAD_RIGHT);
         
         try {
             $dateTimeObj = new DateTime($date_val);
@@ -138,21 +147,29 @@ try {
                     exit();
                 }
 
-            case 'export_all':
+            case 'export_by_date': // Renommé l'action pour la spécificité
                 $maxSizeKB = isset($_GET['size']) ? intval($_GET['size']) : 1000;
                 $maxSizeInBytes = $maxSizeKB * 1024;
-                
+                $exportDate = isset($_GET['export_date']) ? $_GET['export_date'] : null;
+
+                if (empty($exportDate)) {
+                    header('Location: ' . $current_page . '?error=' . urlencode('Veuillez sélectionner une date comptable pour l\'exportation.'));
+                    exit();
+                }
+
                 $sql_export = "SELECT
-                    Pce, DateDeSaisie AS Dte, Lib, Deb, Cre, NumeroAgenceSCE, Cpt, ctr
-                    FROM ECR_DEF
-                    WHERE EstValide = 1
-                    AND (Deb > 0 OR Cre > 0)
-                    AND Cpt IS NOT NULL
-                    AND (is_exported = 0 OR is_exported IS NULL)
-                    ORDER BY Pce, DateDeSaisie";
+                                    Pce, DateDeSaisie AS Dte, Lib, Deb, Cre, NumeroAgenceSCE, Cpt, ctr
+                                FROM ECR_DEF
+                                WHERE EstValide = 1
+                                AND (Deb > 0 OR Cre > 0)
+                                AND Cpt IS NOT NULL
+                                AND (is_exported = 0 OR is_exported IS NULL)
+                                AND DATE(DateDeSaisie) = :export_date -- FILTRE PAR DATE COMPTABLE
+                                ORDER BY Pce, DateDeSaisie";
                 
                 try {
                     $stmt_export = $pdo->prepare($sql_export);
+                    $stmt_export->bindParam(':export_date', $exportDate, PDO::PARAM_STR);
                     $stmt_export->execute();
 
                     $groupedEcritures = [];
@@ -180,7 +197,7 @@ try {
                     }
 
                     if (empty($groupedEcritures)) {
-                        header('Location: ' . $current_page . '?info=' . urlencode('Aucune écriture éligible à l\'exportation.'));
+                        header('Location: ' . $current_page . '?info=' . urlencode('Aucune écriture éligible à l\'exportation pour la date sélectionnée (' . $exportDate . ').'));
                         exit();
                     }
 
@@ -228,11 +245,11 @@ try {
                     }
                     
                     if (empty($output)) {
-                        header('Location: ' . $current_page . '?info=' . urlencode('Aucune écriture à exporter après vérification et équilibrage.'));
+                        header('Location: ' . $current_page . '?info=' . urlencode('Aucune écriture à exporter après vérification et équilibrage pour la date ' . $exportDate . '.'));
                         exit();
                     }
 
-                    $filename = 'ecritures_exportees_' . date('Ymd_His') . '.txt';
+                    $filename = 'ecritures_exportees_' . $exportDate . '_' . date('His') . '.txt';
 
                     header('Content-Type: text/plain; charset=UTF-8');
                     header('Content-Disposition: attachment; filename="' . $filename . '"');
@@ -244,18 +261,27 @@ try {
                     // --- MISE À JOUR DE LA TABLE ECR_DEF ---
                     if (!empty($piece_numbers_to_update)) {
                         $unique_pieces = array_unique($piece_numbers_to_update);
-                        $placeholders = implode(',', array_fill(0, count($unique_pieces), '?'));
                         
                         $pdo->beginTransaction();
                         
-                        // Remplacement de GETDATE() par NOW() pour MySQL
+                        // Générer les placeholders nommés pour la clause IN
+                        $named_placeholders = [];
+                        $params = [':export_date_update' => $exportDate];
+                        foreach ($unique_pieces as $i => $piece) {
+                            $param_name = ':pce_' . $i;
+                            $named_placeholders[] = $param_name;
+                            $params[$param_name] = $piece;
+                        }
+                        $placeholders_in_sql = implode(',', $named_placeholders);
+
                         $sql_update_ecr_def = "
                             UPDATE ECR_DEF
                             SET is_exported = 1, exported_at = NOW()
-                            WHERE Pce IN ($placeholders)
+                            WHERE Pce IN ($placeholders_in_sql) AND DATE(DateDeSaisie) = :export_date_update
                         ";
+                        
                         $stmt_update = $pdo->prepare($sql_update_ecr_def);
-                        $stmt_update->execute($unique_pieces);
+                        $stmt_update->execute($params);
 
                         $pdo->commit();
                     }
@@ -272,13 +298,15 @@ try {
             case 'refresh_data':
                 $allEcritures = getEcrituresData($pdo);
                 $counts = countEcritures($pdo);
+                $uniqueDates = getUniqueEligibleDates($pdo); // Récupère les dates pour le sélecteur
 
                 ob_end_clean();
                 header('Content-Type: application/json');
                 echo json_encode([
                     'status' => 'success',
                     'data' => $allEcritures,
-                    'counts' => $counts
+                    'counts' => $counts,
+                    'uniqueDates' => $uniqueDates // Ajout des dates uniques à la réponse JSON
                 ]);
                 exit();
         }
@@ -288,7 +316,8 @@ try {
     $counts = countEcritures($pdo);
     $countToValidate = $counts['to_validate'];
     $countToExport = $counts['to_export'];
-    
+    $uniqueEligibleDates = getUniqueEligibleDates($pdo); // Récupération initiale des dates
+
     if (file_exists('../../templates/header.php')) {
         require_once('../../templates/header.php');
     }
@@ -328,6 +357,15 @@ try {
         <div class="form-group">
             <label for="exportSize">Taille max. du fichier (Ko):</label>
             <input type="number" id="exportSize" class="form-control" value="1000" min="10" style="width: 150px; display: inline-block;">
+        </div>
+        <div class="form-group">
+            <label for="exportDate">Date comptable à exporter :</label>
+            <select id="exportDate" class="form-control" style="width: 200px; display: inline-block;">
+                <option value="">Sélectionnez une date</option>
+                <?php foreach ($uniqueEligibleDates as $date): ?>
+                    <option value="<?= htmlspecialchars($date) ?>"><?= htmlspecialchars((new DateTime($date))->format('Y-m-d')) ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
         <button id="export-btn" class="btn btn-primary <?= $countToExport > 0 ? '' : 'disabled' ?>">
             <span class="glyphicon glyphicon-download-alt"></span> Exporter les Écritures (<span id="count-to-export"><?= $countToExport ?></span>)
@@ -394,18 +432,19 @@ $(document).ready(function() {
         }
         var exportBtn = $(this);
         var size = $('#exportSize').val();
-        if (size > 0) {
-            exportBtn.prop('disabled', true).text('Exportation en cours...');
-            window.location.href = '?action=export_all&size=' + size;
-        } else {
-            // Using a simple modal as per instructions instead of alert()
-            // Create a temporary modal-like div for the message
-            var alertDiv = $('<div>').addClass('alert alert-danger').text('Veuillez entrer une taille de fichier valide (supérieure à 0).');
-            $('#messages-container').append(alertDiv);
-            setTimeout(function() {
-                alertDiv.fadeOut('slow', function() { $(this).remove(); });
-            }, 3000);
+        var exportDate = $('#exportDate').val();
+
+        if (size <= 0) {
+            alert('Veuillez entrer une taille de fichier valide (supérieure à 0).');
+            return;
         }
+        if (exportDate === '') {
+            alert('Veuillez sélectionner une date comptable à exporter.');
+            return;
+        }
+
+        exportBtn.prop('disabled', true).text('Exportation en cours...');
+        window.location.href = '?action=export_by_date&size=' + size + '&export_date=' + exportDate;
     });
 
     function refreshTable() {
@@ -429,7 +468,6 @@ $(document).ready(function() {
                             }
                         }
                         
-                        // Using Date object for formatting, works with MySQL's Y-m-d H:i:s format
                         var exportDateDisplay = e.exported_at ? new Date(e.exported_at).toLocaleString() : 'N/A';
                         
                         var row = '<tr class="' + rowClass + '">' +
@@ -467,6 +505,15 @@ $(document).ready(function() {
                     validateBtn.removeClass('disabled');
                 } else {
                     validateBtn.addClass('disabled');
+                }
+
+                // MISE À JOUR DU SÉLECTEUR DE DATES
+                var dateSelector = $('#exportDate').empty();
+                dateSelector.append('<option value="">Sélectionnez une date</option>');
+                if (resp.uniqueDates && resp.uniqueDates.length > 0) {
+                    $.each(resp.uniqueDates, function(i, date) {
+                        dateSelector.append('<option value="' + date + '">' + date + '</option>');
+                    });
                 }
             }
         });

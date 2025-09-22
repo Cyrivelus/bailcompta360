@@ -99,6 +99,29 @@
     }
 }
  
+function getFactureParEcriture(PDO $pdo, int $idEcriture) {
+    try {
+        // La requête SQL utilise une jointure (JOIN) pour lier les tables Ecritures et Factures
+        // en se basant sur le numéro de pièce.
+        $sql = "SELECT f.*
+                FROM Ecritures AS e
+                JOIN Factures AS f ON e.Numero_Piece = f.Numero_Facture
+                WHERE e.ID_Ecriture = :idEcriture";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':idEcriture', $idEcriture, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        // Fetch the result
+        $facture = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $facture ?: null;
+    } catch (PDOException $e) {
+        // En cas d'erreur, vous pouvez la journaliser ou la gérer comme vous le souhaitez.
+        error_log("Erreur de base de données dans getFactureParEcriture: " . $e->getMessage());
+        return null;
+    }
+}
  
 function updateFactureStatutAndEcriture(PDO $pdo, int $idFacture, string $newStatut, int $idEcriture): bool
 {

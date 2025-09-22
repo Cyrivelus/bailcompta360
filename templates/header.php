@@ -6,7 +6,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Vérifier si l'utilisateur est connecté
+// Vérifier si l'utilisateur est connecté et définir le nom
 $estConnecte = isset($_SESSION['utilisateur_id']);
 $nomUtilisateur = $estConnecte && isset($_SESSION['nom_utilisateur']) ? $_SESSION['nom_utilisateur'] : 'Invité';
 
@@ -17,21 +17,21 @@ $titrePage = isset($titre) ? $titre : 'BailCompta 360';
 $couleurPrincipale = '#6d071a';
 $couleurTextePrimaire = '#ffffff';
 
-// Récupération de la dernière activité
+// Récupération et formatage de la dernière activité
 $derniereActivite = $_SESSION['LAST_ACTIVITY'] ?? null;
 $formatDerniereActivite = '';
 
 if ($estConnecte && $derniereActivite) {
-    $formatDerniereActivite = ' ' . date('d/m/Y H:i:s', $derniereActivite - 3600);
+    $formatDerniereActivite = ' ' . date('d/m/Y H:i:s', $derniereActivite);
 } elseif (!$estConnecte) {
-    $formatDerniereActivite = 'Dernière connexion : ' . date('d/m/Y H:i:s', time() - 3600);
+    $formatDerniereActivite = 'Dernière connexion : ' . date('d/m/Y H:i:s');
 }
 
 // Déconnexion
 if (isset($_POST['logout'])) {
     session_unset();
     session_destroy();
-    header('location:/bailcompta360/index.php');
+    header('location: /bailcompta360/index.php');
     exit();
 }
 ?>
@@ -43,15 +43,17 @@ if (isset($_POST['logout'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($titrePage) ?></title>
 
-    <!-- Fichiers CSS -->
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/formulaire.css">
-    <link rel="stylesheet" href="../css/tableau.css">
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/loading.css"> <!-- Cercle de chargement -->
-    <link rel="shortcut icon" href="../images/LOGO_SCE.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/bailcompta360/css/style.css">
+    <link rel="stylesheet" href="/bailcompta360/css/formulaire.css">
+    <link rel="stylesheet" href="/bailcompta360/css/tableau.css">
+    <link rel="stylesheet" href="/bailcompta360/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bailcompta360/css/loading.css">
+    <link rel="shortcut icon" href="/bailcompta360/images/LOGO_SCE.ico" type="image/x-icon">
+    
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- Styles intégrés -->
     <style>
         body {
             font-family: 'Times New Roman', sans-serif;
@@ -128,6 +130,12 @@ if (isset($_POST['logout'])) {
             align-items: flex-end;
             color: white;
         }
+        
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
 
         .user-name {
             font-weight: bold;
@@ -155,65 +163,108 @@ if (isset($_POST['logout'])) {
             background-color: white;
             color: <?= $couleurPrincipale ?>;
         }
+
+        /* Style for the React Clock */
+        #react-clock-container {
+            font-size: 0.8em;
+            opacity: 0.8;
+            margin-top: 5px;
+            text-align: right;
+            color: white;
+        }
     </style>
 </head>
 
 <body>
 
-<!-- Cercle de chargement -->
 <div id="loading-overlay">
     <div class="spinner"></div>
 </div>
 
-<!-- Header -->
 <header>
     <div class="logo-container">
         <div class="logo">
             <h1>Bail<span>Compta</span> 360</h1>
         </div>
 
-       <div class="user-info">
-    <div class="user-name">
-        <?php if ($estConnecte): ?>
-            <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <?= htmlspecialchars($nomUtilisateur) ?>
-        <?php else: ?>
-            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <?= htmlspecialchars($nomUtilisateur) ?>
-        <?php endif; ?>
-
-        <?php if (!empty($formatDerniereActivite)): ?>
-            <div class="last-activity" style="font-size:0.8em; opacity:0.8;">
-                <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
-                <?= htmlspecialchars($formatDerniereActivite) ?>
+        <div class="user-info">
+            <div class="user-details">
+                <?php if ($estConnecte): ?>
+                    <span class="user-name"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <?= htmlspecialchars($nomUtilisateur) ?></span>
+                <?php else: ?>
+                    <span class="user-name"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <?= htmlspecialchars($nomUtilisateur) ?></span>
+                <?php endif; ?>
+                
+                <?php if (!empty($formatDerniereActivite)): ?>
+                    <div class="last-activity">
+                        <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                        Dernière activité : <?= htmlspecialchars($formatDerniereActivite) ?>
+                    </div>
+                <?php endif; ?>
             </div>
-        <?php endif; ?>
-    </div>
 
-    <?php if ($estConnecte): ?>
-        <div class="mt-2 d-flex align-items-center" style="gap: 0.5rem;">
-            <!-- Lien Modifier mot de passe -->
-            
-            <!-- Bouton Déconnexion -->
-            <form method="post" action="" style="margin:0;">
-                <button type="submit" name="logout" class="btn btn-sm btn-danger">
-                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Déconnexion
-                </button> | <a href="../utilisateurs/modifier_mot_de_passe.php" class="btn btn-sm btn-warning">
-                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Modifier mot de passe
-            </a>
+            <?php if ($estConnecte): ?>
+                <div class="mt-2" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <a href="/bailcompta360/pages/utilisateurs/modifier_mot_de_passe.php" class="btn btn-sm btn-warning">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Modifier mot de passe
+                    </a>
+                    <form method="post" action="" style="margin:0;">
+                        <button type="submit" name="logout" class="btn btn-sm btn-danger">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Déconnexion
+                        </button>
+                    </form>
+                </div>
+            <?php else: ?>
+                <a href="/bailcompta360/index.php" class="logout-btn mt-2">
+                    <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Connexion
+                </a>
+            <?php endif; ?>
 
-            </form>
+            <div id="react-clock-container"></div>
         </div>
-    <?php else: ?>
-        <a href="<?= generateUrl('index.php') ?>" class="logout-btn mt-2">
-            <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Connexion
-        </a>
-    <?php endif; ?>
-</div>
-
     </div>
 </header>
 
-<!-- Script pour masquer le cercle de chargement -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<script type="text/babel">
+    // React Clock Component
+    function Clock() {
+        const [time, setTime] = React.useState(new Date());
+
+        React.useEffect(() => {
+            const timerId = setInterval(() => {
+                setTime(new Date());
+            }, 1000);
+
+            // Cleanup function to clear the interval when the component unmounts
+            return () => clearInterval(timerId);
+        }, []);
+
+        const formatTime = (date) => {
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            return `${hours}:${minutes}:${seconds}`;
+        };
+
+        return (
+            <div>
+                {formatTime(time)}
+            </div>
+        );
+    }
+
+    // Mount the React Clock component to the specified container
+    const clockContainer = document.getElementById('react-clock-container');
+    if (clockContainer) {
+        ReactDOM.render(<Clock />, clockContainer);
+    }
+</script>
+
 <script>
+    // Fades out the loading overlay when the page is fully loaded
     window.addEventListener('load', function () {
         const overlay = document.getElementById('loading-overlay');
         if (overlay) {
@@ -224,6 +275,5 @@ if (isset($_POST['logout'])) {
         }
     });
 </script>
-
 </body>
 </html>

@@ -17,6 +17,7 @@ require_once __DIR__ . "/../fonctions/database.php"; // Chemin ajusté avec __DI
 // Inclure le fichier de gestion des utilisateurs où se trouve updateDerniereConnexion
 require_once __DIR__ . "/../fonctions/gestion_utilisateurs.php";
 
+
 // Configuration des paramètres de session pour la sécurité
 session_set_cookie_params([
     'lifetime' => 0, // Durée de vie du cookie de session (0 signifie jusqu'à la fermeture du navigateur)
@@ -66,6 +67,8 @@ function authentifier(PDO $pdo, string $login, string $password, int $maxAttempt
         $utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$utilisateur) {
+            // Pour des raisons de sécurité, ne pas indiquer si l'utilisateur existe ou non.
+            // Traiter comme un échec de mot de passe incorrect.
             error_log("Tentative de connexion échouée pour l'utilisateur : " . $login . " (Utilisateur non trouvé ou mot de passe incorrect)");
             return "Nom d'utilisateur ou mot de passe incorrect.";
         }
@@ -80,6 +83,8 @@ function authentifier(PDO $pdo, string $login, string $password, int $maxAttempt
 
         $passwordCorrect = false;
         if ($isGuest) {
+            // WARNING: Storing plain text passwords for guests is a security risk.
+            // Consider hashing guest passwords too, or using a fixed guest password that is hashed.
             $passwordCorrect = ($password === $utilisateur['Mot_de_Passe']);
         } else {
             $passwordCorrect = password_verify($password, $utilisateur['Mot_de_Passe']);
@@ -162,7 +167,18 @@ function restaurerSessionViaCookie(PDO $pdo, int $utilisateurId, string $token):
             $_SESSION['role'] = $utilisateur['Role'];
             $_SESSION['last_activity'] = time();
 
+            // *** APPEL DE updateDerniereConnexion ICI ***
             updateDerniereConnexion($pdo, $_SESSION['utilisateur_id']);
+            // *****************************************
+
+            // --- Exécution de la procédure stockée après la connexion via cookie ---
+            try {
+                // CHANGEMENT ICI : Utiliser CALL pour MySQL
+                $pdo->exec("CALL SP_TransfereEcrituresVersDef();");
+            } catch (PDOException $e) {
+                error_log("Erreur PDO lors de l'exécution de la procédure stockée (Def) via cookie : " . $e->getMessage());
+            }
+            // --- Fin de l'ajout ---
 
         } else {
             // Le cookie est invalide ou expiré, le supprimer
@@ -204,35 +220,21 @@ function checkPasswordExpiry(DateTime|string $lastLoginDate, int $expiryMonths):
     return $now > $expiryDate;
 }
 
+
 // --- 3. Traitement des Cookies "Se souvenir de moi" (Déplacé avant la soumission du formulaire) ---
 
+// Vérification de la présence des cookies "remember_me" si aucune session active
 if (isset($_COOKIE['remember_token']) && isset($_COOKIE['remember_id']) && !isset($_SESSION['utilisateur_id'])) {
     restaurerSessionViaCookie($pdo, (int)$_COOKIE['remember_id'], $_COOKIE['remember_token']);
-
+    // Si la session a été restaurée, rediriger pour éviter que l'utilisateur ne soumette le formulaire
     if (isset($_SESSION['utilisateur_id'])) {
         // Redirection après connexion via cookie
-
-        // --- Appel de la procédure stockée MySQL ici ---
-        try {
-            // Appel de la procédure stockée MySQL
-            $pdo->exec("CALL SP_TransfereEcrituresVersDef()");
-            error_log("Procédure SP_TransfereEcrituresVersDef appelée avec succès via cookie.");
-        } catch (PDOException $e) {
-            error_log("Erreur lors de l'appel de la procédure stockée MySQL via cookie : " . $e->getMessage());
-            // Vous pouvez choisir de ne pas bloquer la connexion mais de logguer l'erreur
-            // Ou de rediriger avec un message d'erreur si l'appel est critique.
-        }
-        // --- Fin de l'appel de la procédure stockée ---
-
         switch ($_SESSION['role']) {
             case 'Admin':
                 header("Location: ../pages/utilisateurs/index.php");
                 break;
             case 'Comptable':
                 header("Location: ../pages/ecritures/index.php");
-                break;
-            case 'Caissiere': // Ajout du rôle de caissière
-                header("Location: ../pages/agence/index.php");
                 break;
             case 'super_admin':
                 header("Location: ../pages/admin/data_management/index.php");
@@ -245,61 +247,97 @@ if (isset($_COOKIE['remember_token']) && isset($_COOKIE['remember_id']) && !isse
     }
 }
 
-// --- 4. Traitement de la Soumission du Formulaire ---
+// --- 4. Vérification des Horaires de Connexion (Optionnel) ---
+// À décommenter et adapter si cette fonctionnalité est requise.
+/*
+$currentHour = date('H:i');
+$forbiddenStart = '22:00';
+$forbiddenEnd = '07:30';
+
+if ($currentHour >= $forbiddenStart || $currentHour < $forbiddenEnd) {
+    header("Location: ../index.php?error=" . urlencode("Connexion non autorisée en dehors des heures de bureau."));
+    exit();
+}
+*/
+
+// --- 5. Traitement de la Soumission du Formulaire ---
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($login) && !empty($password)) {
+    // La fonction authentifier gère maintenant le blocage et retourne soit l'utilisateur, soit un message d'erreur.
     $authResult = authentifier($pdo, $login, $password, $maxLoginAttempts, $lockoutTimeMinutes, $guestLoginAttempt);
 
     if (is_array($authResult)) { // Authentification réussie
         $utilisateur = $authResult;
 
+        // Définir les variables de session en premier
         $_SESSION['utilisateur_id'] = $utilisateur['ID_Utilisateur'];
         $_SESSION['nom_utilisateur'] = $utilisateur['Nom'];
         $_SESSION['role'] = $utilisateur['Role'];
+        // Correction ici : Fournir une valeur par défaut si Derniere_Connexion est NULL
         $_SESSION['derniere_connexion'] = $utilisateur['Derniere_Connexion'] ?? date('Y-m-d H:i:s');
-        $_SESSION['last_activity'] = time();
-
+        $_SESSION['last_activity'] = time(); // Pour le timeout de session
+        
+        // --- NOUVEAU : Vérification du mot de passe temporaire ---
+        // Définissez une signature pour les mots de passe temporaires, par exemple un préfixe "TEMP_"
         $tempPasswordPrefix = 'TEMP_';
+
+        // Ajout d'une condition spécifique pour le mot de passe "aaaAAA123"
         $isSpecificTempPassword = ($password === 'aaaAAA123' && password_verify($password, $utilisateur['Mot_de_Passe']));
 
         if (str_starts_with($password, $tempPasswordPrefix) && password_verify($password, $utilisateur['Mot_de_Passe']) || $isSpecificTempPassword) {
+            // L'utilisateur s'est connecté avec un mot de passe temporaire
             $_SESSION['admin_message_warning'] = "Votre mot de passe temporaire doit être changé.";
+            // Ajoutez un indicateur de mot de passe temporaire dans la session
             $_SESSION['is_temp_password'] = true;
             header("Location: ../pages/change_mot_de_passe.php");
             exit();
         }
 
+        // *** APPEL DE updateDerniereConnexion APRÈS UNE CONNEXION FORMULAIRE RÉUSSIE ***
         updateDerniereConnexion($pdo, $_SESSION['utilisateur_id']);
+        // *************************************************************************
 
+        // --- NOUVEAU : Exécution de la procédure stockée après une connexion réussie ---
+        try {
+            // CHANGEMENT ICI : Utiliser CALL pour MySQL
+            $pdo->exec("CALL SP_TransfereEcrituresVersDef();");
+        } catch (PDOException $e) {
+            error_log("Erreur PDO lors de l'exécution de la procédure stockée (Def) : " . $e->getMessage());
+            // En cas d'erreur de base de données, vous pouvez choisir de rediriger avec un message d'erreur ou d'ignorer.
+            // Le programme continue même si la procédure stockée échoue.
+        }
+        // --- Fin de l'ajout ---
+        try {
+            // CHANGEMENT ICI : Utiliser CALL pour MySQL
+            $pdo->exec("CALL SP_TransfereEcrituresVersBrl();");
+        } catch (PDOException $e) {
+            error_log("Erreur PDO lors de l'exécution de la procédure stockée (Brl) : " . $e->getMessage());
+            // En cas d'erreur de base de données, vous pouvez choisir de rediriger avec un message d'erreur ou d'ignorer.
+            // Le programme continue même si la procédure stockée échoue.
+        }
+        // --- Fin de l'ajout ---
+
+        // --- Vérification de l'expiration du mot de passe ---
         if ($utilisateur['Role'] !== 'Invité' && checkPasswordExpiry($_SESSION['derniere_connexion'], $passwordExpiryMonths)) {
             $_SESSION['admin_message_warning'] = "Votre mot de passe a expiré. Veuillez le changer.";
+            // La redirection pour un mot de passe expiré doit se faire vers une page de changement de mot de passe,
+            // si celle-ci est différente de la page de mot de passe temporaire.
             header("Location: ../pages/changement_mot_de_passe.php");
             exit();
         }
 
-        // --- Appel de la procédure stockée MySQL ici ---
-        try {
-            // Appel de la procédure stockée MySQL
-            $pdo->exec("CALL SP_TransfereEcrituresVersDef()");
-            error_log("Procédure SP_TransfereEcrituresVersDef appelée avec succès après authentification.");
-        } catch (PDOException $e) {
-            error_log("Erreur lors de l'appel de la procédure stockée MySQL après authentification : " . $e->getMessage());
-            // Loggez l'erreur, mais ne bloquez pas nécessairement la connexion de l'utilisateur ici
-            // si la procédure stockée n'est pas critique pour la fonctionnalité immédiate.
-        }
-        // --- Fin de l'appel de la procédure stockée ---
-
         // --- Gestion du "Se souvenir de moi" ---
         if ($rememberMe) {
-            $token = bin2hex(random_bytes(32));
+            $token = bin2hex(random_bytes(32)); // Générer un token sécurisé
             $hashedTokenForDb = password_hash($token, PASSWORD_DEFAULT);
-            $expiryTimestamp = time() + (86400 * 30);
+            $expiryTimestamp = time() + (86400 * 30); // 30 jours pour le cookie
 
             try {
                 $sql_remember = "UPDATE Utilisateurs SET remember_token = :hashed_token, remember_expiry = :expiry WHERE ID_Utilisateur = :utilisateur_id";
                 $stmt_remember = $pdo->prepare($sql_remember);
                 $stmt_remember->bindParam(':hashed_token', $hashedTokenForDb);
-                $stmt_remember->bindParam(':expiry', date('Y-m-d H:i:s', $expiryTimestamp));
+                // Utiliser NOW() pour MySQL si le format de date est correct
+                $stmt_remember->bindParam(':expiry', date('Y-m-d H:i:s', $expiryTimestamp)); 
                 $stmt_remember->bindParam(':utilisateur_id', $_SESSION['utilisateur_id']);
                 $stmt_remember->execute();
 
@@ -323,6 +361,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($login) && !empty($password)
                 error_log("Erreur PDO lors de la mise à jour du token 'remember me' : " . $e->getMessage());
             }
         } else {
+            // Si "Se souvenir de moi" n'est pas coché, supprimer les cookies et nettoyer la DB
             setcookie('remember_token', '', time() - 3600, '/', '', isset($_SERVER['HTTPS']), true);
             setcookie('remember_id', '', time() - 3600, '/', '', isset($_SERVER['HTTPS']), true);
             try {
@@ -343,9 +382,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($login) && !empty($password)
             case 'Comptable':
                 header("Location: ../pages/ecritures/index.php");
                 break;
-            case 'Caissiere': // Ajout du rôle de caissière
-                header("Location: ../pages/agences/index.php");
-                break;
             case 'super_admin':
                 header("Location: ../pages/admin/data_management/index.php");
                 break;
@@ -356,11 +392,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($login) && !empty($password)
         exit();
 
     } else { // Authentification échouée ou compte bloqué
-        $errorMessage = $authResult;
+        $errorMessage = $authResult; // Le message d'erreur est retourné directement par la fonction
         header("Location: ../index.php?error=" . urlencode($errorMessage));
         exit();
     }
 } else {
+    // Rediriger si la page est accédée directement sans soumission de formulaire ou champs vides
     header("Location: ../index.php?error=" . urlencode("Veuillez saisir votre login et votre mot de passe."));
     exit();
 }

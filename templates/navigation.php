@@ -34,6 +34,43 @@ $_SESSION['LAST_ACTIVITY'] = time();
 // 4. Core navigation logic
 $estConnecte = isset($_SESSION['utilisateur_id']);
 
+$moisEnCours = date('F Y'); // Exemple : "September 2025"
+// Si vous voulez le mois en français et l'année
+
+
+
+// Ancien code (déprécié) :
+// setlocale(LC_TIME, 'fr_FR.UTF-8', 'fra');
+// $moisEnCours = strftime('%B %Y');
+
+// Nouveau code (moderne) :
+if (class_exists('IntlDateFormatter')) {
+    // Utilise IntlDateFormatter si l'extension intl est disponible (recommandé pour la localisation)
+    $formatter = new IntlDateFormatter(
+        'fr_FR', // Locale
+        IntlDateFormatter::LONG, // Style de date (LONG pour mois et année)
+        IntlDateFormatter::NONE, // Pas de style d'heure
+        'Europe/Paris', // Fuseau horaire (ajuster si nécessaire)
+        IntlDateFormatter::GREGORIAN,
+        'MMMM yyyy' // Pattern personnalisé pour "Mois Année"
+    );
+    $moisEnCours = $formatter->format(time());
+} else {
+    // Fallback pour les systèmes sans extension intl (moins précis pour la localisation, mais fonctionne)
+    // Vous devrez peut-être ajuster le mois pour la majuscule si date('F') renvoie la première lettre en majuscule.
+    $moisEnCours = date('F Y');
+    // Si la locale est définie et que vous voulez forcer la traduction du mois,
+    // vous pourriez avoir besoin d'un tableau de traduction comme ceci:
+    $monthNamesFr = [
+        'January' => 'Janvier', 'February' => 'Février', 'March' => 'Mars', 'April' => 'Avril',
+        'May' => 'Mai', 'June' => 'Juin', 'July' => 'Juillet', 'August' => 'Août',
+        'September' => 'Septembre', 'October' => 'Octobre', 'November' => 'Novembre', 'December' => 'Décembre'
+    ];
+    $moisEnCours = strtr($moisEnCours, $monthNamesFr);
+}
+
+// Le reste de votre code qui utilise $moisEnCours
+
 function generateUrl($path) {
     return '/bailcompta360/' . ltrim($path, '/');
 }
@@ -93,7 +130,26 @@ if ($estConnecte):
     <link rel="stylesheet" href="../css/select2-bootstrap.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     
-    <style>
+      <style>
+	/* --- Styles pour le lien de la période --- */
+.nav-period-link {
+    font-size: 0.9em; /* Taille de police légèrement plus petite */
+    color: #6c757d;   /* Couleur de texte gris */
+    padding-top: 20px; /* Espacement en haut */
+    display: flex;    /* Permet d'aligner l'icône et le texte */
+    align-items: center; /* Centre verticalement l'icône et le texte */
+    text-decoration: none; /* Supprime le soulignement par défaut des liens */
+}
+
+/* Espacement entre l'icône et le texte */
+.nav-period-link .glyphicon {
+    margin-right: 5px; /* Un petit espace à droite de l'icône */
+}
+
+/* Au survol, changer la couleur (optionnel) */
+.nav-period-link:hover {
+    color: #495057; /* Un gris un peu plus foncé au survol */
+}
         /* Styles personnalisés pour la navigation verticale */
         .vertical-nav {
             min-width: 200px;
@@ -336,7 +392,7 @@ if ($estConnecte):
                 </li>
                 <li class="nav-item">
                     <a class="dropdown-item <?= isActive('pages/comptes/index.php', $relative_uri) ? 'active' : '' ?>" href="<?= generateUrl('pages/comptes/index.php') ?>">
-                        <span class="glyphicon glyphicon-list-alt"></span><span>Consulter Comptes</span>
+                        <span class="glyphicon glyphicon-list-alt"></span><span>Consul Comptes</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -631,21 +687,72 @@ if ($estConnecte):
                 </li>
             </ul>
         </div>
-        
+         <a class="nav-link" href="#" style="font-size: 0.9em; color: #6c757d; padding-top: 20px;">
+        <span class="glyphicon glyphicon-tag"></span><span>Version 1.0</span>
+    </a>
+	<BR>
+	<BR>
+	<BR>
+	<BR>
+	<BR>
+	<BR>
+	<BR>
+	<BR>
+	<BR>
+	<BR>
+	<a class="nav-link nav-period-link" href="#">
+  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+  <span>Période en cours : 
+  <BR><?= htmlspecialchars($moisEnCours) ?></span>
+</a>
     </nav>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="js/jquery-3.7.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/select2.min.js"></script>
 
 <script>
-    $(document).ready(function () {
-        $("#toggle-btn").on("click", function () {
-            $("#sidebar").toggleClass("collapsed");
-            $("body").toggleClass("collapsed-sidebar");
-        });
+$(document).ready(function () {
+    // 1. Gère le basculement de la barre latérale
+    $("#toggle-btn").on("click", function () {
+        $("#sidebar").toggleClass("collapsed");
+        $("body").toggleClass("collapsed-sidebar");
     });
+
+    // 2. Gère l'ouverture/fermeture des dropdowns
+    $(".dropdown-toggle").on("click", function (e) {
+        e.preventDefault(); // Empêche le comportement de lien par défaut
+
+        // Ferme tous les autres dropdowns ouverts
+        $(".dropdown-menu.in").not($(this).next(".dropdown-menu")).slideUp();
+        $(".dropdown-toggle").not(this).removeClass("active");
+
+        // Bascule le dropdown actuel
+        $(this).next(".dropdown-menu").slideToggle();
+        $(this).toggleClass("active");
+    });
+
+    // 3. Gère la fermeture des dropdowns quand on clique ailleurs sur la page
+    $(document).on("click", function (e) {
+        if (!$(e.target).closest('.dropdown-menu, .dropdown-toggle').length) {
+            $(".dropdown-menu.in").slideUp();
+            $(".dropdown-toggle").removeClass("active");
+        }
+    });
+
+    // 4. Gère le clic sur un lien dans un dropdown pour le fermer
+    $(".dropdown-menu a").on("click", function (e) {
+        // e.preventDefault(); // Supprimez ceci si vous voulez que le lien fonctionne
+
+        // Ferme le dropdown parent
+        $(this).closest(".dropdown-menu").slideUp();
+        $(this).closest(".dropdown").find(".dropdown-toggle").removeClass("active");
+    });
+});
 </script>
 
 <?php else: ?>

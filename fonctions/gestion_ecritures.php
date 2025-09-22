@@ -42,22 +42,11 @@
 
 
 
-function getEcriture(PDO $pdo, int $idEcriture): array|null // Renommée de getEcritureParId à getEcriture
-{
-    try {
-        $sql = "SELECT ID_Ecriture, Date_Saisie, Description, Montant_Total
-                FROM ecritures
-                WHERE ID_Ecriture = :id_ecriture";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':id_ecriture', $idEcriture, PDO::PARAM_INT);
-        $stmt->execute();
-        $ecriture = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $ecriture ? $ecriture : null; // Retourne null si aucun résultat
-    } catch (PDOException $e) {
-        // Gestion des erreurs : log l'erreur et retourne null
-        error_log("Erreur PDO lors de la récupération de l'écriture : " . $e->getMessage());
-        return null;
-    }
+function getEcriture($pdo, $idEcriture) {
+    $sql = "SELECT ID_Ecriture, Date_Saisie, Description, Numero_Piece, Cde FROM Ecritures WHERE ID_Ecriture = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$idEcriture]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 function supprimerEcriture(PDO $pdo, int $id): bool {
@@ -1692,6 +1681,65 @@ function getLignesEcritureByEcritureId(PDO $pdo, int $idEcriture) {
         error_log("Erreur lors de la récupération des lignes d'écriture: " . $e->getMessage());
         return [];
     }
+}
+
+/**
+ * Checks for overdue and upcoming loan payments for the accountant.
+ *
+ * This function queries the database for the first uncompleted payment
+ * that is either overdue or due within the next 7 days.
+ *
+ * @param PDO $pdo The PDO database connection object.
+ * @return array An associative array with two boolean keys: 'overdue' and 'upcoming'.
+ */
+function getAccountantLoanAlerts(PDO $pdo)
+{
+    // Initialize alerts to false
+    $alerts = [
+        'overdue' => false,
+        'upcoming' => false
+    ];
+
+    // Define the date thresholds for the query
+    $today = (new DateTime())->format('Y-m-d');
+    $upcomingThreshold = (new DateTime('+7 days'))->format('Y-m-d');
+
+    // Use a corrected MySQL query (changed TOP 1 to LIMIT 1)
+    // The query finds the first relevant uncompleted payment due date
+    $sql = "
+        SELECT EA.Date_Echeance
+        FROM Echeances_Amortissement AS EA
+        LEFT JOIN Statuts AS S ON EA.ID_Statut = S.ID_Statut
+        WHERE S.Code_Statut <> 'COMP'
+        AND (EA.Date_Echeance < :today OR EA.Date_Echeance <= :upcoming_threshold)
+        ORDER BY EA.Date_Echeance ASC
+        LIMIT 1;
+    ";
+
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':today', $today);
+        $stmt->bindParam(':upcoming_threshold', $upcomingThreshold);
+        $stmt->execute();
+        $echeance = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($echeance) {
+            $echeanceDate = new DateTime($echeance['Date_Echeance']);
+            $todayDateObj = new DateTime($today);
+
+            if ($echeanceDate < $todayDateObj) {
+                $alerts['overdue'] = true;
+            } else {
+                $alerts['upcoming'] = true;
+            }
+        }
+    } catch (PDOException $e) {
+        // Log the error instead of killing the script
+        error_log("Database error in getAccountantLoanAlerts: " . $e->getMessage());
+        // For production, you might return default alerts to avoid showing a critical error
+    }
+
+    return $alerts;
 }
 
 // ... (your existing getEcrituresByFactureId and other functions) ...

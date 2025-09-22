@@ -233,6 +233,24 @@ $text = $translations[$lang];
         }
     </style>
 </head>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $text['app_name'] ?></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        body { font-family: sans-serif; }
+        .login-container { max-width: 400px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        .btn { margin-right: 5px; }
+        .forgot-password { text-align: right; margin-top: 10px; }
+        .language-switcher { position: fixed; top: 10px; right: 10px; z-index: 1000; }
+        .alert { margin-bottom: 20px; }
+        .dropdown-item { display: block; padding: 5px 10px; }
+    </style>
+</head>
 <body>
     <div class="login-container">
         <header>
@@ -288,49 +306,51 @@ $text = $translations[$lang];
         </form>
     </div>
 
-  <div class="language-switcher">
-    <a class="nav-link dropdown-toggle <?= strpos($_SERVER['REQUEST_URI'], '?lang=') !== false ? 'active' : '' ?>"
-        href="#"
-        id="languageDropdown"
-        role="button"
-        data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-        style="
-            font-weight: bold; 
-            color: blue; 
-            border: 2px solid maroon; 
-            background-color: rgba(255, 255, 255, 0.85);
-            padding: 5px 10px; 
-            border-radius: 5px;
-        ">
-        <span class="glyphicon glyphicon-globe" style="margin-right:5px;"></span>
-        Langue
-    </a>
-    <div class="dropdown-menu" aria-labelledby="languageDropdown" style="background-color: rgba(255, 255, 255, 0.95); border: 1px solid maroon;">
-        <a class="dropdown-item" href="?lang=fr" style="font-weight: bold; color: blue;">
-            🇫🇷 Français
+    <div class="language-switcher">
+        <a class="nav-link dropdown-toggle <?= strpos($_SERVER['REQUEST_URI'], '?lang=') !== false ? 'active' : '' ?>"
+            href="#"
+            id="languageDropdown"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            style="
+                font-weight: bold; 
+                color: blue; 
+                border: 2px solid maroon; 
+                background-color: rgba(255, 255, 255, 0.85);
+                padding: 5px 10px; 
+                border-radius: 5px;
+            ">
+            <span class="glyphicon glyphicon-globe" style="margin-right:5px;"></span>
+            Langue
         </a>
-        <br>
-        <a class="dropdown-item" href="?lang=en" style="font-weight: bold; color: blue;">
-            🇬🇧 English
-        </a>
+        <div class="dropdown-menu" aria-labelledby="languageDropdown" style="background-color: rgba(255, 255, 255, 0.95); border: 1px solid maroon;">
+            <a class="dropdown-item" href="?lang=fr" style="font-weight: bold; color: blue;">
+                🇫🇷 Français
+            </a>
+            <br>
+            <a class="dropdown-item" href="?lang=en" style="font-weight: bold; color: blue;">
+                🇬🇧 English
+            </a>
+        </div>
     </div>
-</div>
 
-
-        </li>
-    </div>
+    <div id="react-root"></div>
 
     <footer>
         <?= $text['footer_text'] ?> <?= date('Y'); ?>
     </footer>
 
+   
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/jquery-3.7.1.js"></script>
+
+
     <script>
+        // Existing JavaScript functions remain unchanged
         function togglePasswordVisibility() {
             const passwordInput = document.getElementById("password");
             const toggleIcon = document.getElementById("togglePassword");
